@@ -244,9 +244,6 @@ int CHLMachineGun::WeaponSoundRealtime( WeaponSound_t shoot_type )
 	return numBullets;
 }
 
-
-
-
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
@@ -289,7 +286,7 @@ float CHLSelectFireMachineGun::GetBurstCycleRate( void )
 	// this is the time it takes to fire an entire 
 	// burst, plus whatever amount of delay we want
 	// to have between bursts.
-	return 0.5f;
+	return 0.375f;
 }
 
 float CHLSelectFireMachineGun::GetFireRate( void )
@@ -306,6 +303,11 @@ float CHLSelectFireMachineGun::GetFireRate( void )
 		return 0.1f;	// 600 rounds per minute = 0.1 seconds per bullet
 		break;
 
+	case FIREMODE_SEMI:
+		// No refire when holding a trigger
+		return 9999.9f;	// Soonest primary fire should determine our rate of fire
+		break;
+
 	default:
 		return 0.1f;
 		break;
@@ -319,6 +321,7 @@ bool CHLSelectFireMachineGun::Deploy( void )
 	return BaseClass::Deploy();
 }
 
+#define	SINGLE_FASTEST_REFIRE_TIME		0.1f	// Cycling rate!
 
 //-----------------------------------------------------------------------------
 // Purpose: 
@@ -345,11 +348,16 @@ void CHLSelectFireMachineGun::PrimaryAttack( void )
 		// Call the think function directly so that the first round gets fired immediately.
 		BurstThink();
 		SetThink( &CHLSelectFireMachineGun::BurstThink );
-		m_flNextPrimaryAttack = gpGlobals->curtime + GetBurstCycleRate();
-		m_flNextSecondaryAttack = gpGlobals->curtime + GetBurstCycleRate();
+//		m_flNextPrimaryAttack = gpGlobals->curtime + GetBurstCycleRate();
+//		m_flNextSecondaryAttack = gpGlobals->curtime + GetBurstCycleRate();
 
 		// Pick up the rest of the burst through the think function.
 		SetNextThink( gpGlobals->curtime + GetFireRate() );
+		break;
+
+	case FIREMODE_SEMI:
+		BaseClass::PrimaryAttack();
+		SetWeaponIdleTime(gpGlobals->curtime + 3.0f);
 		break;
 	}
 
@@ -369,8 +377,19 @@ void CHLSelectFireMachineGun::PrimaryAttack( void )
 void CHLSelectFireMachineGun::SecondaryAttack( void )
 {
 	// change fire modes.
+	SelectFire();
+}
 
-	switch( m_iFireMode )
+//-----------------------------------------------------------------------------
+// Purpose: 
+//
+//
+//-----------------------------------------------------------------------------
+void CHLSelectFireMachineGun::SelectFire(void)
+{
+	// change fire modes.
+
+	switch (m_iFireMode)
 	{
 	case FIREMODE_FULLAUTO:
 		//Msg( "Burst\n" );
@@ -384,17 +403,67 @@ void CHLSelectFireMachineGun::SecondaryAttack( void )
 		WeaponSound(SPECIAL1);
 		break;
 	}
-	
-	SendWeaponAnim( GetSecondaryAttackActivity() );
 
-	m_flNextSecondaryAttack = gpGlobals->curtime + 0.3;
+	m_flNextSecondaryAttack = gpGlobals->curtime + 0.375;
+}
 
-	CBasePlayer *pOwner = ToBasePlayer( GetOwner() );
-	if ( pOwner )
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+void CHLSelectFireMachineGun::ItemPostFrame(void)
+{
+	CBasePlayer *pOwner = ToBasePlayer(GetOwner());
+
+	if ((pOwner->m_nButtons & IN_ALT1) && (m_flNextSecondaryAttack <= gpGlobals->curtime))
 	{
-		m_iSecondaryAttacks++;
-		gamestats->Event_WeaponFired( pOwner, false, GetClassname() );
+		SelectFire();
 	}
+
+	// Only semi auto for now
+	if (!m_bInReload && m_iClip1 > 0 && (pOwner->m_nButtons & IN_ATTACK) && (m_flNextPrimaryAttack <= gpGlobals->curtime) && m_iFireMode == FIREMODE_SEMI)
+	{
+		// This isn't full auto, you have to release the trigger before firing again!
+		m_flNextSecondaryAttack = gpGlobals->curtime + 9999.9f;
+		m_flNextPrimaryAttack = gpGlobals->curtime + 9999.9f;
+		// Fire one shot
+		// Calling Primary Attack ejects casings and does muzzleflash, but doesn't fire a round nor does it produce sound. Why?
+		if (m_nShotsFired == 0)
+		{
+			BaseClass::PrimaryAttack();
+			BaseClass::WeaponSound(SINGLE_NPC);
+			Vector vecSrc = pOwner->Weapon_ShootPosition();
+			Vector vecAiming = pOwner->GetAutoaimVector(AUTOAIM_SCALE_DEFAULT);
+			pOwner->FireBullets(1, vecSrc, vecAiming, GetBulletSpread(), MAX_TRACE_LENGTH, m_iPrimaryAmmoType, 1);
+			//		pOwner->DoMuzzleFlash(); // We don't need it
+			--m_iClip1;
+			m_nShotsFired++;
+		}
+	}
+
+	// Trigger released, do cycle rate
+	if (!m_bInReload && (pOwner->m_afButtonReleased & IN_ATTACK))
+	{
+		if (m_iFireMode == FIREMODE_3RNDBURST)
+		{
+			m_flNextSecondaryAttack = gpGlobals->curtime + GetBurstCycleRate();
+			m_flNextPrimaryAttack = gpGlobals->curtime + GetBurstCycleRate();
+		}
+		else
+		{
+			m_flNextSecondaryAttack = gpGlobals->curtime + GetFireRate();
+			m_flNextPrimaryAttack = gpGlobals->curtime + GetFireRate();
+		}
+	}
+/*	if (pOwner->m_nButtons & IN_RELOAD)
+	{
+		m_flNextSecondaryAttack = gpGlobals->curtime + GetSequence();
+		m_flNextPrimaryAttack = gpGlobals->curtime + GetSequence();
+	}
+*/
+	BaseClass::ItemPostFrame();
+
+//	if (m_bInReload)
+//		return;
 }
 
 //-----------------------------------------------------------------------------
@@ -436,6 +505,10 @@ void CHLSelectFireMachineGun::WeaponSound( WeaponSound_t shoot_type, float sound
 			BaseClass::WeaponSound( SINGLE, soundtime );
 			break;
 
+		case FIREMODE_SEMI:
+			BaseClass::WeaponSound(SINGLE_NPC, soundtime);
+			break;
+
 		case FIREMODE_3RNDBURST:
 			if( m_iBurstSize == GetBurstSize() && m_iClip1 >= m_iBurstSize )
 			{
@@ -448,8 +521,8 @@ void CHLSelectFireMachineGun::WeaponSound( WeaponSound_t shoot_type, float sound
 				// sounds individually as each round is fired.
 				BaseClass::WeaponSound( SINGLE, soundtime );
 			}
-
 			break;
+
 		}
 		return;
 	}

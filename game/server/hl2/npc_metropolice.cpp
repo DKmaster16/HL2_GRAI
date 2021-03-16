@@ -3953,7 +3953,7 @@ float CNPC_MetroPolice::GetHitgroupDamageMultiplier(int iHitGroup, const CTakeDa
 			return 1.0f;
 		}
 	}
-
+	/*
 	case HITGROUP_STOMACH:
 	{
 		if (info.GetDamageType() & DMG_BUCKSHOT)
@@ -3979,6 +3979,7 @@ float CNPC_MetroPolice::GetHitgroupDamageMultiplier(int iHitGroup, const CTakeDa
 			return 1.0f;
 		}
 	}
+	*/
 	}
 
 	return BaseClass::GetHitgroupDamageMultiplier(iHitGroup, info);

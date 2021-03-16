@@ -117,6 +117,8 @@ CWeaponAR2::CWeaponAR2( )
 	m_nShotsFired	= 0;
 	m_nVentPose		= -1;
 
+	m_iFireMode = FIREMODE_FULLAUTO;
+
 	m_bAltFiresUnderwater = false;
 }
 
@@ -159,6 +161,9 @@ void CWeaponAR2::ItemPostFrame( void )
 	}
 
 	BaseClass::ItemPostFrame();
+
+//	if (m_bInReload)
+//		return;
 }
 
 //-----------------------------------------------------------------------------
@@ -262,6 +267,30 @@ void CWeaponAR2::DelayedAttack( void )
 }
 
 //-----------------------------------------------------------------------------
+// Purpose:
+//-----------------------------------------------------------------------------
+void CWeaponAR2::SelectFire(void)
+{
+	// change fire modes.
+
+	switch (m_iFireMode)
+	{
+	case FIREMODE_SEMI:
+		//Msg( "Burst\n" );
+		m_iFireMode = FIREMODE_FULLAUTO;
+		WeaponSound(EMPTY);
+		break;
+
+	case FIREMODE_FULLAUTO:
+		//Msg( "Auto\n" );
+		m_iFireMode = FIREMODE_SEMI;
+		WeaponSound(EMPTY);
+		break;
+	}
+	m_flNextSecondaryAttack = gpGlobals->curtime + 0.375;
+}
+
+//-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
 void CWeaponAR2::SecondaryAttack( void )
@@ -344,7 +373,7 @@ void CWeaponAR2::FireNPCPrimaryAttack( CBaseCombatCharacter *pOperator, bool bUs
 
 	CSoundEnt::InsertSound( SOUND_COMBAT|SOUND_CONTEXT_GUNFIRE, pOperator->GetAbsOrigin(), SOUNDENT_VOLUME_MACHINEGUN, 0.2, pOperator, SOUNDENT_CHANNEL_WEAPON, pOperator->GetEnemy() );
 
-	pOperator->FireBullets( 1, vecShootOrigin, vecShootDir, VECTOR_CONE_PRECALCULATED, MAX_TRACE_LENGTH, m_iPrimaryAmmoType, 2 );
+	pOperator->FireBullets( 1, vecShootOrigin, vecShootDir, VECTOR_CONE_PRECALCULATED, MAX_TRACE_LENGTH, m_iPrimaryAmmoType, 1 );
 
 	// NOTENOTE: This is overriden on the client-side
 	// pOperator->DoMuzzleFlash();

@@ -652,7 +652,7 @@ void CWeaponShotgun::ItemPostFrame( void )
 				}
 					Reload();
 					return;
-				}
+			}
 			// Clip full, stop reloading
 			else
 			{

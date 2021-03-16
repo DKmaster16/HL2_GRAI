@@ -38,13 +38,16 @@ public:
 	void	AddViewKick( void );
 	void	SecondaryAttack( void );
 
-	int		GetMinBurst() { return 2; }		// OLD: 2
-	int		GetMaxBurst() { return 5; }		// OLD: 5
+	void	SelectFire(void);
+//	virtual void	ItemPostFrame(void);
+
+	int		GetMinBurst() { return 4; }		// OLD: 2
+	int		GetMaxBurst() { return 7; }		// OLD: 5
 
 	virtual void Equip( CBaseCombatCharacter *pOwner );
 	bool	Reload( void );
 
-	float	GetFireRate( void ) { return 0.063f; }	// 15.87hz OLD: 0.075 - 13.3hz
+	float	GetFireRate(void); //{ return 0.063f; }	// 15.87hz OLD: 0.075 - 13.3hz
 	int		CapabilitiesGet( void ) { return bits_CAP_WEAPON_RANGE_ATTACK1; }
 	int WeaponRangeAttack2Condition();
 	Activity	GetPrimaryAttackActivity(void);
@@ -52,11 +55,12 @@ public:
 	virtual const Vector& GetBulletSpread(void)
 	{
 		// Define "spread" parameters based on the "owner" and what they are doing
+		static Vector plrSingleCone = VECTOR_CONE_05DEGREES;	// Single Fire
 		static Vector plrAccurateCone = VECTOR_CONE_2DEGREES;	// Zooming or ducking
-		static Vector plrCone = VECTOR_CONE_3DEGREES;	// Standing, moving around, the default
+		static Vector plrCone = VECTOR_CONE_3DEGREES;		// Standing, moving around, the default
 		static Vector plrRunCone = VECTOR_CONE_6DEGREES;	// Player sprint accuracy
 		static Vector plrJumpCone = VECTOR_CONE_15DEGREES;	// Player jump/midair accuracy
-		static Vector npcCone = VECTOR_CONE_3DEGREES;	// NPC cone when standing still
+		static Vector npcCone = VECTOR_CONE_3DEGREES;		// NPC cone when standing still
 		static Vector npcMoveCone = VECTOR_CONE_5DEGREES;	// NPC cone when moving
 
 		if (GetOwner() && GetOwner()->IsNPC())
@@ -78,6 +82,8 @@ public:
 			return plrJumpCone;
 		if (pPlayer->m_nButtons & IN_SPEED)
 			return plrRunCone;
+		if (m_iFireMode == FIREMODE_SEMI)
+			return plrSingleCone;
 		if (pPlayer->m_nButtons & IN_DUCK)
 			return plrAccurateCone;
 		if (pPlayer->m_nButtons & IN_ZOOM)
@@ -176,10 +182,28 @@ CWeaponSMG1::CWeaponSMG1( )
 {
 	m_fMinRange1		= 0;// No minimum range. 
 	m_fMaxRange1		= 1800;	// was 1500 
+	m_iFireMode = FIREMODE_FULLAUTO;
 
 	m_bAltFiresUnderwater = false;
 }
 
+float CWeaponSMG1::GetFireRate(void)
+{
+	switch (m_iFireMode)
+	{
+	case FIREMODE_SEMI:
+		return 0.1f;
+		break;
+
+	case FIREMODE_FULLAUTO:
+		return 0.063f;
+		break;
+
+	default:
+		return 0.063f;
+		break;
+	}
+}
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
@@ -362,20 +386,21 @@ Activity CWeaponSMG1::GetPrimaryAttackActivity( void )
 //-----------------------------------------------------------------------------
 bool CWeaponSMG1::Reload( void )
 {
+	// No longer be able to alt during a reload. It messes with semi-auto fire
+
 	bool fRet;
-	float fCacheTime = m_flNextSecondaryAttack;
+//	float fCacheTime = m_flNextSecondaryAttack;
 
 	fRet = DefaultReload( GetMaxClip1(), GetMaxClip2(), ACT_VM_RELOAD );
-	if ( fRet )
+	if (fRet)
 	{
 		// Undo whatever the reload process has done to our secondary
 		// attack timer. We allow you to interrupt reloading to fire
 		// a grenade.
-		m_flNextSecondaryAttack = GetOwner()->m_flNextAttack = fCacheTime;
+//		m_flNextSecondaryAttack = GetOwner()->m_flNextAttack = fCacheTime;
 
 		WeaponSound( RELOAD );
 	}
-
 	return fRet;
 }
 
@@ -384,7 +409,7 @@ bool CWeaponSMG1::Reload( void )
 //-----------------------------------------------------------------------------
 void CWeaponSMG1::AddViewKick( void )
 {
-	#define	EASY_DAMPEN			0.5f	//0.5 How much eaier the kick is on skill 1
+	#define	EASY_DAMPEN			0.5f	//How much easier the kick is on skill 1
 	#define	MAX_VERTICAL_KICK	3.0f	//Degrees Self explanatory
 	#define	SLIDE_LIMIT			2.3f	//How long does it take for recoil to fully kick in (time in seconds)
 	
@@ -397,6 +422,43 @@ void CWeaponSMG1::AddViewKick( void )
 	DoMachineGunKick( pPlayer, EASY_DAMPEN, MAX_VERTICAL_KICK, m_fFireDuration, SLIDE_LIMIT );
 }
 
+//-----------------------------------------------------------------------------
+// Purpose:
+//-----------------------------------------------------------------------------
+void CWeaponSMG1::SelectFire(void)
+{
+	// change fire modes.
+
+	switch (m_iFireMode)
+	{
+	case FIREMODE_SEMI:
+		//Msg( "Burst\n" );
+		m_iFireMode = FIREMODE_FULLAUTO;
+		WeaponSound(SPECIAL2);
+		break;
+
+	case FIREMODE_FULLAUTO:
+		//Msg( "Auto\n" );
+		m_iFireMode = FIREMODE_SEMI;
+		WeaponSound(SPECIAL1);
+		break;
+	}
+
+	m_flNextSecondaryAttack = gpGlobals->curtime + 0.375;
+}
+
+/*
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+void CWeaponSMG1::ItemPostFrame(void)
+{
+	BaseClass::ItemPostFrame();
+
+	if (m_bInReload)
+		return;
+}
+*/
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
@@ -417,8 +479,8 @@ void CWeaponSMG1::SecondaryAttack( void )
 		return;
 	}
 
-	if( m_bInReload )
-		m_bInReload = false;
+//	if( m_bInReload )
+//		m_bInReload = false;
 
 	// MUST call sound before removing a round from the clip of a CMachineGun
 	BaseClass::WeaponSound( WPN_DOUBLE );

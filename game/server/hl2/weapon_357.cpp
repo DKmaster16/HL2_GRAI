@@ -142,8 +142,8 @@ void CWeapon357::PrimaryAttack( void )
 	SendWeaponAnim( ACT_VM_PRIMARYATTACK );
 	pPlayer->SetAnimation( PLAYER_ATTACK1 );
 
-	m_flNextPrimaryAttack = gpGlobals->curtime + 0.4;	// was 0.75
-	m_flNextSecondaryAttack = gpGlobals->curtime + 0.4;	// was 0.75
+	m_flNextPrimaryAttack = gpGlobals->curtime + 0.375;	// was 0.75
+	m_flNextSecondaryAttack = gpGlobals->curtime + 0.375;	// was 0.75
 
 	m_iClip1--;
 
@@ -163,7 +163,7 @@ void CWeapon357::PrimaryAttack( void )
 
 	pPlayer->SnapEyeAngles( angles );
 
-	pPlayer->ViewPunch( QAngle( -6, random->RandomFloat( -2, 2 ), 0 ) );	// -8
+	pPlayer->ViewPunch( QAngle( -6, random->RandomFloat( -1, 1 ), 0 ) );	// -8
 
 	CSoundEnt::InsertSound( SOUND_COMBAT, GetAbsOrigin(), 600, 0.2, GetOwner() );
 

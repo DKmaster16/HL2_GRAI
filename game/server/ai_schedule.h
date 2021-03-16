@@ -51,10 +51,10 @@ enum pathType_t
 	PATH_NONE = -1,
 	PATH_TRAVEL,			//Path that will take us to the goal
 	PATH_LOS,				//Path that gives us line of sight to our goal
-	//PATH_FLANK,				//Path that will take us to a flanking position of our goal
-	//PATH_FLANK_LOS,			//Path that will take us to within line of sight to the flanking position of our goal
+	PATH_FLANK,				//Path that will take us to a flanking position of our goal
+	PATH_FLANK_LOS,			//Path that will take us to within line of sight to the flanking position of our goal
 	PATH_COVER,				//Path that will give us cover from our goal
-	//PATH_COVER_LOS,			//Path that will give us line of sight to cover from our goal
+	PATH_COVER_LOS,			//Path that will give us line of sight to cover from our goal
 };
 
 //=============================================================================

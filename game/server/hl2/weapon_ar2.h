@@ -19,10 +19,10 @@
 #include "in_buttons.h"
 
 
-class CWeaponAR2 : public CHLMachineGun
+class CWeaponAR2 : public CHLSelectFireMachineGun
 {
 public:
-	DECLARE_CLASS( CWeaponAR2, CHLMachineGun );
+	DECLARE_CLASS(CWeaponAR2, CHLSelectFireMachineGun);
 
 	CWeaponAR2();
 
@@ -34,6 +34,8 @@ public:
 	void	SecondaryAttack( void );
 	void	DelayedAttack( void );
 
+	void	SelectFire(void);
+
 	const char *GetTracerType( void ) { return "AR2Tracer"; }
 
 	void	AddViewKick( void );
@@ -44,7 +46,7 @@ public:
 	void	Operator_HandleAnimEvent( animevent_t *pEvent, CBaseCombatCharacter *pOperator );
 
 	int		GetMinBurst( void ) { return 2; }	// was 2
-	int		GetMaxBurst( void ) { return 5; }	// was 5
+	int		GetMaxBurst( void ) { return 4; }	// was 5
 	float	GetFireRate( void ) { return 0.1f; }
 
 	bool	CanHolster( void );
@@ -59,6 +61,7 @@ public:
 	virtual const Vector& GetBulletSpread( void )
 	{
 		// Define "spread" parameters based on the "owner" and what they are doing
+		static Vector plrSingleCone = VECTOR_CONE_PRECALCULATED;	// Single Fire
 		static Vector plrAccurateCone = VECTOR_CONE_05DEGREES;	// Zooming or ducking
 		static Vector plrCone = VECTOR_CONE_1DEGREES;	// Standing, moving around, the default
 		static Vector plrRunCone = VECTOR_CONE_4DEGREES;	// Player sprint accuracy
@@ -90,6 +93,8 @@ public:
 			return plrJumpCone;
 		if (pPlayer->m_nButtons & IN_SPEED)
 			return plrRunCone;
+		if (m_iFireMode == FIREMODE_SEMI)
+			return plrSingleCone;
 		if (pPlayer->m_nButtons & IN_DUCK)
 			return plrAccurateCone;
 		if (pPlayer->m_nButtons & IN_ZOOM)

@@ -182,8 +182,8 @@ bool CAI_TacticalServices::TestLateralCover( const Vector &vecCheckStart, const 
 // conceal them from view of pSightEnt
 //-------------------------------------
 
-#define	COVER_CHECKS	5// how many checks are made
-#define COVER_DELTA		48// distance between checks
+#define	COVER_CHECKS	10// how many checks are made (was 5)
+#define COVER_DELTA		48// distance between checks (was 48)
 bool CAI_TacticalServices::FindLateralCover( const Vector &vecThreat, float flMinDist, Vector *pResult )
 {
 	return FindLateralCover( vecThreat, flMinDist, COVER_CHECKS * COVER_DELTA, COVER_CHECKS, pResult );
@@ -573,6 +573,13 @@ int CAI_TacticalServices::FindLosNode(const Vector &vThreatPos, const Vector &vT
 					float flDot = DotProduct( vecEnemyToRef, vecEnemyToNode );
 					
 					if ( RAD2DEG( acos( flDot ) ) < flFlankParam )
+					{
+						skip = true;
+					}
+
+					// Additional check to not accidentally rush the player.
+					Vector vecDist = nodeOrigin - vecFlankRefPos;
+					if (vecDist.Length() < 252)	// 7 Yards
 					{
 						skip = true;
 					}

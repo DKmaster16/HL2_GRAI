@@ -193,7 +193,7 @@ ConVar  ai_debug_squads( "ai_debug_squads", "0" );
 ConVar  ai_debug_loners( "ai_debug_loners", "0" );
 
 // Shoot trajectory
-ConVar	ai_lead_time( "ai_lead_time","0.02" );	//0.0
+ConVar	ai_lead_time( "ai_lead_time","0.0677" );	//0.0
 ConVar	ai_shot_stats( "ai_shot_stats", "0" );
 ConVar	ai_shot_stats_term( "ai_shot_stats_term", "1000" );
 ConVar	ai_shot_bias( "ai_shot_bias", "1.0" );
@@ -1935,7 +1935,7 @@ bool CAI_BaseNPC::QueryHearSound( CSound *pSound )
 		if ( !IsPlayerAlly() )
 			return false;
 	}
-
+	/*
 	if ( pSound->IsSoundType( SOUND_PLAYER ) && GetState() == NPC_STATE_IDLE && !FVisible( pSound->GetSoundReactOrigin() ) )
 	{
 		// NPC's that are IDLE should disregard player movement sounds if they can't see them.
@@ -1945,7 +1945,7 @@ bool CAI_BaseNPC::QueryHearSound( CSound *pSound )
 		// deduce that the sound can not be heard
 		return false;
 	}
-
+	*/
 	// Disregard footsteps from our own class type
 	if ( pSound->IsSoundType( SOUND_COMBAT ) && pSound->SoundChannel() == SOUNDENT_CHANNEL_NPC_FOOTSTEP )
 	{

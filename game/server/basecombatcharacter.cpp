@@ -1531,7 +1531,7 @@ bool CBaseCombatCharacter::BecomeRagdoll( const CTakeDamageInfo &info, const Vec
 	newinfo.SetDamageForce( forceVector );
 
 	// Burning corpses are server-side. Removed: && HL2GameRules()->IsAlyxInDarknessMode()
-	if ( IsOnFire() )
+	if (IsOnFire() && HL2GameRules()->IsAlyxInDarknessMode())
 	{
 		CBaseEntity *pRagdoll = CreateServerRagdoll( this, m_nForceBone, newinfo, COLLISION_GROUP_DEBRIS );
 		FixupBurningServerRagdoll( pRagdoll );

@@ -17,6 +17,7 @@
 #include "game.h"
 #include "vstdlib/random.h"
 #include "gamestats.h"
+//#include "particle_parse.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -51,9 +52,19 @@ public:
 	void	ItemPreFrame( void );
 	void	ItemBusyFrame( void );
 	void	PrimaryAttack( void );
+	void	SecondaryAttack( void );
 	void	AddViewKick( void );
 	void	DryFire( void );
 	void	Operator_HandleAnimEvent( animevent_t *pEvent, CBaseCombatCharacter *pOperator );
+
+	void			BurstFireRemaining(void);
+	virtual float	GetBurstCycleRate(void);
+	virtual float	GetFireRate(void);
+	virtual bool	Deploy(void);
+	virtual int		GetBurstSize(void) { return 3; };
+	float	m_fNextBurstShot;			// time to shoot the next bullet in burst fire mode
+
+	void	SelectFire(void);
 
 	void	UpdatePenaltyTime( void );
 
@@ -96,8 +107,7 @@ public:
 		}
 		else
 		{
-			// Old value
-			plrCone = VECTOR_CONE_5DEGREES;
+			plrCone = VECTOR_CONE_2DEGREES;
 		}
 		CBasePlayer *pPlayer = ToBasePlayer(GetOwnerEntity());
 		if (pPlayer->m_nButtons & IN_SPEED)
@@ -120,11 +130,6 @@ public:
 		return 3; 
 	}
 
-	virtual float GetFireRate( void ) 
-	{
-		return 0.3f; 
-	}
-
 	DECLARE_ACTTABLE();
 
 private:
@@ -132,8 +137,39 @@ private:
 	float	m_flLastAttackTime;
 	float	m_flAccuracyPenalty;
 	int		m_nNumShotsFired;
+
+	protected:
+		int m_iBurstSize;
+		int	m_iFireMode;
 };
 
+float CWeaponPistol::GetFireRate(void)
+{
+	switch (m_iFireMode)
+	{
+	case FIREMODE_SEMI:
+		// must release the trigger before firing again
+		return 9999.9f;
+		break;
+
+	case FIREMODE_3RNDBURST:
+		// the time between rounds fired within a single burst
+		return 0.06f;
+		break;
+
+	default:
+		return 9999.9f;
+		break;
+	}
+}
+
+float CWeaponPistol::GetBurstCycleRate(void)
+{
+	// this is the time it takes to fire an entire 
+	// burst, plus whatever amount of delay we want
+	// to have between bursts.
+	return 0.375f;
+}
 
 IMPLEMENT_SERVERCLASS_ST(CWeaponPistol, DT_WeaponPistol)
 END_SEND_TABLE()
@@ -147,6 +183,8 @@ BEGIN_DATADESC( CWeaponPistol )
 	DEFINE_FIELD( m_flLastAttackTime,		FIELD_TIME ),
 	DEFINE_FIELD( m_flAccuracyPenalty,		FIELD_FLOAT ), //NOTENOTE: This is NOT tracking game time
 	DEFINE_FIELD( m_nNumShotsFired,			FIELD_INTEGER ),
+	DEFINE_FIELD( m_iBurstSize,				FIELD_INTEGER ),
+	DEFINE_FIELD( m_iFireMode,				FIELD_INTEGER ),
 
 END_DATADESC()
 
@@ -184,6 +222,9 @@ CWeaponPistol::CWeaponPistol( void )
 	m_fMinRange2		= 240;
 	m_fMaxRange2		= 1000;
 
+	m_iFireMode = FIREMODE_SEMI;
+	m_fNextBurstShot = 0.0f;
+
 	m_bFiresUnderwater	= true;
 }
 
@@ -192,6 +233,7 @@ CWeaponPistol::CWeaponPistol( void )
 //-----------------------------------------------------------------------------
 void CWeaponPistol::Precache( void )
 {
+//	PrecacheParticleSystem("weapon_muzzle_smoke");
 	BaseClass::Precache();
 }
 
@@ -245,7 +287,7 @@ void CWeaponPistol::DryFire( void )
 //-----------------------------------------------------------------------------
 void CWeaponPistol::PrimaryAttack( void )
 {
-	if ( ( gpGlobals->curtime - m_flLastAttackTime ) > 0.5f )
+	if ( ( gpGlobals->curtime - m_flLastAttackTime ) > 0.4f )
 	{
 		m_nNumShotsFired = 0;
 	}
@@ -255,18 +297,115 @@ void CWeaponPistol::PrimaryAttack( void )
 	}
 
 	m_flLastAttackTime = gpGlobals->curtime;
-	m_flSoonestPrimaryAttack = gpGlobals->curtime + PISTOL_FASTEST_REFIRE_TIME;
 	CSoundEnt::InsertSound( SOUND_COMBAT, GetAbsOrigin(), SOUNDENT_VOLUME_PISTOL, 0.2, GetOwner() );
 
 	CBasePlayer *pOwner = ToBasePlayer( GetOwner() );
 
 	BaseClass::PrimaryAttack();
 
+	switch (m_iFireMode)
+	{
+	case FIREMODE_SEMI:
+		m_flSoonestPrimaryAttack = gpGlobals->curtime + PISTOL_FASTEST_REFIRE_TIME;
+		break;
+
+	case FIREMODE_3RNDBURST:
+		m_iBurstSize = GetBurstSize() - 1;	// We fire first round immediately
+		WeaponSound(SINGLE_NPC);
+		m_flNextPrimaryAttack = 9999.9f;	// Release the trigger before firing next burst
+		m_flNextSecondaryAttack = gpGlobals->curtime + GetBurstCycleRate();
+		m_flSoonestPrimaryAttack = gpGlobals->curtime + GetBurstCycleRate();
+		m_fNextBurstShot = gpGlobals->curtime + GetFireRate();
+		break;
+	}
+
 	// Add an accuracy penalty which can move past our maximum penalty time if we're really spastic
 	m_flAccuracyPenalty += PISTOL_ACCURACY_SHOT_PENALTY_TIME;
 
 	m_iPrimaryAttacks++;
 	gamestats->Event_WeaponFired( pOwner, true, GetClassname() );
+}
+
+//-----------------------------------------------------------------------------
+// Purpose:
+//-----------------------------------------------------------------------------
+void CWeaponPistol::SelectFire(void)
+{
+	// change fire modes.
+
+	switch (m_iFireMode)
+	{
+	case FIREMODE_SEMI:
+		//Msg( "Burst\n" );
+		m_iFireMode = FIREMODE_3RNDBURST;
+		WeaponSound(SPECIAL2);
+		break;
+
+	case FIREMODE_3RNDBURST:
+		//Msg( "Auto\n" );
+		m_iFireMode = FIREMODE_SEMI;
+		WeaponSound(SPECIAL1);
+		break;
+	}
+
+	m_flNextSecondaryAttack = gpGlobals->curtime + 0.375;
+}
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+void CWeaponPistol::SecondaryAttack(void)
+{
+	if (m_flNextSecondaryAttack <= gpGlobals->curtime)
+		SelectFire();
+	return;
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+void CWeaponPistol::BurstFireRemaining(void)
+{
+	CBasePlayer *pPlayer = ToBasePlayer(GetOwner());
+
+		if (!pPlayer || m_iClip1 <= 0)
+		{
+			m_iClip1 = 0;
+			m_iBurstSize = 0;
+			m_fNextBurstShot = 0.0f;
+			return;
+		}
+
+		if (m_iBurstSize > 0)
+		{
+			// Fire bullets
+			// Calling Primary Attack ejects casings and does muzzleflash, but doesn't fire a round nor does it produce sound. Why?
+			BaseClass::PrimaryAttack();
+			Vector vecSrc = pPlayer->Weapon_ShootPosition();
+			Vector vecAiming = pPlayer->GetAutoaimVector(AUTOAIM_SCALE_DEFAULT);
+			pPlayer->FireBullets(1, vecSrc, vecAiming, GetBulletSpread(), MAX_TRACE_LENGTH, m_iPrimaryAmmoType, 1);
+//			pPlayer->DoMuzzleFlash();
+			--m_iClip1;
+			--m_iBurstSize;
+			++m_nNumShotsFired;
+			WeaponSound(SINGLE_NPC);
+			m_fNextBurstShot = gpGlobals->curtime + GetFireRate();
+		}
+		else
+		{
+			return;
+		}
+
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+bool CWeaponPistol::Deploy(void)
+{
+	// Forget about any bursts this weapon was firing when holstered
+	m_iBurstSize = 0;
+	m_fNextBurstShot = 0.0f;
+	return BaseClass::Deploy();
 }
 
 //-----------------------------------------------------------------------------
@@ -322,16 +461,29 @@ void CWeaponPistol::ItemPostFrame( void )
 	if ( pOwner == NULL )
 		return;
 
+	if ((pOwner->m_nButtons & IN_ALT1) && (m_flNextSecondaryAttack <= gpGlobals->curtime))
+	{
+		SelectFire();
+	}
+
+	if (m_iFireMode == FIREMODE_3RNDBURST)
+	{
+		if (m_iBurstSize > 0 && gpGlobals->curtime >= m_fNextBurstShot)
+		{
+			BurstFireRemaining();
+		}
+	}
+
 	//Allow a refire as fast as the player can click
-	if ( ( ( pOwner->m_nButtons & IN_ATTACK ) == false ) && ( m_flSoonestPrimaryAttack < gpGlobals->curtime ) )
+	if (((pOwner->m_nButtons & IN_ATTACK) == false) && (m_flSoonestPrimaryAttack < gpGlobals->curtime))
 	{
 		m_flNextPrimaryAttack = gpGlobals->curtime - 0.1f;
 	}
-	else if ( ( pOwner->m_nButtons & IN_ATTACK ) && ( m_flNextPrimaryAttack < gpGlobals->curtime ) && ( m_iClip1 <= 0 ) )
+	else if ((pOwner->m_nButtons & IN_ATTACK) && (m_flNextPrimaryAttack < gpGlobals->curtime) && (m_iClip1 <= 0))
 	{
 		DryFire();
 	}
-	else if ( ( ( pOwner->m_nButtons & IN_ATTACK ) == false ) && ( m_flSoonestPrimaryAttack > gpGlobals->curtime ) )
+	else if (((pOwner->m_nButtons & IN_ATTACK) == false) && (m_flSoonestPrimaryAttack > gpGlobals->curtime) && m_iFireMode == FIREMODE_SEMI)	//&& m_iFireMode == FIREMODE_SEMI
 	{
 		m_flNextPrimaryAttack = (m_flSoonestPrimaryAttack - gpGlobals->curtime);
 	}
@@ -380,7 +532,7 @@ void CWeaponPistol::AddViewKick( void )
 	QAngle	viewPunch;
 	// Increase these values to make recoil comparable to vanilla one, since we have tiny spread
 	viewPunch.x = random->RandomFloat( 0.4f, 0.8f );	// 0.25f, 0.5f
-	viewPunch.y = random->RandomFloat( -.9f, .9f );		// -.6f, .6f
+	viewPunch.y = random->RandomFloat( -.9f, .9f );	// -.6f, .6f
 	viewPunch.z = 0.0f;
 
 	//Add it to the view punch

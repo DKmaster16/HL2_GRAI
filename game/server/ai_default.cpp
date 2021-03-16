@@ -862,9 +862,9 @@ AI_DEFINE_SCHEDULE
 
 	"	Tasks"
 	"		TASK_STOP_MOVING		0"
-	"		TASK_WAIT				1.0"
+	"		TASK_WAIT				2.0"
 	"		TASK_TURN_LEFT			180"
-	"		TASK_WAIT				1.0"
+	"		TASK_WAIT				2.0"
 	"		TASK_TURN_LEFT			180"
 	""
 	"	Interrupts"

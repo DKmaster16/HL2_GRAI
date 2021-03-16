@@ -1022,7 +1022,7 @@ void CBasePlayer::DamageEffect(float flDamage, int fDamageType)
 #define OLD_ARMOR_BONUS  0.4	// Each Point of Armor is work 1/x points of health, 1 armor = 2.5 health
 
 // Bad suit
-#define ARMOR_RATIO	0.2		// Armor Takes 80% of the damage
+#define ARMOR_RATIO	0.17		// Armor Takes 83% of the damage
 #define ARMOR_BONUS	0.5		// 1 armor = 2 health
 
 //---------------------------------------------------------

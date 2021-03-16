@@ -1929,14 +1929,15 @@ int CNPC_Combine::SelectCombatSchedule()
 */
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-#define COMBINE_LARGER_BURST_RANGE	(12.0f * 21.0f) // If an enemy is 21 fee awtay, soldiers fire larger continuous bursts.
+#define COMBINE_LARGER_BURST_RANGE	(12.0f * 21.0f) // If an enemy is 21 feet away, soldiers fire larger continuous bursts.
+#define COMBINE_SINGLE_FIRE_RANGE	(36.0f * 40.0f) // If an enemy is 40 yards away, soldiers fire in single mode.
 void CNPC_Combine::OnUpdateShotRegulator()
 {
 	BaseClass::OnUpdateShotRegulator();
 
 	if (GetEnemy() && HasCondition(COND_CAN_RANGE_ATTACK1))
 	{
-		if (GetAbsOrigin().DistTo(GetEnemy()->GetAbsOrigin()) <= COMBINE_LARGER_BURST_RANGE && !HasShotgun())
+		if (GetAbsOrigin().DistTo(GetEnemy()->GetAbsOrigin()) <= COMBINE_LARGER_BURST_RANGE)
 		{
 			if (!HasShotgun())
 			{
@@ -1945,6 +1946,14 @@ void CNPC_Combine::OnUpdateShotRegulator()
 				GetShotRegulator()->SetBurstShotsRemaining(longBurst);
 			}
 				GetShotRegulator()->SetRestInterval(0.15, 0.25);
+		}
+		else if (GetAbsOrigin().DistTo(GetEnemy()->GetAbsOrigin()) <= COMBINE_SINGLE_FIRE_RANGE && !HasShotgun())
+		{
+			int shortBurst = random->RandomInt(1, 3);
+
+			GetShotRegulator()->SetBurstShotsRemaining(shortBurst);
+			GetShotRegulator()->SetRestInterval(0.5, 0.9);
+			GetShotRegulator()->SetBurstInterval(0.2, 0.4);
 		}
 	}
 }
@@ -3453,7 +3462,7 @@ bool CNPC_Combine::CanAltFireEnemy( bool bUseFreeKnowledge )
 
 	flLength *= tr.fraction;
 	//If the ball can travel 95% of the distance to the player then let the NPC shoot it. 
-	if (tr.fraction >= 0.95 && flLength > 128.0f )
+	if (tr.fraction >= 0.95 && (!tr.m_pEnt || !tr.m_pEnt->IsWorld()) && flLength > 128.0f)	// (!tr.m_pEnt || !tr.m_pEnt->IsWorld()) && Thanks to Mapbase
 	{
 		// Target is valid
 		m_vecAltFireTarget = vecTarget;

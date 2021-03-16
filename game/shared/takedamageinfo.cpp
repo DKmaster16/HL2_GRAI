@@ -299,10 +299,10 @@ void CalculateExplosiveDamageForce( CTakeDamageInfo *info, const Vector &vecDir,
 {
 	info->SetDamagePosition( vecForceOrigin );
 
-	float flClampForce = ImpulseScale( 75, 400 );
+	float flClampForce = ImpulseScale( 75, 100 );
 
-	// Calculate an impulse large enough to push a 75kg man 4 in/sec per point of damage
-	float flForceScale = info->GetBaseDamage() * ImpulseScale( 75, 4 );
+	// Calculate an impulse large enough to push a 75kg man 1 in/sec per point of damage
+	float flForceScale = info->GetBaseDamage() * ImpulseScale( 75, 1 );
 
 	if( flForceScale > flClampForce )
 		flForceScale = flClampForce;

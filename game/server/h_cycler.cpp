@@ -229,6 +229,7 @@ public:
 
 	void PrimaryAttack( void );
 	void SecondaryAttack( void );
+	void SelectFire( void );
 	bool Deploy( void );
 	bool Holster( CBaseCombatWeapon *pSwitchingTo = NULL );
 	string_t m_iszModel;

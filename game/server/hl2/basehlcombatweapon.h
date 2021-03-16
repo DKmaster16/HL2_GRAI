@@ -75,6 +75,8 @@ public:
 	virtual float	GetBurstCycleRate( void );
 	virtual float	GetFireRate( void );
 
+	virtual void	ItemPostFrame(void);
+
 	virtual bool	Deploy( void );
 	virtual void	WeaponSound( WeaponSound_t shoot_type, float soundtime = 0.0f );
 
@@ -86,6 +88,7 @@ public:
 
 	virtual void	PrimaryAttack( void );
 	virtual void	SecondaryAttack( void );
+	virtual void	SelectFire( void );
 
 	virtual int		WeaponRangeAttack1Condition( float flDot, float flDist );
 	virtual int		WeaponRangeAttack2Condition( float flDot, float flDist );
@@ -93,5 +96,7 @@ public:
 protected:
 	int m_iBurstSize;
 	int	m_iFireMode;
+//	float	m_flSoonestPrimaryAttack;
+
 };
 #endif // BASEHLCOMBATWEAPON_H

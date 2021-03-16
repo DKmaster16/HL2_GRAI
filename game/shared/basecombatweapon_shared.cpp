@@ -1711,7 +1711,7 @@ void CBaseCombatWeapon::ItemPostFrame( void )
 			}
 		}
 	}
-	
+
 	if ( !bFired && (pOwner->m_nButtons & IN_ATTACK) && (m_flNextPrimaryAttack <= gpGlobals->curtime))
 	{
 		// Clip empty? Or out of ammo on a no-clip weapon?
