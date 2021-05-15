@@ -55,6 +55,8 @@ public:
 	bool			FVisible( CBaseEntity *pEntity, int traceMask = MASK_BLOCKLOS, CBaseEntity **ppBlocker = NULL );
 	virtual bool	IsCurTaskContinuousMove();
 
+	bool			IsJumpLegal(const Vector &startPos, const Vector &apex, const Vector &endPos) const;
+
 	virtual float	GetJumpGravity() const		{ return 1.8f; }
 
 	virtual Vector  GetCrouchEyeOffset( void );
@@ -121,7 +123,7 @@ public:
 	WeaponProficiency_t CalcWeaponProficiency( CBaseCombatWeapon *pWeapon );
 	bool			HasShotgun();
 	bool			ActiveWeaponIsFullyLoaded();
-	void			OnUpdateShotRegulator();
+//	void			OnUpdateShotRegulator();
 
 	bool			HandleInteraction(int interactionType, void *data, CBaseCombatCharacter *sourceEnt);
 	const char*		GetSquadSlotDebugName( int iSquadSlot );
@@ -207,7 +209,7 @@ private:
 		SCHED_COMBINE_FACE_IDEAL_YAW,
 		SCHED_COMBINE_MOVE_TO_MELEE,
 		SCHED_COMBINE_FLANK_ENEMY,
-		SCHED_COMBINE_SMASH_PROP,
+//		SCHED_COMBINE_SMASH_PROP,
 		NEXT_SCHEDULE,
 	};
 
@@ -227,7 +229,7 @@ private:
 		TASK_COMBINE_SET_STANDING,
 		TASK_COMBINE_BEGIN_FLANK,
 		TASK_COMBINE_ANNOUNCE_FLANK,
-		TASK_RETURN_NORMAL_SPEED,
+//		TASK_RETURN_NORMAL_SPEED,
 		NEXT_TASK
 	};
 
@@ -291,7 +293,7 @@ private:
 	float			m_flNextSuppressCheck;
 	float			m_flNextLostSoundTime;
 	float			m_flAlertPatrolTime;		// When to stop doing alert patrol
-	float			m_flNextAltFireTime;		// Elites only. Next time to begin considering alt-fire attack.
+	float			m_flNextAltFireTime;		// Next time to begin considering alt-fire attack.
 	float			m_flTimeSawEnemyAgain;
 //	float			m_flDangerCheck;
 	float			m_flDangerSignalTime;

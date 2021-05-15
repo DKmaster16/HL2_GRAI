@@ -1136,6 +1136,11 @@ int CAI_PlayerAlly::OnTakeDamage_Alive( const CTakeDamageInfo &info )
 				flDamage = ( GetMaxHealth() * 0.25 );
 				subInfo.SetDamage( flDamage );
 			}
+			if (flDamage > (GetMaxHealth() * 0.1) && flDamage < (GetMaxHealth() * 0.25))
+			{
+				flDamage = (GetMaxHealth() * 0.1);
+				subInfo.SetDamage(flDamage);
+			}
 		}
 	}
 #endif

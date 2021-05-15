@@ -48,6 +48,7 @@ ConVar	sk_antlion_swipe_damage( "sk_antlion_swipe_damage", "0" );
 ConVar	sk_antlion_jump_damage( "sk_antlion_jump_damage", "0" );
 ConVar  sk_antlion_air_attack_dmg( "sk_antlion_air_attack_dmg", "0" );
 ConVar	sk_antlion_357_damage_scale("sk_antlion_357_damage_scale", "2.0");
+ConVar	sk_antlion_buckshot_damage_scale("sk_antlion_buckshot_damage_scale", "1.35");
 
 #ifdef HL2_EPISODIC
 
@@ -2602,7 +2603,11 @@ int CNPC_Antlion::OnTakeDamage_Alive( const CTakeDamageInfo &info )
 	{
 		flScale = sk_antlion_357_damage_scale.GetFloat();
 	}
-
+	else if (info.GetDamageType() & DMG_BUCKSHOT)
+	{
+		flScale = sk_antlion_buckshot_damage_scale.GetFloat();
+	}
+	
 	if (flScale != 0)
 	{
 		float flDamage = info.GetDamage() * flScale;

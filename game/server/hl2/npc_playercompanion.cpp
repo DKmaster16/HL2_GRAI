@@ -510,6 +510,14 @@ void CNPC_PlayerCompanion::GatherConditions()
 	}
 }
 
+bool CNPC_PlayerCompanion::bHighHealth()
+{
+	if ((float)GetHealth() / (float)GetMaxHealth() > 0.75f)
+	{
+		return true;
+	}
+	return false;
+}
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
@@ -747,6 +755,7 @@ int CNPC_PlayerCompanion::SelectSchedule()
 				return schedule;
 		}
 	}
+
 
 	return BaseClass::SelectSchedule();
 }
@@ -1011,15 +1020,15 @@ int CNPC_PlayerCompanion::TranslateSchedule( int scheduleType )
 
 	case SCHED_ESTABLISH_LINE_OF_FIRE:
 	case SCHED_MOVE_TO_WEAPON_RANGE:
-		if ( IsMortar( GetEnemy() ) )
+		if ( IsMortar( GetEnemy() ) || !bHighHealth() )
 			return SCHED_TAKE_COVER_FROM_ENEMY;
 		break;
 
 	case SCHED_CHASE_ENEMY:
-		if ( IsMortar( GetEnemy() ) )
-			return SCHED_TAKE_COVER_FROM_ENEMY;
-		if ( GetEnemy() && FClassnameIs( GetEnemy(), "npc_combinegunship" ) )
+		if (GetEnemy() && FClassnameIs(GetEnemy(), "npc_combinegunship"))
 			return SCHED_ESTABLISH_LINE_OF_FIRE;
+		if ( IsMortar( GetEnemy() ) || !bHighHealth() )
+			return SCHED_TAKE_COVER_FROM_ENEMY;
 		break;
 
 	case SCHED_ESTABLISH_LINE_OF_FIRE_FALLBACK:
@@ -1029,7 +1038,7 @@ int CNPC_PlayerCompanion::TranslateSchedule( int scheduleType )
 		break;
 
 	case SCHED_RANGE_ATTACK1:
-		if ( IsMortar( GetEnemy() ) )
+		if ( IsMortar( GetEnemy() ) || !bHighHealth() )
 			return SCHED_TAKE_COVER_FROM_ENEMY;
 			
 		if ( GetShotRegulator()->IsInRestInterval() )
@@ -2266,10 +2275,23 @@ void CNPC_PlayerCompanion::OnUpdateShotRegulator()
 	{
 		if( GetAbsOrigin().DistTo( GetEnemy()->GetAbsOrigin() ) <= PC_LARGER_BURST_RANGE && !Weapon_OwnsThisType("weapon_shotgun") )
 		{
+			if (hl2_episodic.GetBool())
+			{
 				// Longer burst
 				int longBurst = random->RandomInt(10, 20);
 				GetShotRegulator()->SetBurstShotsRemaining(longBurst);
 				GetShotRegulator()->SetRestInterval(0.1, 0.2);
+			}
+			else
+			{
+				// Longer burst
+				GetShotRegulator()->SetBurstShotsRemaining(GetShotRegulator()->GetBurstShotsRemaining() * 3);
+
+				// Shorter Rest interval
+				float flMinInterval, flMaxInterval;
+				GetShotRegulator()->GetRestInterval(&flMinInterval, &flMaxInterval);
+				GetShotRegulator()->SetRestInterval(flMinInterval * 0.6f, flMaxInterval * 0.6f);
+			}
 		}
 	}
 }
@@ -2336,7 +2358,7 @@ float CNPC_PlayerCompanion::GetHitgroupDamageMultiplier(int iHitGroup, const CTa
 			return 1.0f;
 		}
 	}
-
+	
 	case HITGROUP_STOMACH:
 	{
 		if (info.GetAmmoType() == GetAmmoDef()->Index("Pistol") || info.GetAmmoType() == GetAmmoDef()->Index("AR2") || info.GetDamageType() & DMG_BUCKSHOT)
@@ -2360,9 +2382,9 @@ WeaponProficiency_t CNPC_PlayerCompanion::CalcWeaponProficiency( CBaseCombatWeap
 	}
 	else if (FClassnameIs(pWeapon, "weapon_ar2"))
 	{
-		return WEAPON_PROFICIENCY_GOOD;			// 4/6 AR2
+		return WEAPON_PROFICIENCY_GOOD;			// 2.5/7.5 AR2
 	}
-		return WEAPON_PROFICIENCY_VERY_GOOD;	// 4/6.65 SMG1
+		return WEAPON_PROFICIENCY_VERY_GOOD;	// 3/6 SMG1
 
 	/*
 	float chance = random->RandomInt(0, 100);
@@ -2510,8 +2532,8 @@ void CNPC_PlayerCompanion::SetupCoverSearch( CBaseEntity *pEntity )
 	gm_bFindingCoverFromAllEnemies = false;
 	g_pMultiCoverSearcher = this;
 
-	if ( Classify() == CLASS_PLAYER_ALLY_VITAL || IsInPlayerSquad() )
-	{
+//	if ( Classify() == CLASS_PLAYER_ALLY_VITAL || IsInPlayerSquad() )
+//	{
 		if ( GetEnemy() )
 		{
 			if ( !pEntity || GetEnemies()->NumEnemies() > 1 )
@@ -2546,7 +2568,7 @@ void CNPC_PlayerCompanion::SetupCoverSearch( CBaseEntity *pEntity )
 				}
 			}
 		}
-	}
+//	}
 }
 
 //-----------------------------------------------------------------------------

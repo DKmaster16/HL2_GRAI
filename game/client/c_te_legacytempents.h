@@ -209,6 +209,7 @@ private:
 
 	// 357
 	void					MuzzleFlash_357_Player( ClientEntityHandle_t hEntity, int attachmentIndex );
+	void					MuzzleFlash_357_NPC(ClientEntityHandle_t hEntity, int attachmentIndex);
 
 	// RPG
 	void					MuzzleFlash_RPG_NPC( ClientEntityHandle_t hEntity, int attachmentIndex );

@@ -2981,7 +2981,7 @@ void CNPC_CombineDropship::MakeTracer( const Vector &vecTracerSrc, const trace_t
 
 			flTracerDist = VectorNormalize( vecDir );
 
-			UTIL_Tracer( vecTracerSrc, tr.endpos, 0, TRACER_DONT_USE_ATTACHMENT, 16000, true, "GunshipTracer" );
+			UTIL_Tracer( vecTracerSrc, tr.endpos, 0, TRACER_DONT_USE_ATTACHMENT, 9000, true, "GunshipTracer" );
 		}
 		break;
 

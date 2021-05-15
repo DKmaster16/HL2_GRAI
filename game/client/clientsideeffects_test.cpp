@@ -305,6 +305,10 @@ void FX_Tracer( Vector& start, Vector& end, int velocity, bool makeWhiz )
 		float length = random->RandomFloat( 64.0f, 128.0f );
 		float life = ( dist + length ) / velocity;	//NOTENOTE: We want the tail to finish its run as well
 		
+//		if (life >= 0.05f)
+//		{
+//			life = 0.05f;
+//		}
 		//Add it
 		FX_AddDiscreetLine( start, dir, velocity, length, dist, random->RandomFloat( 0.75f, 0.9f ), life, "effects/spark" );
 	}

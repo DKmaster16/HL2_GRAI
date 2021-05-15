@@ -97,7 +97,7 @@ bool CAI_Pathfinder::UseStrongOptimizations()
 		return false;
 	}
 #endif//HL2_DLL
-	return false;	// was true for all NPC, now we have better CPUs so stop optimizing (EXPERIMENTAL)
+	return false;	// was true for all NPC, now we have better CPUs so stop optimizing 
 }
 
 //-----------------------------------------------------------------------------

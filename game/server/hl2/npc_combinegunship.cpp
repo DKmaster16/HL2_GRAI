@@ -119,7 +119,7 @@ Wedge's notes:
 
 #define	GUNSHIP_MIN_CHASE_DIST_DIFF	128.0f	// Distance threshold used to determine when a target has moved enough to update our navigation to it
 
-#define	MIN_GROUND_ATTACK_DIST			500.0f // Minimum distance a target has to be for the gunship to consider using the ground attack weapon
+#define	MIN_GROUND_ATTACK_DIST			350.0f // Minimum distance a target has to be for the gunship to consider using the ground attack weapon
 #define	MIN_GROUND_ATTACK_HEIGHT_DIFF	128.0f // Target's position and hit position must be within this threshold vertically
 
 #define GUNSHIP_WASH_ALTITUDE		1024.0f
@@ -874,9 +874,9 @@ bool CNPC_CombineGunship::CheckGroundAttack( void )
 		return false;
 	Vector	predPos, predDest;
 	
-	// Find where the enemy is most likely to be in two seconds
-	UTIL_PredictedPosition( GetEnemy(), 1.0f, &predPos );
-	UTIL_PredictedPosition( this, 1.0f, &predDest );
+	// Find where the enemy is most likely to be in 1 1/2 seconds
+	UTIL_PredictedPosition( GetEnemy(), 0.75f, &predPos );
+	UTIL_PredictedPosition( this, 0.75f, &predDest );
 
 	Vector	predGap = ( predDest - predPos );
 	predGap.z = 0;
@@ -924,7 +924,7 @@ void CNPC_CombineGunship::StartGroundAttack( void )
 {
 	// Mark us as attacking
 	m_bIsGroundAttacking = true;
-	m_flGroundAttackTime = gpGlobals->curtime + 3.0f;
+	m_flGroundAttackTime = gpGlobals->curtime + 1.5f;	// 3.00f
 
 	// Setup the attack effects
 	Vector	vecShootPos;
@@ -955,7 +955,7 @@ void CNPC_CombineGunship::StartGroundAttack( void )
 	}
 }
 
-#define GUNSHIP_BELLY_BLAST_RADIUS 350.0f
+#define GUNSHIP_BELLY_BLAST_RADIUS 400.0f
 #define BELLY_BLAST_MAX_PUNCH 5
 
 //-----------------------------------------------------------------------------
@@ -1018,12 +1018,12 @@ void CNPC_CombineGunship::ManageWarningBeam( void )
 				trace_t tr2;
 				UTIL_TraceLine( vEndPunch, vEndPunch - vDir * 2, MASK_SOLID, &filter, &tr2 );
 
-				if ( (m_flGroundAttackTime - gpGlobals->curtime) <= 2.0f )
+				if ( (m_flGroundAttackTime - gpGlobals->curtime) <= 1.0f )
 				{
 					g_pEffects->EnergySplash( tr2.endpos + vDir * 8, tr2.plane.normal, true );
 				}
 
-				g_pEffects->Sparks( tr2.endpos, 3.0f - (m_flGroundAttackTime-gpGlobals->curtime), 3.5f - (m_flGroundAttackTime-gpGlobals->curtime), &tr2.plane.normal );
+				g_pEffects->Sparks( tr2.endpos, 1.5f - (m_flGroundAttackTime-gpGlobals->curtime), 1.75f - (m_flGroundAttackTime-gpGlobals->curtime), &tr2.plane.normal );
 
 			}
 		}
@@ -2830,7 +2830,7 @@ void CNPC_CombineGunship::MakeTracer( const Vector &vecTracerSrc, const trace_t 
 
 			flTracerDist = VectorNormalize( vecDir );
 
-			UTIL_Tracer( vecTracerSrc, tr.endpos, 0, TRACER_DONT_USE_ATTACHMENT, 8000, true, "GunshipTracer" );
+			UTIL_Tracer( vecTracerSrc, tr.endpos, 0, TRACER_DONT_USE_ATTACHMENT, 9000, true, "GunshipTracer" );
 		}
 		break;
 
@@ -3049,7 +3049,7 @@ void CNPC_CombineGunship::StartCannonBurst( int iBurstSize )
 	{
 		// Follow mode
 		Vector	enemyPos;
-		UTIL_PredictedPosition( GetEnemy(), 2.0f, &enemyPos );
+		UTIL_PredictedPosition( GetEnemy(), 1.0f, &enemyPos );
 
 		QAngle offsetAngles;
 		Vector offsetDir = ( WorldSpaceCenter() - enemyPos );

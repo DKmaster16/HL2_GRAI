@@ -8,7 +8,7 @@
 #include "cbase.h"
 
 #include "ai_behavior_lead.h"
-
+#include "ai_memory.h"
 #include "ai_goalentity.h"
 #include "ai_navigator.h"
 #include "ai_speech.h"
@@ -660,8 +660,14 @@ int CAI_LeadBehavior::TranslateSchedule( int scheduleType )
 	switch( scheduleType )
 	{
 	case SCHED_LEAD_PAUSE:
-		if( bInCombat )
+		if (bInCombat)
+		{
+//			if (GetEnemies()->NumEnemies() > 1)
+//			{
+//				return SCHED_TAKE_COVER_FROM_ENEMY;
+//			}
 			return SCHED_LEAD_PAUSE_COMBAT;
+		}
 		break;
 	}
 	return BaseClass::TranslateSchedule( scheduleType );

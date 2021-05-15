@@ -107,11 +107,11 @@ ConVar hunter_cheap_explosions( "hunter_cheap_explosions", "1" );
 // Damage received
 ConVar sk_hunter_357_damage_scale("sk_hunter_357_damage_scale", "1.0");
 ConVar sk_hunter_bullet_damage_scale( "sk_hunter_bullet_damage_scale", "0.6" );
-ConVar sk_hunter_charge_damage_scale( "sk_hunter_charge_damage_scale", "2.0" );
+ConVar sk_hunter_charge_damage_scale( "sk_hunter_charge_damage_scale", "1.2" );
 ConVar sk_hunter_buckshot_damage_scale( "sk_hunter_buckshot_damage_scale", "0.5" );
 ConVar sk_hunter_vehicle_damage_scale( "sk_hunter_vehicle_damage_scale", "2.2" );
 ConVar sk_hunter_dmg_from_striderbuster( "sk_hunter_dmg_from_striderbuster", "150" );
-ConVar sk_hunter_citizen_damage_scale( "sk_hunter_citizen_damage_scale", "0.3" );
+ConVar sk_hunter_citizen_damage_scale( "sk_hunter_citizen_damage_scale", "0.6" );
 
 ConVar hunter_allow_dissolve( "hunter_allow_dissolve", "1" );
 ConVar hunter_random_expressions( "hunter_random_expressions", "0" );
@@ -122,7 +122,7 @@ ConVar hunter_melee_delay( "hunter_melee_delay", "2.0" );
 
 // Bullrush charge.
 ConVar hunter_charge( "hunter_charge", "1" );
-ConVar hunter_charge_min_delay( "hunter_charge_min_delay", "10.0" );
+ConVar hunter_charge_min_delay( "hunter_charge_min_delay", "6.0" );
 ConVar hunter_charge_pct( "hunter_charge_pct", "25" );
 ConVar hunter_charge_test( "hunter_charge_test", "0" );
 
@@ -151,12 +151,12 @@ ConVar hunter_hate_thrown_striderbusters_tolerance( "hunter_hate_thrown_striderb
 ConVar hunter_seek_thrown_striderbusters_tolerance( "hunter_seek_thrown_striderbusters_tolerance", "400.0" );
 ConVar hunter_retreat_striderbusters( "hunter_retreat_striderbusters", "1", FCVAR_NONE, "If true, the hunter will retreat when a buster is glued to him." );
 
-ConVar hunter_allow_nav_jump( "hunter_allow_nav_jump", "0" );
+ConVar hunter_allow_nav_jump( "hunter_allow_nav_jump", "1" );
 ConVar g_debug_hunter_charge( "g_debug_hunter_charge", "0" );
 
 ConVar hunter_stand_still( "hunter_stand_still", "0" ); // used for debugging, keeps them rooted in place
 
-ConVar hunter_siege_frequency( "hunter_siege_frequency", "12" );
+ConVar hunter_siege_frequency( "hunter_siege_frequency", "6" );
 
 #define HUNTER_FOV_DOT					0.0		// 180 degree field of view
 #define HUNTER_CHARGE_MIN				256
@@ -3005,11 +3005,11 @@ int CNPC_Hunter::SelectSchedule()
 				{
 					if ( g_Hunters[i] != this )
 					{
-						g_Hunters[i]->m_RundownDelay.Set( 3 );
+						g_Hunters[i]->m_RundownDelay.Set( 2 );
 						g_Hunters[i]->m_IgnoreVehicleTimer.Force();
 					}
 				}
-				m_IgnoreVehicleTimer.Set( hunter_dodge_warning.GetFloat() * 4 );
+				m_IgnoreVehicleTimer.Set( hunter_dodge_warning.GetFloat() * 3 );
 				if ( hunter_dodge_debug.GetBool() )
 				{
 					Msg( "Hunter %d rundown\n", entindex() );
@@ -3044,7 +3044,7 @@ int CNPC_Hunter::SelectSchedule()
 				}
 				for ( int i = 0; i < g_Hunters.Count(); i++ )
 				{
-					g_Hunters[i]->m_RundownDelay.Set( 4 );
+					g_Hunters[i]->m_RundownDelay.Set( 2 );
 					g_Hunters[i]->m_IgnoreVehicleTimer.Force();
 				}
 				if ( GetSquad() )
@@ -3438,16 +3438,20 @@ void CNPC_Hunter::StartTask( const Task_t *pTask )
 
 				// Decide how many shots to fire.
 				int nShots = hunter_flechette_volley_size.GetInt();
-				if ( g_pGameRules->IsSkillLevel( SKILL_EASY ) )
+				if ( g_pGameRules->IsSkillLevel( SKILL_HARD ) )
 				{
-					nShots--;
+					nShots++;
 				}
 
 				// Decide when to fire the first shot.
 				float initialDelay = hunter_first_flechette_delay.GetFloat();
+				if (g_pGameRules->IsSkillLevel(SKILL_HARD))
+				{
+					initialDelay *= 0.6;
+				}
 				if ( bIsBuster )
 				{
-					initialDelay = 0; //*= 0.5;
+					initialDelay *= 0.5;
 				}
 
 				BeginVolley( nShots, gpGlobals->curtime + initialDelay );
@@ -3728,7 +3732,7 @@ void CNPC_Hunter::RunTask( const Task_t *pTask )
 				if ( IsActivityFinished() )
 				{
 					m_flNextChargeTime = gpGlobals->curtime + hunter_charge_min_delay.GetFloat() + random->RandomFloat( 0, 2.5 ) + random->RandomFloat( 0, 2.5 );
-					float delayMultiplier = ( g_pGameRules->IsSkillLevel( SKILL_EASY ) ) ? 2.0 : 1.0;	// charge time depends on difficulty (1.5 on easy and 1.0 scale OLD)
+					float delayMultiplier = ( g_pGameRules->IsSkillLevel( SKILL_HARD ) ) ? 0.75 : 1.0;	// charge time depends on difficulty
 					float groupDelay = gpGlobals->curtime +  ( 2.0  + random->RandomFloat( 0, 2 ) ) * delayMultiplier;
 					for ( int i = 0; i < g_Hunters.Count(); i++ )
 					{
@@ -5997,7 +6001,7 @@ int CNPC_Hunter::CountRangedAttackers()
 //-----------------------------------------------------------------------------
 void CNPC_Hunter::DelayRangedAttackers( float minDelay, float maxDelay, bool bForced )
 {
-	float delayMultiplier = ( g_pGameRules->IsSkillLevel( SKILL_EASY ) ) ? 1.5 : 1.0;	// range attacks are delayed on easy (1.25 scale OLD)
+	float delayMultiplier = ( g_pGameRules->IsSkillLevel( SKILL_HARD ) ) ? 0.75 : 1.0;	// range attacks are delayed on easy
 	if ( !m_bEnableSquadShootDelay && !bForced )
 	{
 		m_flNextRangeAttack2Time = gpGlobals->curtime + random->RandomFloat( minDelay, maxDelay ) * delayMultiplier;

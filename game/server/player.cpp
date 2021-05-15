@@ -182,6 +182,18 @@ ConVar	sk_player_chest( "sk_player_chest","1" );
 ConVar	sk_player_stomach( "sk_player_stomach","1" );
 ConVar	sk_player_arm( "sk_player_arm","1" );
 ConVar	sk_player_leg( "sk_player_leg","1" );
+ConVar	sk_player_bod_health("sk_player_bod_health", "20");
+ConVar	sk_player_bod_scale("sk_player_bod_scale", "0.5");
+ConVar	sk_armor_ratio("sk_armor_ratio", "0.1");
+ConVar	sk_armor_bonus("sk_armor_bonus", "0.4");
+ConVar	sk_armor_ratio_diabolical("sk_armor_ratio_diabolical", "0.17");
+ConVar	sk_armor_bonus_diabolical("sk_armor_bonus_diabolical", "0.5");
+ConVar	sk_armor_ratio_blast_scale("sk_armor_ratio_blast_scale", "1.0");
+ConVar	sk_armor_bonus_blast_scale("sk_armor_bonus_blast_scale", "1.667");
+ConVar	sk_armor_ratio_slash_scale("sk_armor_ratio_slash_scale", "2.0");
+ConVar	sk_armor_bonus_slash_scale("sk_armor_bonus_slash_scale", "1.0");
+ConVar	sk_armor_ratio_club_scale("sk_armor_ratio_club_scale", "2.5");
+ConVar	sk_armor_bonus_club_scale("sk_armor_bonus_club_scale", "1.0");
 
 //ConVar	player_usercommand_timeout( "player_usercommand_timeout", "10", 0, "After this many seconds without a usercommand from a player, the client is kicked." );
 #ifdef _DEBUG
@@ -945,6 +957,12 @@ void CBasePlayer::TraceAttack( const CTakeDamageInfo &inputInfo, const Vector &v
 			break;
 		}
 
+		// Last health points are sturdier. Keep player at low health for longer to engage him more!
+		if (m_iHealth <= sk_player_bod_health.GetFloat())
+		{
+			info.ScaleDamage(sk_player_bod_scale.GetFloat());
+		}
+
 #ifdef HL2_EPISODIC
 		// If this damage type makes us bleed, then do so
 		bool bShouldBleed = !g_pGameRules->Damage_ShouldNotBleed( info.GetDamageType() );
@@ -1017,13 +1035,14 @@ void CBasePlayer::DamageEffect(float flDamage, int fDamageType)
 	etc are implemented with subsequent calls to OnTakeDamage using DMG_GENERIC.
 */
 
+
 // Good suit
-#define OLD_ARMOR_RATIO	 0.1	// Armor Takes 90% of the damage
-#define OLD_ARMOR_BONUS  0.4	// Each Point of Armor is work 1/x points of health, 1 armor = 2.5 health
+#define ARMOR_RATIO	 sk_armor_ratio.GetFloat()	// Armor Takes 90% of the damage
+#define ARMOR_BONUS  sk_armor_bonus.GetFloat()	// Each Point of Armor is work 1/x points of health, 1 armor = 2.5 health
 
 // Bad suit
-#define ARMOR_RATIO	0.17		// Armor Takes 83% of the damage
-#define ARMOR_BONUS	0.5		// 1 armor = 2 health
+#define ARMOR_RATIO_DIABOLICAL	sk_armor_ratio_diabolical.GetFloat()	// Armor Takes 83% of the damage
+#define ARMOR_BONUS_DIABOLICAL	sk_armor_bonus_diabolical.GetFloat()		// 1 armor = 2 health
 
 //---------------------------------------------------------
 //---------------------------------------------------------
@@ -1102,19 +1121,23 @@ int CBasePlayer::OnTakeDamage( const CTakeDamageInfo &inputInfo )
 	if (g_pGameRules->IsSkillLevel(SKILL_HARD))
 	{
 		// Diabolical armor at the Half-Life 1 level
-		flBonus = ARMOR_BONUS;	// 1 Armor = 2 Health
-		flRatio = ARMOR_RATIO;	// Absorbs 80% of the damage, potential health in the Citadel = 500
+		flBonus = ARMOR_BONUS_DIABOLICAL;	// 1 Armor = 2 Health
+		flRatio = ARMOR_RATIO_DIABOLICAL;	// Absorbs 83% of the damage, potential health in the Citadel = 500
 	}
 	else 
 	{
 		// Normal and Hard armor a bit better than Diabolical
-		flBonus = OLD_ARMOR_BONUS;	// 1 Armor = 2.5 Health
-		flRatio = OLD_ARMOR_RATIO;	// Absorbs 90% of the damage,potential health in the Citadel = 600
+		flBonus = ARMOR_BONUS;	// 1 Armor = 2.5 Health
+		flRatio = ARMOR_RATIO;	// Absorbs 90% of the damage,potential health in the Citadel = 600
 	}
 
+	// NOTE: Numbers might have been changed
 	// blasts damage armor more, except for diabolical, raw damage is already too high, while armor absorbs less damage at the same time.
-	if ((info.GetDamageType() & DMG_BLAST))
+	if (bitsDamage & DMG_BLAST)
 	{
+		flBonus *= sk_armor_bonus_blast_scale.GetFloat();
+		flRatio *= sk_armor_ratio_blast_scale.GetFloat();
+		/**
 		if (g_pGameRules->IsSkillLevel(SKILL_EASY))
 		{
 			// Armor takes 2.22 times less damage from explotions compared to diabolical. Bring it up to
@@ -1124,9 +1147,21 @@ int CBasePlayer::OnTakeDamage( const CTakeDamageInfo &inputInfo )
 		else if (g_pGameRules->IsSkillLevel(SKILL_MEDIUM))
 		{
 			// Armor takes 1.67 times less damage from explotions compared to diabolical. Do the same drill
-			flBonus *= 1.5;
+			flBonus *= 1.33;
 		}
-			// At the end, blasts deal same armor damage to armor on Normal and Hard, Diabolical damage is still a bit higher
+		*/	// At the end, blasts deal same armor damage to armor on Normal and Hard, Diabolical damage is still a bit higher
+	}
+
+	if (bitsDamage & DMG_SLASH)
+	{
+		flBonus *= sk_armor_bonus_slash_scale.GetFloat();
+		flRatio *= sk_armor_ratio_slash_scale.GetFloat();
+	}
+
+	if (bitsDamage & DMG_CLUB)
+	{
+		flBonus *= sk_armor_bonus_club_scale.GetFloat();
+		flRatio *= sk_armor_ratio_club_scale.GetFloat();
 	}
 
 	// Already dead
@@ -1359,14 +1394,16 @@ int CBasePlayer::OnTakeDamage( const CTakeDamageInfo &inputInfo )
 		}
 	}
 
-	float flPunch = -2;
+	float flPunch = -0.5;
 
-	if( hl2_episodic.GetBool() && info.GetAttacker() && !FInViewCone( info.GetAttacker() ) )
+//	if( info.GetAttacker() && !FInViewCone( info.GetAttacker() ) )	//hl2_episodic.GetBool() &&
 	{
-		if( info.GetDamage() > 10.0f )
-			flPunch = -10;
+		if (info.GetDamage() > 25.0f)
+			flPunch = RandomFloat(-6, -10 );
+		else if( info.GetDamage() > 8.0f )
+			flPunch = RandomFloat( -0.75, -1.25 );
 		else
-			flPunch = RandomFloat( -5, -7 );
+			flPunch = RandomFloat( -0.3, -0.5 );
 	}
 
 	m_Local.m_vecPunchAngle.SetX( flPunch );

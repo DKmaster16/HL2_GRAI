@@ -538,11 +538,12 @@ enum
 	BLOOD_COLOR_GREEN,
 	BLOOD_COLOR_MECH,
 
-#if defined( HL2_EPISODIC )
+//#if defined( HL2_EPISODIC )
 	BLOOD_COLOR_ANTLION,		// FIXME: Move to Base HL2
 	BLOOD_COLOR_ZOMBIE,			// FIXME: Move to Base HL2
 	BLOOD_COLOR_ANTLION_WORKER,
-#endif // HL2_EPISODIC
+	BLOOD_COLOR_COMBINE,
+//#endif // HL2_EPISODIC
 };
 
 //-----------------------------------------------------------------------------
@@ -687,10 +688,11 @@ struct FireBulletsInfo_t
 		m_vecSrc.Init( VEC_T_NAN, VEC_T_NAN, VEC_T_NAN );
 		m_vecDirShooting.Init( VEC_T_NAN, VEC_T_NAN, VEC_T_NAN );
 #endif
+		m_flLatency = 0.0f;
 		m_bPrimaryAttack = true;
 	}
 
-	FireBulletsInfo_t( int nShots, const Vector &vecSrc, const Vector &vecDir, const Vector &vecSpread, float flDistance, int nAmmoType, bool bPrimaryAttack = true )
+	FireBulletsInfo_t(int nShots, const Vector &vecSrc, const Vector &vecDir, const Vector &vecSpread, float flDistance, int nAmmoType, bool bPrimaryAttack = true)
 	{
 		m_iShots = nShots;
 		m_vecSrc = vecSrc;
@@ -706,6 +708,7 @@ struct FireBulletsInfo_t
 		m_pAdditionalIgnoreEnt = NULL;
 		m_flDamageForceScale = 1.0f;
 		m_bPrimaryAttack = bPrimaryAttack;
+		m_flLatency = 0.0f;
 	}
 
 	int m_iShots;
@@ -715,15 +718,15 @@ struct FireBulletsInfo_t
 	float m_flDistance;
 	int m_iAmmoType;
 	int m_iTracerFreq;
-	float m_flDamage;
-	int m_iPlayerDamage;	// Damage to be used instead of m_flDamage if we hit a player
+	int m_flDamage;
+	int m_iPlayerDamage;	// Damage to be used instead of m_iDamage if we hit a player
 	int m_nFlags;			// See FireBulletsFlags_t
 	float m_flDamageForceScale;
+	float m_flLatency;
 	CBaseEntity *m_pAttacker;
 	CBaseEntity *m_pAdditionalIgnoreEnt;
 	bool m_bPrimaryAttack;
 };
-
 //-----------------------------------------------------------------------------
 // Purpose: Data for making the MOVETYPE_STEP entities appear to simulate every frame
 //  We precompute the simulation and then meter it out each tick during networking of the 

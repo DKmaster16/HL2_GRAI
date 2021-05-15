@@ -589,7 +589,7 @@ void CNPC_Monk::GatherConditions()
 		pSightEnt = GetSenses()->GetNextSeenEntity( &iter );
 	}
 
-	if( m_iDangerousZombies >= 3 || (GetEnemy() && GetHealth() < 40) )
+	if( m_iDangerousZombies >= 3 || (GetEnemy() && GetHealth() < 60) )
 	{
 		// I see many zombies, or I'm quite injured.
 		SpeakIfAllowed( TLK_HELP_ME );

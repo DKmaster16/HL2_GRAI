@@ -47,7 +47,9 @@ public:
 
 	int		GetMinBurst( void ) { return 2; }	// was 2
 	int		GetMaxBurst( void ) { return 4; }	// was 5
-	float	GetFireRate( void ) { return 0.1f; }
+	float	GetMinRestTime( void ) { return 0.4; }
+	float	GetMaxRestTime( void ) { return 1.0; }
+	float	GetFireRate(void);
 
 	bool	CanHolster( void );
 	bool	Reload( void );
@@ -61,24 +63,31 @@ public:
 	virtual const Vector& GetBulletSpread( void )
 	{
 		// Define "spread" parameters based on the "owner" and what they are doing
-		static Vector plrSingleCone = VECTOR_CONE_PRECALCULATED;	// Single Fire
+		static Vector plrSingleCone = VECTOR_CONE_0125DEGREES;	// Single Fire
 		static Vector plrAccurateCone = VECTOR_CONE_05DEGREES;	// Zooming or ducking
 		static Vector plrCone = VECTOR_CONE_1DEGREES;	// Standing, moving around, the default
 		static Vector plrRunCone = VECTOR_CONE_4DEGREES;	// Player sprint accuracy
 		static Vector plrJumpCone = VECTOR_CONE_15DEGREES;	// Player jump/midair accuracy
-		static Vector npcCone = VECTOR_CONE_4DEGREES;	// NPC cone when standing still
-		static Vector npcMoveCone = VECTOR_CONE_6DEGREES;	// NPC cone when moving
-		static Vector vitalAllyCone = VECTOR_CONE_1DEGREES;	// Vital ally cone (Narney)
+		static Vector npcCone = VECTOR_CONE_1DEGREES;	// NPC cone when standing still
+		static Vector npcMoveCone = VECTOR_CONE_3DEGREES;	// NPC cone when moving
+		static Vector npcConeMidAir = VECTOR_CONE_4DEGREES;	// NPC cone when rappeling
+		static Vector vitalAllyCone = VECTOR_CONE_05DEGREES;	// Vital ally cone (Barney)
+
 
 		if (GetOwner() && GetOwner()->IsNPC())
 		{
-			if (GetOwner() && (GetOwner()->Classify() == CLASS_PLAYER_ALLY_VITAL))	
+			/*if (GetOwner() && (GetOwner()->Classify() == CLASS_PLAYER_ALLY_VITAL))	
 			{
 				return vitalAllyCone;
 			}
-			else if (GetOwner()->IsMoving())
+			else */
+			if (GetOwner()->IsMoving())
 			{
 				return npcMoveCone;
+			}
+			else if (GetOwner()->GetGroundEntity() == nullptr)
+			{
+				return npcConeMidAir;
 			}
 			else
 			{
@@ -110,7 +119,7 @@ protected:
 	float					m_flDelayedFire;
 	bool					m_bShotDelayed;
 	int						m_nVentPose;
-	
+
 	DECLARE_ACTTABLE();
 	DECLARE_DATADESC();
 };

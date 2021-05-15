@@ -109,7 +109,7 @@ IMPLEMENT_ACTTABLE(CWeaponAR2);
 CWeaponAR2::CWeaponAR2( )
 {
 	m_fMinRange1	= 65;
-	m_fMaxRange1	= 3600;	// OLD: 2048
+	m_fMaxRange1	= 4096;	// OLD: 2048
 
 	m_fMinRange2	= 128;
 	m_fMaxRange2	= 1024;
@@ -128,6 +128,24 @@ void CWeaponAR2::Precache( void )
 
 	UTIL_PrecacheOther( "prop_combine_ball" );
 	UTIL_PrecacheOther( "env_entity_dissolver" );
+}
+
+float CWeaponAR2::GetFireRate(void)
+{
+	switch (m_iFireMode)
+	{
+	case FIREMODE_SEMI:
+		return 0.12f;
+		break;
+
+	case FIREMODE_FULLAUTO:
+		return 0.1f;
+		break;
+
+	default:
+		return 0.1f;
+		break;
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -499,9 +517,9 @@ void CWeaponAR2::Operator_HandleAnimEvent( animevent_t *pEvent, CBaseCombatChara
 //-----------------------------------------------------------------------------
 void CWeaponAR2::AddViewKick( void )
 {
-	#define	EASY_DAMPEN			0.67f	//0.75
-	#define	MAX_VERTICAL_KICK	12.0f	//Degrees Self explanatory (was 8)
-	#define	SLIDE_LIMIT			3.0f	//How long does it take for recoil to fully kick in (time in seconds)
+	#define	EASY_DAMPEN			0.75f	//How much easier the recoil is on easy
+	#define	MAX_VERTICAL_KICK	8.33f	//Degrees
+	#define	SLIDE_LIMIT			2.70f	//How long does it take for recoil to fully kick in (time in seconds)
 	
 	//Get the view kick
 	CBasePlayer *pPlayer = ToBasePlayer( GetOwner() );
@@ -528,11 +546,11 @@ const WeaponProficiencyInfo_t *CWeaponAR2::GetProficiencyValues()
 {
 	static WeaponProficiencyInfo_t proficiencyTable[] =
 	{
-		{ 2.00,		0.75	},	//poor 6/9 nice.
-		{ 1.25,		0.75	},	//average 5/7.5
-		{ 1.00,		0.85	},	//good 4/6
-		{ 0.75,		0.75	},	//very good 3/4.5
-		{ 1.00,		1.0		},	//perfect 1 player
+		{ 3.50,		0.55	},	//poor 3.5/10.5
+		{ 3.00,		0.65	},	//average 3/9
+		{ 2.50,		0.75	},	//good 2.5/7.5
+		{ 2.00,		0.75	},	//very good 2/6
+		{ 1.00,		1.0		},	//perfect 1/3
 	};
 
 	COMPILE_TIME_ASSERT( ARRAYSIZE(proficiencyTable) == WEAPON_PROFICIENCY_PERFECT + 1);

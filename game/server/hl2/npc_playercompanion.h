@@ -149,6 +149,7 @@ public:
 	Activity		NPC_TranslateActivity(Activity eNewActivity);
 	void 			HandleAnimEvent(animevent_t *pEvent);
 	bool			HandleInteraction(int interactionType, void *data, CBaseCombatCharacter* sourceEnt);
+	bool			bHighHealth();
 
 	int				GetSoundInterests();
 

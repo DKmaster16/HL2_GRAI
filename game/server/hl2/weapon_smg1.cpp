@@ -60,8 +60,9 @@ public:
 		static Vector plrCone = VECTOR_CONE_3DEGREES;		// Standing, moving around, the default
 		static Vector plrRunCone = VECTOR_CONE_6DEGREES;	// Player sprint accuracy
 		static Vector plrJumpCone = VECTOR_CONE_15DEGREES;	// Player jump/midair accuracy
-		static Vector npcCone = VECTOR_CONE_3DEGREES;		// NPC cone when standing still
-		static Vector npcMoveCone = VECTOR_CONE_5DEGREES;	// NPC cone when moving
+		static Vector npcCone = VECTOR_CONE_2DEGREES;		// NPC cone when standing still
+		static Vector npcMoveCone = VECTOR_CONE_4DEGREES;	// NPC cone when moving
+		static Vector npcConeMidAir = VECTOR_CONE_4DEGREES;	// NPC cone when rappeling
 
 		if (GetOwner() && GetOwner()->IsNPC())
 		{
@@ -241,7 +242,7 @@ void CWeaponSMG1::FireNPCPrimaryAttack( CBaseCombatCharacter *pOperator, Vector 
 
 	CSoundEnt::InsertSound( SOUND_COMBAT|SOUND_CONTEXT_GUNFIRE, pOperator->GetAbsOrigin(), SOUNDENT_VOLUME_MACHINEGUN, 0.2, pOperator, SOUNDENT_CHANNEL_WEAPON, pOperator->GetEnemy() );
 	pOperator->FireBullets( 1, vecShootOrigin, vecShootDir, VECTOR_CONE_PRECALCULATED,
-		MAX_TRACE_LENGTH, m_iPrimaryAmmoType, 2, entindex(), 0 );
+		MAX_TRACE_LENGTH, m_iPrimaryAmmoType, 0, entindex(), 2 );
 
 	pOperator->DoMuzzleFlash();
 	m_iClip1 = m_iClip1 - 1;
@@ -411,7 +412,7 @@ void CWeaponSMG1::AddViewKick( void )
 {
 	#define	EASY_DAMPEN			0.5f	//How much easier the kick is on skill 1
 	#define	MAX_VERTICAL_KICK	3.0f	//Degrees Self explanatory
-	#define	SLIDE_LIMIT			2.3f	//How long does it take for recoil to fully kick in (time in seconds)
+	#define	SLIDE_LIMIT			2.0f	//How long does it take for recoil to fully kick in (time in seconds)
 	
 	//Get the view kick
 	CBasePlayer *pPlayer = ToBasePlayer( GetOwner() );
@@ -642,11 +643,11 @@ const WeaponProficiencyInfo_t *CWeaponSMG1::GetProficiencyValues()
 {
 	static WeaponProficiencyInfo_t proficiencyTable[] =
 	{
-		{ 3.00,		1.00	},	//poor	9/15
-		{ 2.50,		0.75	},	//average 7.5/12.5
-		{ 2.00,		0.75	},	//good 6/10
-		{ 1.33,		0.75	},	//very good	4/6.65
-		{ 1.00,		1.0		},	//perfect 1/3/5
+		{ 4.00,		0.75	},	//poor	8/16
+		{ 3.00,		0.65	},	//average 6/12
+		{ 2.00,		0.65	},	//good 4/8
+		{ 1.50,		0.65	},	//very good	3/6
+		{ 1.00,		1.0		},	//perfect 2/4
 	};
 
 	COMPILE_TIME_ASSERT( ARRAYSIZE(proficiencyTable) == WEAPON_PROFICIENCY_PERFECT + 1);

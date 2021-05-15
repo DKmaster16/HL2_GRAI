@@ -34,6 +34,7 @@
 #include "Sprite.h"
 #include "particle_parse.h"
 #include "particle_system.h"
+#include "ammodef.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -92,6 +93,10 @@ ConVar	g_antlionguard_hemorrhage( "g_antlionguard_hemorrhage", "1", FCVAR_NONE, 
 #define	ANTLIONGUARD_CHARGE_MAX			2048
 
 ConVar	sk_antlionguard_health( "sk_antlionguard_health", "0" );
+ConVar	sk_antlion_guard_bullet_damage_scale( "sk_antlion_guard_bullet_damage_scale", "0.3" );
+ConVar	sk_antlion_guard_buckshot_damage_scale( "sk_antlion_guard_buckshot_damage_scale", "0.25" );
+ConVar	sk_antlion_guard_357_damage_scale( "sk_antlion_guard_357_damage_scale", "0.65" );
+ConVar	sk_antlion_guard_diabolical_damage_scale("sk_antlion_guard_diabolical_damage_scale", "0.65");
 
 int	g_interactionAntlionGuardFoundPhysicsObject = 0;	// We're moving to a physics object to shove it, don't all choose the same object
 int	g_interactionAntlionGuardShovedPhysicsObject = 0;	// We've punted an object, it is now clear to be chosen by others
@@ -2152,7 +2157,7 @@ int CNPC_AntlionGuard::OnTakeDamage_Alive( const CTakeDamageInfo &info )
 	// Hack to make antlion guard harder in HARD
 	if ( g_pGameRules->IsSkillLevel(SKILL_HARD)  && !(info.GetDamageType() & DMG_CRUSH) )
 	{
-		dInfo.SetDamage( dInfo.GetDamage() * 0.75 );
+		dInfo.SetDamage( dInfo.GetDamage() * sk_antlion_guard_diabolical_damage_scale.GetFloat() );
 	}
 
 	// Cap damage taken by crushing (otherwise we can get crushed oddly)
@@ -2288,14 +2293,18 @@ void CNPC_AntlionGuard::TraceAttack( const CTakeDamageInfo &inputInfo, const Vec
 {
 	CTakeDamageInfo info = inputInfo;
 
-	// Bullets are weak against us, buckshot less so
+	// Bullets are weak against us, buckshot more so
 	if ( info.GetDamageType() & DMG_BUCKSHOT )
 	{
-		info.ScaleDamage( 0.5f );
+		info.ScaleDamage( sk_antlion_guard_buckshot_damage_scale.GetFloat() );	// 0.5
+	}
+	else if (info.GetAmmoType() == GetAmmoDef()->Index("357"))	// .357 Magnum scaling
+	{
+		info.ScaleDamage(sk_antlion_guard_357_damage_scale.GetFloat());
 	}
 	else if ( info.GetDamageType() & DMG_BULLET )
 	{
-		info.ScaleDamage( 0.25f );
+		info.ScaleDamage( sk_antlion_guard_bullet_damage_scale.GetFloat() );	// 0.25
 	}
 
 	// Make sure we haven't rounded down to a minimal amount

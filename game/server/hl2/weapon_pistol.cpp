@@ -76,8 +76,8 @@ public:
 	virtual const Vector& GetBulletSpread( void )
 	{		
 		// Handle NPCs first
-		static Vector npcCone = VECTOR_CONE_4DEGREES;		// NPC cone when standing still
-		static Vector npcMoveCone = VECTOR_CONE_7DEGREES;	// NPC cone when moving
+		static Vector npcCone = VECTOR_CONE_2DEGREES;		// NPC cone when standing still
+		static Vector npcMoveCone = VECTOR_CONE_5DEGREES;	// NPC cone when moving
 		if (GetOwner() && GetOwner()->IsNPC())
 		{
 			if (GetOwner()->IsMoving())
@@ -168,7 +168,7 @@ float CWeaponPistol::GetBurstCycleRate(void)
 	// this is the time it takes to fire an entire 
 	// burst, plus whatever amount of delay we want
 	// to have between bursts.
-	return 0.375f;
+	return 0.35f;
 }
 
 IMPLEMENT_SERVERCLASS_ST(CWeaponPistol, DT_WeaponPistol)
@@ -259,7 +259,7 @@ void CWeaponPistol::Operator_HandleAnimEvent( animevent_t *pEvent, CBaseCombatCh
 			CSoundEnt::InsertSound( SOUND_COMBAT|SOUND_CONTEXT_GUNFIRE, pOperator->GetAbsOrigin(), SOUNDENT_VOLUME_PISTOL, 0.2, pOperator, SOUNDENT_CHANNEL_WEAPON, pOperator->GetEnemy() );
 
 			WeaponSound( SINGLE_NPC );
-			pOperator->FireBullets( 1, vecShootOrigin, vecShootDir, VECTOR_CONE_PRECALCULATED, MAX_TRACE_LENGTH, m_iPrimaryAmmoType, 2 );
+			pOperator->FireBullets( 1, vecShootOrigin, vecShootDir, VECTOR_CONE_PRECALCULATED, MAX_TRACE_LENGTH, m_iPrimaryAmmoType, 1 );
 			pOperator->DoMuzzleFlash();
 			m_iClip1 = m_iClip1 - 1;
 		}
@@ -454,7 +454,10 @@ void CWeaponPistol::ItemPostFrame( void )
 	BaseClass::ItemPostFrame();
 
 	if ( m_bInReload )
+	{
+		m_iBurstSize = 0;
 		return;
+	}
 	
 	CBasePlayer *pOwner = ToBasePlayer( GetOwner() );
 
@@ -483,9 +486,9 @@ void CWeaponPistol::ItemPostFrame( void )
 	{
 		DryFire();
 	}
-	else if (((pOwner->m_nButtons & IN_ATTACK) == false) && (m_flSoonestPrimaryAttack > gpGlobals->curtime) && m_iFireMode == FIREMODE_SEMI)	//&& m_iFireMode == FIREMODE_SEMI
+	else if (((pOwner->m_nButtons & IN_ATTACK) == false) && (m_flSoonestPrimaryAttack > gpGlobals->curtime))
 	{
-		m_flNextPrimaryAttack = (m_flSoonestPrimaryAttack - gpGlobals->curtime);
+		m_flNextPrimaryAttack = m_flSoonestPrimaryAttack;
 	}
 }
 //-----------------------------------------------------------------------------
@@ -531,8 +534,8 @@ void CWeaponPistol::AddViewKick( void )
 
 	QAngle	viewPunch;
 	// Increase these values to make recoil comparable to vanilla one, since we have tiny spread
-	viewPunch.x = random->RandomFloat( 0.4f, 0.8f );	// 0.25f, 0.5f
-	viewPunch.y = random->RandomFloat( -.9f, .9f );	// -.6f, .6f
+	viewPunch.x = random->RandomFloat( -.5f, -0.8f );	// 0.25f, 0.5f
+	viewPunch.y = random->RandomFloat( -.7f, .7f );	// -.6f, .6f
 	viewPunch.z = 0.0f;
 
 	//Add it to the view punch
@@ -544,10 +547,10 @@ const WeaponProficiencyInfo_t *CWeaponPistol::GetProficiencyValues()
 {
 	static WeaponProficiencyInfo_t proficiencyTable[] =
 	{
-		{ 5.0, 1.0 },	//poor 20/35
-		{ 2.5, 0.75 },	//average 10/17.5
-		{ 1.8, 0.75 },	//good	7.2/12.6
-		{ 1.4, 0.75 },	//very good	5.6/9.8
+		{ 7.0, 1.0 },	//poor 14/35
+		{ 3.0, 0.75 },	//average 6/15
+		{ 2.25, 0.75 },	//good	4.5/11.25
+		{ 1.5, 0.75 },	//very good	3/7.5
 		{ 1.0, 1.0 },	//perfect 4/7
 	};
 

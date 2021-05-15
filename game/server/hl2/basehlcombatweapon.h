@@ -87,7 +87,7 @@ public:
 	void			BurstThink( void );
 
 	virtual void	PrimaryAttack( void );
-	virtual void	SecondaryAttack( void );
+//	virtual void	SecondaryAttack( void );
 	virtual void	SelectFire( void );
 
 	virtual int		WeaponRangeAttack1Condition( float flDot, float flDist );

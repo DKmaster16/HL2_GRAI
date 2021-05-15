@@ -26,14 +26,14 @@ public:
 	
 	void	Precache( void );
 
-	virtual int		GetMinBurst( void ) { return 4; }
-	virtual int		GetMaxBurst( void ) { return 7; }
+	virtual int		GetMinBurst( void ) { return 3; }	//4
+	virtual int		GetMaxBurst( void ) { return 3; }	//7
 	virtual float	GetMinRestTime( void );
 	virtual float	GetMaxRestTime( void );
 
 	virtual void Equip( CBaseCombatCharacter *pOwner );
 
-	float	GetFireRate( void ) { return 0.1f; }
+	float	GetFireRate( void ) { return 0.09f; }
 	int		CapabilitiesGet( void ) { return bits_CAP_WEAPON_RANGE_ATTACK1; }
 	int		WeaponRangeAttack1Condition( float flDot, float flDist );
 	int		WeaponRangeAttack2Condition( float flDot, float flDist );

@@ -1771,9 +1771,13 @@ void CTempEnts::MuzzleFlash( int type, ClientEntityHandle_t hEntity, int attachm
 		}
 		break;
 	case MUZZLEFLASH_357:
-		if ( firstPerson )
+		if (firstPerson)
 		{
-			MuzzleFlash_357_Player( hEntity, attachmentIndex );
+			MuzzleFlash_357_Player(hEntity, attachmentIndex);
+		}
+		else
+		{
+			MuzzleFlash_357_NPC(hEntity, attachmentIndex);
 		}
 		break;
 	case MUZZLEFLASH_RPG:
@@ -3121,6 +3125,11 @@ void CTempEnts::MuzzleFlash_357_Player( ClientEntityHandle_t hEntity, int attach
 		pParticle->m_flRoll			= random->RandomInt( 0, 360 );
 		pParticle->m_flRollDelta	= 0.0f;
 	}
+}
+
+void CTempEnts::MuzzleFlash_357_NPC(ClientEntityHandle_t hEntity, int attachmentIndex)
+{
+	FX_MuzzleEffectAttached(0.5f, hEntity, attachmentIndex, NULL, true);
 }
 
 //==================================================

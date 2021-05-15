@@ -374,12 +374,13 @@ void CHLSelectFireMachineGun::PrimaryAttack( void )
 //
 //
 //-----------------------------------------------------------------------------
+/*
 void CHLSelectFireMachineGun::SecondaryAttack( void )
 {
 	// change fire modes.
 	SelectFire();
 }
-
+*/
 //-----------------------------------------------------------------------------
 // Purpose: 
 //
@@ -460,6 +461,12 @@ void CHLSelectFireMachineGun::ItemPostFrame(void)
 		m_flNextPrimaryAttack = gpGlobals->curtime + GetSequence();
 	}
 */
+	// Debounce the recoiling counter
+	if ((pOwner->m_nButtons & IN_ATTACK) == false)
+	{
+		m_nShotsFired = 0;
+	}
+
 	BaseClass::ItemPostFrame();
 
 //	if (m_bInReload)

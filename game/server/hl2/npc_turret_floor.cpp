@@ -310,7 +310,7 @@ void CNPC_FloorTurret::Spawn( void )
 	SetPoseParameter( m_poseAim_Yaw, 0 );
 	SetPoseParameter( m_poseAim_Pitch, 0 );
 
-	m_iAmmoType = GetAmmoDef()->Index( "PISTOL" );
+	m_iAmmoType = GetAmmoDef()->Index( "AR2" );
 
 	m_iMuzzleAttachment = LookupAttachment( "eyes" );
 	m_iEyeAttachment = LookupAttachment( "light" );
@@ -598,7 +598,7 @@ bool CNPC_FloorTurret::HandleInteraction(int interactionType, void *data, CBaseC
 		if ( !m_hLastNPCToKickMe )
 		{
 			m_hLastNPCToKickMe = sourceEnt;
-			m_flKnockOverFailedTime = gpGlobals->curtime + 0.4;
+			m_flKnockOverFailedTime = gpGlobals->curtime + 0.35;
 		}
 
 		// Get knocked away
@@ -1050,14 +1050,13 @@ void CNPC_FloorTurret::SearchThink( void )
 	//If we've found a target, spin up the barrel and start to attack
 	if ( GetEnemy() != NULL )
 	{
-		//Give players a grace period
-		if ( GetEnemy()->IsPlayer() )
+		if ( GetEnemy()->IsPlayer() && !g_pGameRules->IsSkillLevel(SKILL_HARD) )
 		{
-			m_flShotTime  = gpGlobals->curtime + 0.5f;
+			m_flShotTime  = gpGlobals->curtime + 0.6f;
 		}
 		else
 		{
-			m_flShotTime  = gpGlobals->curtime + 0.1f;
+			m_flShotTime  = gpGlobals->curtime + 0.3f;
 		}
 
 		m_flLastSight = 0;
@@ -1927,8 +1926,8 @@ float CNPC_FloorTurret::GetAttackDamageScale( CBaseEntity *pVictim )
 		if ( pBCC->Classify() == CLASS_ANTLION )
 			return 1.5;
 			
-//		if ( pBCC->Classify() == CLASS_COMBINE )
-//			return 2.0;
+		if ( pBCC->Classify() == CLASS_COMBINE )
+			return 1.5;
 	}
 
 	return BaseClass::GetAttackDamageScale( pVictim );

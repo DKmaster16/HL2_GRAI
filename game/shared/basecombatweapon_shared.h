@@ -102,6 +102,8 @@ namespace vgui2
 
 // NOTE: The way these are calculated is that each component == sin (degrees/2)
 #define VECTOR_CONE_PRECALCULATED	vec3_origin
+#define VECTOR_CONE_0125DEGREES		Vector( 0.00109, 0.00109, 0.00109 )
+#define VECTOR_CONE_025DEGREES		Vector( 0.00219, 0.00219, 0.00219 )
 #define VECTOR_CONE_05DEGREES		Vector( 0.00437, 0.00437, 0.00437 )
 #define VECTOR_CONE_1DEGREES		Vector( 0.00873, 0.00873, 0.00873 )
 #define VECTOR_CONE_2DEGREES		Vector( 0.01745, 0.01745, 0.01745 )

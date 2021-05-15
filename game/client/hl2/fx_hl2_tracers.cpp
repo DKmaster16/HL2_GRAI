@@ -94,7 +94,7 @@ void AirboatGunHeavyTracerCallback( const CEffectData &data )
 	// Use default velocity if none specified
 	if ( !flVelocity )
 	{
-		flVelocity = 8000;
+		flVelocity = 9000;
 	}
 
 	//Get out shot direction and length
@@ -282,14 +282,14 @@ void AR2TracerCallback( const CEffectData &data )
 		VectorMA( data.m_vStart, 4, vright, foo );
 		foo[2] -= 0.5f;
 
-		FX_PlayerAR2Tracer( foo, (Vector&)data.m_vOrigin );
-		return;
+//		FX_PlayerAR2Tracer( foo, (Vector&)data.m_vOrigin );
+//		return;
 	}
 	
 	// Use default velocity if none specified
 	if ( !flVelocity )
 	{
-		flVelocity = 8000;
+		flVelocity = 9000;
 	}
 
 	// Do tracer effect
@@ -422,7 +422,7 @@ void CreateMuzzleflashELight( const Vector &origin, int exponent, int nMinRadius
 			el->color.exponent = exponent;
 
 			el->radius	= random->RandomInt( nMinRadius, nMaxRadius );
-			el->decay	= el->radius / 0.05f;
+			el->decay	= el->radius / 0.5f;	// was 0.05f
 			el->die		= gpGlobals->curtime + 0.1f;
 		}
 	}

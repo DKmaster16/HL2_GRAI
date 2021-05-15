@@ -1,513 +1,515 @@
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\client.pch
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\vc120.pdb
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\stdafx.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\achievementmgr.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_basecombatcharacter.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_baseflex.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_func_reflective_glass.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_info_overlay_accessor.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_physbox.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_physmagnet.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_ragdoll_manager.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_sceneentity.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\clienteffectprecachesystem.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\cliententitylist.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\clientsteamcontext.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\effectsclient.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\entitylist_base.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\entityparticletrail_shared.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\env_wind_shared.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\functionproxy.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\fx_fleck.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\fx_interpvalue.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\fx_staticline.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\gamerules.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\haptic_utils.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\hud.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\hud_msg.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\hud_redraw.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\message.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\particlesystemquery.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\physics_shared.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\prediction.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\sceneentity_shared.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\simple_keys.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\soundenvelope.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\takedamageinfo.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\teamplayroundbased_gamerules.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\vgui_consolepanel.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\vgui_fpspanel.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\view_effects.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\viewpostprocess.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\clientscoreboarddialog.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\achievements_hl2.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\basehlcombatweapon_shared.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_ar2_explosion.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_basehelicopter.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_citadel_effects.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_env_starfield.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_npc_rollermine.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_te_concussiveexplosion.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_vehicle_airboat.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\fx_bugbait.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\hl2_clientmode.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\script_intro_shared.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\shieldproxy.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\vgui_rootpanel_hl2.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\in_sixense_gesture_bindings.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_basetempentity.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_movie_explosion.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_prop_vehicle.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_te_clientprojectile.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_te_footprint.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_te_muzzleflash.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_te_smoke.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_testtraceline.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\particlesphererenderer.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\entity_client_tools.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\achievements_hlx.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\ammodef.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\animatespecifictextureproxy.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\baseclientrendertargets.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\basecombatweapon_shared.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\basepresence.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\beamdraw.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_basedoor.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_baseplayer.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_pixel_visibility.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_sprite_perfmonitor.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_team.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_tesla.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_vote_controller.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\clientmode_shared.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\glow_outline_effect.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\hintmessage.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\hintsystem.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\hud_animationinfo.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\hud_crosshair.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\hud_pdump.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\initializer.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\lampbeamproxy.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\menu.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\particles_simple.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\physics_saverestore.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\ragdoll.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\vgui_basepanel.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\vgui_debugoverlaypanel.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\vgui_schemevisualizer.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\viewconeimage.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\weapon_parse.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\basemodelpanel.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\mapoverview.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_basehlcombatweapon.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_env_alyxtemp.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_func_tankmortar.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_npc_combinegunship.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_vehicle_crane.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_weapon_crossbow.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\clientmode_hlnormal.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\hud_quickinfo.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_impact_effects.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_smokestack.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_te_beamfollow.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_te_beamspline.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_te_bubbletrail.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_te_fizz.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_te_largefunnel.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_te_playerdecal.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\fx_line.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\mp3player.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\animatedtextureproxy.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\baseachievement.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_basecombatweapon.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_env_particlescript.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_fish.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_func_dust.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_physicsprop.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_slideshow_display.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_user_message_register.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_vguiscreen.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\commentary_modelviewer.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\fx_quad.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\gamestringpool.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\haptic_msgs.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\hltvcamera.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\hud_basetimer.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\hud_numericdisplay.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\in_joystick.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\particle_litsmokeemitter.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\particle_simple3d.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\particles_attractor.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\particles_new.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\playerspawncache.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\point_bonusmaps_accessor.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\precache_register.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\props_shared.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\simtimer.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\spritemodel.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\vehicle_viewblend_shared.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\vgui_bitmapbutton.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\vgui_messagechars.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\view_beams.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\waterlodmaterialproxy.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\weapon_selection.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\commandmenu.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\teammenu.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_weapon__stubs_hl2.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\hl2_usermessages.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\hl_prediction.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\hud_blood.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\hud_flashlight.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\hud_suitpower.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_smoke_trail.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_te_glassshatter.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_te_sprite.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\fx_sparks.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\achievement_saverestore.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\alphamaterialproxy.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\baseanimatedtextureproxy.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\basecombatcharacter_shared.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\baseparticleentity.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\baseprojectile.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\beam_shared.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_breakableprop.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_colorcorrectionvolume.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_entitydissolve.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_env_tonemap_controller.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_func_areaportalwindow.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_func_conveyor.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_func_lod.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_func_rotating.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_hairball.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_plasma.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_shadowcontrol.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_spotlight_end.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_sun.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_team_objectiveresource.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_waterlodcontrol.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\cdll_bounded_cvars.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\cl_mat_stub.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\client_factorylist.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\client_virtualreality.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\colorcorrectionmgr.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\decals.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\flashlighteffect.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\fx_shelleject.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\fx_trail.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\gamerules_register.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\gametrace_client.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\gamevars_shared.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\geiger.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\hud_autoaim.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\hud_element_helper.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\hud_hdrdemo.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\hud_weapon.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\interpolatedvar.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\movevars_shared.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\multiplay_gamerules.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\particle_parse.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\particles_localspace.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\perfvisualbenchmark.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\physics_main_shared.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\soundemittersystem.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\usercmd.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\vgui_bitmapimage.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\vgui_loadingdiscpanel.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\vgui_video_player.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\viewdebug.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\weapon_parse_default.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\worlddimsproxy.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\baseviewport.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_barney.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_basehlplayer.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_plasma_beam_node.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_strider.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\fx_antlion.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\hl_gamemovement.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\hud_health.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\hud_zoom.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_steamjet.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_te_basebeam.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_te_beamlaser.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_te_bloodsprite.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_te_dynamiclight.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_te_killplayerattachments.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_te_physicsprop.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_te_spritespray.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\fx_discreetline.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\achievement_notification_panel.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_baseviewmodel.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_colorcorrection.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_entityparticletrail.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_env_projectedtexture.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_fire_smoke.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_func_monitor.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_func_smokevolume.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_point_commentary_node.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_waterbullet.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\cdll_client_int.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\hud_chat.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\igamesystem.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\in_main.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\physics_main_client.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\physpropclientside.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\proxyplayer.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\studio_shared.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\studio_stats.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\timematerialproxy.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\train.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\vgui_game_viewport.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\vgui_int.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\view.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\viewrender.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_info_teleporter_countdown.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\hud_damageindicator.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\hud_squadstatus.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_particle_smokegrenade.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_te.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_te_beamentpoint.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_te_beampoints.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_te_breakmodel.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_te_explosion.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_te_showline.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_te_worlddecal.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\fx_envelope.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\toolframework_client.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\activitylist.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_ai_basehumanoid.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_ai_basenpc.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_baseentity.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_func_occluder.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_func_tracktrain.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_materialmodifycontrol.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_props.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_sprite.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_vehicle_choreo_generic.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_world.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\classmap.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\clientshadowmgr.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\fx_cube.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\fx_explosion.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\gamestats.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\hud_bitmapnumericdisplay.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\hud_filmdemo.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\hud_vehicle.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\isnpcproxy.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\lamphaloproxy.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\matrixproxy.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\mp_shareddefs.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\obstacle_pushaway.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\particle_collision.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\particle_proxies.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\particlemgr.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\rope_helpers.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\screenspaceeffects.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\sprite.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\teamplay_gamerules.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\text_message.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\vgui_avatarimage.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\vgui_video.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\voice_banmgr.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\basemodel_panel.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\navprogress.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_antlion_dust.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_barnacle.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_corpse.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_hl2_playerlocaldata.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_npc_antlionguard.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_prop_combine_ball.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_te_flare.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_weapon_physcannon.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\death.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\hud_credits.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\hud_weaponselection.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_te_armorricochet.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_te_beamringpoint.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_te_bubbles.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_te_effect_dispatch.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_te_legacytempents.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\smoke_fog_overlay.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\replaycamera.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\animatedoffsettextureproxy.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\animation.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\baseentity_shared.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\baseplayer_shared.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_baseanimatingoverlay.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_dynamiclight.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_env_fog_controller.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_env_screenoverlay.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_func_breakablesurf.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_lightglow.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_point_camera.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_rumble.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_soundscape.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_test_proxytoggle.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_vehicle_jeep.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\cam_thirdperson.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\cdll_util.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\clientsideeffects.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\clientsideeffects_test.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\collisionproperty.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\death_pose.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\debugoverlay_shared.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\dummyproxy.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\effect_dispatch_data.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\ehandle.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\entityoriginmaterialproxy.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\env_detail_controller.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\eventlist.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\func_ladder.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\fx_blood.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\fx_tracer.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\gamemovement.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\history_resource.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\hud_closecaption.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\movehelper_client.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\particle_property.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\particles_ez.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\physics.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\proxyentity.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\proxyhealth.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\ragdoll_shared.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\sequence_transitioner.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\singleplay_gamerules.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\soundparametersinternal.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\splinepatch.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\spritetrail.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\texturescrollmaterialproxy.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\util_shared.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\vgui_centerstringpanel.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\vgui_netgraphpanel.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\view_scene.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\voice_status.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\iconpanel.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\spectatorgui.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_env_headcrabcanister.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_npc_manhack.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_rotorwash.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_thumper_dust.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_vehicle_prisoner_pod.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_weapon_stunstick.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\fx_hl2_tracers.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\hl_in_main.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\hud_ammo.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\hud_posture.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_particle_fire.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_recipientfilter.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_stickybolt.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_te_beaments.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_te_beamring.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_te_bspdecal.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_te_decal.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_te_glowsprite.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_te_projecteddecal.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\fx.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\cdll_replay.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\animatedentitytextureproxy.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\base_playeranimstate.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\basegrenade_shared.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\baseviewmodel_shared.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\bone_accessor.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\bone_merge_cache.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_baseanimating.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_gib.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_particle_system.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_playerresource.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_rope.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\camomaterialproxy.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\client_thinklist.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\clientleafsystem.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\detailobjectsystem.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\fx_impact.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\fx_water.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\glow_overlay.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\hud_basechat.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\hud_hintdisplay.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\in_camera.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\mapentities_shared.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\mathproxy.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\panelmetaclassmgr.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\playerandobjectenumerator.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\point_posecontroller.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\predictableid.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\predictioncopy.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\proxypupil.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\recvproxy.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\saverestore.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\test_ehandle.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\toggletextureproxy.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\usermessages.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\vgui_bitmappanel.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\vgui_grid.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\vgui_slideshow_display_screen.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\viewangleanim.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\warp_overlay.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\weapons_resource.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\intromenu.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\vguitextwindow.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_script_intro.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_vehicle_cannon.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_vort_charge_token.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\env_headcrabcanister_shared.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\fx_hl2_impacts.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\hl2_gamerules.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\hud_battery.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\hud_poisondamageindicator.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\in_sixense.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\sixense_convars.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_effects.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_te_bloodstream.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_te_energysplash.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_te_impact.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_te_particlesystem.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_te_sparks.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\c_tracer.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\bonelist.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\compiledcaptionswap.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\interval.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\networkvar.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\posedebugger.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\vgui_controls.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\collisionutils.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\memoverride.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\scratchpad3d.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\sheetsimulator.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\vallocator.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\dt_utlvector_common.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\hud_lcd.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\dt_utlvector_recv.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\interpolatortypes.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\mumble.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\dt_recv.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\in_mouse.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\bone_setup.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\rendertexture.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\stringregistry.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\client_class.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\language.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\randoverride.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\renamed_recvtable_compat.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\rope_physics.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\scratchpadutils.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\simple_physics.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\studio.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\crtmemdebug.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\filesystem_helpers.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\jigglebones.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\sentence.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\client.lib
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\client.exp
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\pointeroverride.obj
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\client.dll
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\client.pdb
-d:\games\my first mod\sp\src\game\client\.\release_mod_hl2\client.dll
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\client (hl2).tlog\cl.command.1.tlog
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\client (hl2).tlog\cl.read.1.tlog
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\client (hl2).tlog\cl.write.1.tlog
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\client (hl2).tlog\client (hl2).write.1u.tlog
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\client (hl2).tlog\custombuild.command.1.tlog
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\client (hl2).tlog\custombuild.read.1.tlog
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\client (hl2).tlog\custombuild.write.1.tlog
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\client (hl2).tlog\link.command.1.tlog
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\client (hl2).tlog\link.read.1.tlog
-d:\games\my first mod\sp\src\game\client\release_mod_hl2\client (hl2).tlog\link.write.1.tlog
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\client.pch
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\vc120.pdb
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\stdafx.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\cdll_replay.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\ammodef.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\animatespecifictextureproxy.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\baseclientrendertargets.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\basecombatweapon_shared.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\beam_shared.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_baseplayer.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_physbox.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_point_camera.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_rope.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_world.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\cdll_util.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\clientmode_shared.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\gametrace_client.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\glow_outline_effect.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\hintmessage.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\hud_autoaim.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\hud_filmdemo.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\hud_weapon.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\mp_shareddefs.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\obstacle_pushaway.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\particle_parse.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\particles_ez.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\physics.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\prediction.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\soundemittersystem.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\vgui_basepanel.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\vgui_game_viewport.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\vgui_messagechars.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\view.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\warp_overlay.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\basemodelpanel.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\teammenu.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_basehelicopter.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_corpse.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_hl2_playerlocaldata.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_npc_manhack.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_script_intro.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_vehicle_cannon.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_vort_charge_token.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\death.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\hl_prediction.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\hud_credits.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\script_intro_shared.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\shieldproxy.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\in_sixense.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_effects.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_te_beamfollow.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_te_energysplash.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_te_largefunnel.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_te_playerdecal.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\fx_discreetline.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\entity_client_tools.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\achievement_saverestore.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\activitylist.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\baseviewmodel_shared.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_baseflex.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_func_reflective_glass.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_info_overlay_accessor.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_physicsprop.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_sceneentity.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\cl_mat_stub.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\client_virtualreality.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\debugoverlay_shared.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\dummyproxy.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\effectsclient.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\entityoriginmaterialproxy.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\env_detail_controller.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\func_ladder.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\fx_interpvalue.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\fx_shelleject.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\fx_tracer.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\gamerules.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\hltvcamera.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\hud_chat.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\hud_redraw.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\igamesystem.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\lampbeamproxy.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\matrixproxy.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\multiplay_gamerules.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\particle_simple3d.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\particles_new.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\physpropclientside.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\predictioncopy.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\saverestore.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\teamplay_gamerules.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\text_message.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\usercmd.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\vgui_bitmapbutton.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\vgui_fpspanel.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\view_effects.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\voice_status.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\commandmenu.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\spectatorgui.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_antlion_dust.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_basehlplayer.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_npc_combinegunship.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_thumper_dust.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_weapon_crossbow.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\clientmode_hlnormal.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\hud_poisondamageindicator.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\vgui_rootpanel_hl2.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\sixense_convars.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_movie_explosion.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_prop_vehicle.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_te_clientprojectile.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_te_impact.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_te_physicsprop.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\fx.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\mp3player.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\animatedoffsettextureproxy.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\base_playeranimstate.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\basegrenade_shared.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\basepresence.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\bone_merge_cache.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_baseentity.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_fish.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_func_dust.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_hairball.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_point_commentary_node.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_vguiscreen.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\collisionproperty.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\commentary_modelviewer.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\gamevars_shared.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\glow_overlay.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\hud_basechat.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\hud_numericdisplay.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\in_camera.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\mapentities_shared.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\message.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\particles_localspace.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\physics_main_client.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\playerandobjectenumerator.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\point_posecontroller.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\proxyentity.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\proxypupil.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\recvproxy.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\sceneentity_shared.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\sequence_transitioner.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\simple_keys.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\singleplay_gamerules.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\spritemodel.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\toggletextureproxy.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\vehicle_viewblend_shared.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\vgui_bitmappanel.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\vgui_grid.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\vgui_video.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\viewconeimage.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\worlddimsproxy.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\basemodel_panel.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\mapoverview.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_barney.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_citadel_effects.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_func_tankmortar.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_plasma_beam_node.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_strider.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_weapon_stunstick.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\hl2_clientmode.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\hud_squadstatus.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_particle_fire.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_stickybolt.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_te_beaments.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_te_explosion.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_te_particlesystem.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_te_sprite.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\fx_sparks.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\replaycamera.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\alphamaterialproxy.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\animatedtextureproxy.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\animation.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\baseentity_shared.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\beamdraw.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_basedoor.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_baseviewmodel.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_colorcorrectionvolume.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_env_fog_controller.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_env_screenoverlay.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_func_breakablesurf.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_func_rotating.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_lightglow.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_physmagnet.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_ragdoll_manager.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_shadowcontrol.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_sprite.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_vehicle_jeep.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\cdll_bounded_cvars.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\client_thinklist.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\clientshadowmgr.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\entityparticletrail_shared.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\flashlighteffect.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\fx_explosion.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\fx_trail.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\gamestats.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\hud_bitmapnumericdisplay.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\hud_closecaption.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\isnpcproxy.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\lamphaloproxy.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\movehelper_client.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\particle_litsmokeemitter.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\particle_proxies.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\particles_attractor.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\perfvisualbenchmark.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\physics_main_shared.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\soundparametersinternal.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\studio_shared.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\studio_stats.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\vgui_avatarimage.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\vgui_schemevisualizer.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\voice_banmgr.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\weapon_parse.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\baseviewport.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\vguitextwindow.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_weapon_physcannon.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\fx_bugbait.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\fx_hl2_tracers.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\hud_ammo.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\hud_posture.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\in_sixense_gesture_bindings.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_impact_effects.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_smokestack.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_te_beamlaser.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_te_bloodsprite.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_te_bubbletrail.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_te_glowsprite.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_te_showline.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_te_spritespray.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\fx_envelope.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\bonelist.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\toolframework_client.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\achievement_notification_panel.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\baseparticleentity.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\baseprojectile.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\bone_accessor.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_ai_basehumanoid.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_baseanimating.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_particle_system.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_props.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_slideshow_display.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_test_proxytoggle.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_user_message_register.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_waterlodcontrol.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\camomaterialproxy.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\classmap.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\clientleafsystem.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\effect_dispatch_data.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\ehandle.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\entitylist_base.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\env_wind_shared.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\fx_blood.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\fx_quad.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\gamemovement.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\hintsystem.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\hud_animationinfo.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\hud_hintdisplay.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\in_joystick.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\mathproxy.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\panelmetaclassmgr.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\playerspawncache.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\point_bonusmaps_accessor.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\predictableid.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\proxyhealth.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\ragdoll_shared.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\sprite.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\test_ehandle.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\train.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\vgui_consolepanel.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\vgui_int.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\view_beams.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\viewdebug.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\waterlodmaterialproxy.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\weapon_selection.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\intromenu.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\basehlcombatweapon_shared.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_basehlcombatweapon.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_info_teleporter_countdown.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\hl_gamemovement.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\hud_health.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\hud_zoom.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_smoke_trail.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_te_bloodstream.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_te_decal.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_te_fizz.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_te_legacytempents.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\achievements_hlx.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\animatedentitytextureproxy.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\baseachievement.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_ai_basenpc.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_basecombatweapon.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_entitydissolve.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_env_projectedtexture.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_func_areaportalwindow.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_func_lod.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_func_smokevolume.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_plasma.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_soundscape.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_tesla.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_waterbullet.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\cam_thirdperson.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\client_factorylist.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\clienteffectprecachesystem.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\clientsideeffects.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\clientsideeffects_test.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\colorcorrectionmgr.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\death_pose.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\decals.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\eventlist.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\functionproxy.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\fx_cube.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\fx_fleck.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\fx_staticline.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\fx_water.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\geiger.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\hud_basetimer.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\hud_crosshair.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\hud_msg.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\initializer.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\interpolatedvar.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\menu.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\particlesystemquery.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\physics_saverestore.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\ragdoll.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\teamplayroundbased_gamerules.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\vgui_debugoverlaypanel.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\vgui_slideshow_display_screen.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\viewpostprocess.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\clientscoreboarddialog.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_ar2_explosion.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_env_starfield.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_npc_rollermine.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_te_concussiveexplosion.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_vehicle_airboat.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\env_headcrabcanister_shared.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\hl2_gamerules.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\hud_damageindicator.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\hud_suitpower.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_recipientfilter.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_te_armorricochet.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_te_beamring.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_te_breakmodel.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_te_effect_dispatch.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_te_killplayerattachments.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_te_projecteddecal.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_te_worlddecal.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\particlesphererenderer.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\bullet_manager.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\baseanimatedtextureproxy.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\basecombatcharacter_shared.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\baseplayer_shared.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_basecombatcharacter.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_breakableprop.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_dynamiclight.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_entityparticletrail.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_env_tonemap_controller.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_func_conveyor.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_func_occluder.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_func_tracktrain.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_materialmodifycontrol.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_pixel_visibility.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_sun.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_team_objectiveresource.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_vote_controller.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\cliententitylist.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\clientsteamcontext.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\detailobjectsystem.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\fx_impact.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\gamerules_register.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\gamestringpool.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\haptic_utils.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\hud.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\hud_pdump.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\in_main.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\particlemgr.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\proxyplayer.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\rope_helpers.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\screenspaceeffects.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\splinepatch.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\spritetrail.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\timematerialproxy.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\util_shared.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\vgui_centerstringpanel.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\vgui_netgraphpanel.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\view_scene.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\viewangleanim.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\weapon_parse_default.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\weapons_resource.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\iconpanel.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\navprogress.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\achievements_hl2.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_barnacle.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_env_headcrabcanister.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_prop_combine_ball.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_te_flare.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_vehicle_prisoner_pod.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\fx_antlion.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\hl2_usermessages.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\hud_battery.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\hud_quickinfo.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_basetempentity.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_particle_smokegrenade.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_steamjet.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_te_beamentpoint.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_te_beamringpoint.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_te_bspdecal.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_te_dynamiclight.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_te_glassshatter.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_te_sparks.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_testtraceline.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\smoke_fog_overlay.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\achievementmgr.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_baseanimatingoverlay.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_colorcorrection.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_env_particlescript.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_fire_smoke.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_func_monitor.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_gib.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_playerresource.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_rumble.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_spotlight_end.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_sprite_perfmonitor.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_team.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_vehicle_choreo_generic.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\cdll_client_int.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\haptic_msgs.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\history_resource.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\hud_element_helper.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\hud_hdrdemo.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\hud_vehicle.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\movevars_shared.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\particle_collision.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\particle_property.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\particles_simple.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\physics_shared.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\precache_register.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\props_shared.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\simtimer.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\soundenvelope.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\takedamageinfo.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\texturescrollmaterialproxy.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\usermessages.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\vgui_bitmapimage.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\vgui_loadingdiscpanel.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\vgui_video_player.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\viewrender.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_env_alyxtemp.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_npc_antlionguard.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_rotorwash.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_vehicle_crane.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_weapon__stubs_hl2.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\fx_hl2_impacts.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\hl_in_main.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\hud_blood.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\hud_flashlight.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\hud_weaponselection.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_te.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_te_basebeam.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_te_beampoints.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_te_beamspline.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_te_bubbles.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_te_footprint.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_te_muzzleflash.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_te_smoke.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\c_tracer.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\fx_line.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\dt_recv.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\hud_lcd.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\crtmemdebug.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\filesystem_helpers.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\language.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\networkvar.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\randoverride.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\scratchpad3d.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\stringregistry.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\bone_setup.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\posedebugger.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\sheetsimulator.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\compiledcaptionswap.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\interval.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\renamed_recvtable_compat.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\rendertexture.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\simple_physics.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\studio.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\client_class.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\memoverride.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\rope_physics.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\scratchpadutils.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\vallocator.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\vgui_controls.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\dt_utlvector_recv.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\in_mouse.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\collisionutils.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\jigglebones.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\sentence.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\dt_utlvector_common.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\interpolatortypes.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\mumble.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\client.lib
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\client.exp
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\pointeroverride.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\client_hl2.vpc.sentinel
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\client.dll
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\client.pdb
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\.\release_mod_hl2\client.dll
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\client (hl2).tlog\cl.command.1.tlog
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\client (hl2).tlog\cl.read.1.tlog
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\client (hl2).tlog\cl.write.1.tlog
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\client (hl2).tlog\client (hl2).write.1u.tlog
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\client (hl2).tlog\custombuild.command.1.tlog
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\client (hl2).tlog\custombuild.read.1.tlog
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\client (hl2).tlog\custombuild.write.1.tlog
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\client (hl2).tlog\link.command.1.tlog
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\client (hl2).tlog\link.read.1.tlog
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_hl2\client (hl2).tlog\link.write.1.tlog

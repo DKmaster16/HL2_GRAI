@@ -1059,7 +1059,7 @@ public:
 	int						ShouldToggle( USE_TYPE useType, int currentState );
 
 	// UNDONE: Move these virtuals to CBaseCombatCharacter?
-	virtual void MakeTracer( const Vector &vecTracerSrc, const trace_t &tr, int iTracerType );
+	virtual void MakeTracer( const Vector &vecTracerSrc, const trace_t &tr, int iTracerType );	//, float iSpeed
 	virtual int	GetTracerAttachment( void );
 	virtual void FireBullets( const FireBulletsInfo_t &info );
 	virtual void DoImpactEffect( trace_t &tr, int nDamageType ); // give shooter a chance to do a custom impact.

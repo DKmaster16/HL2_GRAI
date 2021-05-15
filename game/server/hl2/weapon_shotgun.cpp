@@ -37,6 +37,7 @@ private:
 	bool	m_bNeedPump;		// When emptied completely or firing secondary
 	bool	m_bDelayedFire1;	// Fire primary when finished reloading
 	bool	m_bDelayedFire2;	// Fire secondary when finished reloading
+//	float	m_flSoonestPrimaryAttack;
 
 public:
 	void	Precache( void );
@@ -45,18 +46,20 @@ public:
 
 	virtual const Vector& GetBulletSpread( void )
 	{
-		static Vector vitalAllyCone = VECTOR_CONE_4DEGREES;
+		static Vector AllyCone = VECTOR_CONE_4DEGREES;
 		static Vector cone = VECTOR_CONE_6DEGREES;
 
 		if( GetOwner() && (GetOwner()->Classify() == CLASS_PLAYER_ALLY) )	// _VITAL
 		{
 			// Give Alyx's shotgun blasts more a more directed punch. She needs
 			// to be at least as deadly as she would be with her pistol to stay interesting (sjb)
-			return vitalAllyCone;
+			return AllyCone;
 		}
 
 		return cone;
 	}
+
+	const WeaponProficiencyInfo_t *GetProficiencyValues();
 
 	virtual int				GetMinBurst() { return 1; }
 	virtual int				GetMaxBurst() { return 2; }	// was 3
@@ -97,7 +100,7 @@ LINK_ENTITY_TO_CLASS( weapon_shotgun, CWeaponShotgun );
 PRECACHE_WEAPON_REGISTER(weapon_shotgun);
 
 BEGIN_DATADESC( CWeaponShotgun )
-
+//DEFINE_FIELD( m_flSoonestPrimaryAttack, FIELD_TIME ),
 	DEFINE_FIELD( m_bNeedPump, FIELD_BOOLEAN ),
 	DEFINE_FIELD( m_bDelayedFire1, FIELD_BOOLEAN ),
 	DEFINE_FIELD( m_bDelayedFire2, FIELD_BOOLEAN ),
@@ -198,7 +201,8 @@ void CWeaponShotgun::FireNPCPrimaryAttack( CBaseCombatCharacter *pOperator, bool
 	else
 	{
 		// Shotgunner is moving and shooting, do semi auto shooting due to not having to pump.
-		pOperator->FireBullets(sk_plr_num_shotgun_pellets.GetInt(), vecShootOrigin, vecShootDir, GetBulletSpread(), MAX_TRACE_LENGTH, m_iPrimaryAmmoType, 0);
+		pOperator->FireBullets(sk_plr_num_shotgun_pellets.GetInt() - 1, vecShootOrigin, vecShootDir, GetBulletSpread(), MAX_TRACE_LENGTH, m_iPrimaryAmmoType, 0, -1, -1, 0, NULL, true, true);
+		pOperator->FireBullets(1, vecShootOrigin, vecShootDir, GetBulletSpread() * 1.5f, MAX_TRACE_LENGTH, m_iPrimaryAmmoType, 0);
 		WeaponSound(SINGLE_NPC);
 		m_iClip1 = m_iClip1 - 1;
 	}
@@ -260,16 +264,16 @@ float CWeaponShotgun::GetMinRestTime()
 	{
 		if (g_pGameRules->IsSkillLevel(SKILL_HARD))
 		{
-			return 0.175f;
+			return 0.17f;
 		}
 		else
 		{
-			return 0.3f;
+			return 0.4f;
 		}
 	}
 	else
 	{
-		return 0.7f;
+		return 0.6f;
 	}
 	
 	return BaseClass::GetMinRestTime();
@@ -283,7 +287,7 @@ float CWeaponShotgun::GetMaxRestTime()
 	{
 		if (g_pGameRules->IsSkillLevel(SKILL_HARD))
 		{
-			return 0.4f;
+			return 0.34f;
 		}
 		else
 		{
@@ -313,7 +317,7 @@ float CWeaponShotgun::GetFireRate()
 			return 0.25f;	// OLD: 0.8f
 		}
 
-		return 0.375;	// was 0.7
+		return 0.5;	// was 0.7
 	}
 	else 
 		if (GetOwner() && GetOwner()->Classify() == CLASS_COMBINE && FClassnameIs(GetOwner(), "npc_combine_s"))	//hl2_episodic.GetBool() &&
@@ -321,7 +325,7 @@ float CWeaponShotgun::GetFireRate()
 			return 0.5f;	// OLD: 0.8f
 		}
 
-	return 1.0;	// was 0.7
+	return 0.7;	// was 0.7
 
 }
 
@@ -365,7 +369,7 @@ bool CWeaponShotgun::StartReload( void )
 
 	pOwner->m_flNextAttack = gpGlobals->curtime;
 	m_flNextPrimaryAttack = gpGlobals->curtime + SequenceDuration();
-
+	m_flNextSecondaryAttack = gpGlobals->curtime + SequenceDuration();
 	m_bInReload = true;
 	return true;
 }
@@ -406,7 +410,7 @@ bool CWeaponShotgun::Reload( void )
 
 	pOwner->m_flNextAttack = gpGlobals->curtime;
 	m_flNextPrimaryAttack = gpGlobals->curtime + SequenceDuration() - 0.04;	// Reload a bit faster
-
+	m_flNextSecondaryAttack = gpGlobals->curtime + SequenceDuration() - 0.04;
 	return true;
 }
 
@@ -432,6 +436,7 @@ void CWeaponShotgun::FinishReload( void )
 
 	pOwner->m_flNextAttack = gpGlobals->curtime;
 	m_flNextPrimaryAttack = gpGlobals->curtime + SequenceDuration() - 0.04;	// Finish a bit faster
+	m_flNextSecondaryAttack = gpGlobals->curtime + SequenceDuration() - 0.04;
 }
 
 //-----------------------------------------------------------------------------
@@ -478,6 +483,7 @@ void CWeaponShotgun::Pump( void )
 
 	pOwner->m_flNextAttack	= gpGlobals->curtime + SequenceDuration();
 	m_flNextPrimaryAttack	= gpGlobals->curtime + SequenceDuration();
+	m_flNextSecondaryAttack = gpGlobals->curtime + SequenceDuration();
 }
 
 //-----------------------------------------------------------------------------
@@ -491,6 +497,7 @@ void CWeaponShotgun::DryFire( void )
 	SendWeaponAnim( ACT_VM_DRYFIRE );
 	
 	m_flNextPrimaryAttack = gpGlobals->curtime + SequenceDuration();
+	m_flNextSecondaryAttack = gpGlobals->curtime + SequenceDuration();
 }
 
 //-----------------------------------------------------------------------------
@@ -519,7 +526,9 @@ void CWeaponShotgun::PrimaryAttack( void )
 	pPlayer->SetAnimation( PLAYER_ATTACK1 );
 
 	// Don't fire again until fire animation has completed
-	m_flNextPrimaryAttack = gpGlobals->curtime + 0.375;	// 160 RPM
+	m_flNextPrimaryAttack = gpGlobals->curtime + 0.16f;	// 353 RPM
+	m_flNextSecondaryAttack = gpGlobals->curtime + 0.16f;
+//	m_flSoonestPrimaryAttack = gpGlobals->curtime + SequenceDuration();	// approx. 0.28f 214 RPM
 	m_iClip1 -= 1;
 
 	Vector	vecSrc		= pPlayer->Weapon_ShootPosition( );
@@ -528,7 +537,8 @@ void CWeaponShotgun::PrimaryAttack( void )
 	pPlayer->SetMuzzleFlashTime( gpGlobals->curtime + 1.0 );
 	
 	// Fire the bullets, and force the first shot to be perfectly accuracy
-	pPlayer->FireBullets( sk_plr_num_shotgun_pellets.GetInt(), vecSrc, vecAiming, GetBulletSpread(), MAX_TRACE_LENGTH, m_iPrimaryAmmoType, 0, -1, -1, 0, NULL, true, true );
+	pPlayer->FireBullets( sk_plr_num_shotgun_pellets.GetInt() - 1, vecSrc, vecAiming, GetBulletSpread(), MAX_TRACE_LENGTH, m_iPrimaryAmmoType, 0, -1, -1, 0, NULL, true, true );
+	pPlayer->FireBullets( 1, vecSrc, vecAiming, GetBulletSpread() * 1.5f, MAX_TRACE_LENGTH, m_iPrimaryAmmoType, 0);
 	
 	pPlayer->ViewPunch( QAngle( random->RandomFloat( -3, -2 ), random->RandomFloat( -3, 3 ), 0 ) );	// (-2, -1) (-2, 2)
 
@@ -577,7 +587,9 @@ void CWeaponShotgun::SecondaryAttack( void )
 	pPlayer->SetAnimation( PLAYER_ATTACK1 );
 
 	// Don't fire again until fire animation has completed
-	m_flNextPrimaryAttack = gpGlobals->curtime + SequenceDuration();
+	m_flNextPrimaryAttack = gpGlobals->curtime + 0.16f;
+	m_flNextSecondaryAttack = gpGlobals->curtime + 0.16f;
+//	m_flSoonestPrimaryAttack = gpGlobals->curtime + SequenceDuration();
 	m_iClip1 -= 2;	// Shotgun uses same clip for primary and secondary attacks
 
 	Vector vecSrc	 = pPlayer->Weapon_ShootPosition();
@@ -633,6 +645,10 @@ void CWeaponShotgun::ItemPostFrame( void )
 			m_bInReload = false;
 			m_bDelayedFire2 = true;
 		}
+//		else if ((pOwner->m_nButtons & IN_RELOAD) && (m_flNextPrimaryAttack > gpGlobals->curtime))
+//		{
+//			m_flNextPrimaryAttack = m_flNextPrimaryAttack - 0.01;
+//		}
 		else if (m_flNextPrimaryAttack <= gpGlobals->curtime)
 		{
 			// If out of ammo end reload
@@ -673,8 +689,17 @@ void CWeaponShotgun::ItemPostFrame( void )
 		return;
 	}
 	
+	if (((pOwner->m_nButtons & IN_ATTACK2) | (pOwner->m_nButtons & IN_ATTACK)) && (m_flNextPrimaryAttack > gpGlobals->curtime))
+	{
+		m_flNextPrimaryAttack = gpGlobals->curtime + 1.0f;
+	}
+	else if (((pOwner->m_nButtons & IN_ATTACK2) == false) && (pOwner->m_nButtons & IN_ATTACK) == false)
+	{
+		m_flNextPrimaryAttack = m_flNextSecondaryAttack;
+	}
+
 	// Shotgun uses same timing and ammo for secondary attack
-	if ((m_bDelayedFire2 || pOwner->m_nButtons & IN_ATTACK2)&&(m_flNextPrimaryAttack <= gpGlobals->curtime))
+	if ((m_bDelayedFire2 || pOwner->m_nButtons & IN_ATTACK2) && (m_flNextPrimaryAttack <= gpGlobals->curtime))
 	{
 		m_bDelayedFire2 = false;
 		
@@ -712,7 +737,7 @@ void CWeaponShotgun::ItemPostFrame( void )
 			SecondaryAttack();
 		}
 	}
-	else if ( (m_bDelayedFire1 || pOwner->m_nButtons & IN_ATTACK) && m_flNextPrimaryAttack <= gpGlobals->curtime)
+	else if ((m_bDelayedFire1 || pOwner->m_nButtons & IN_ATTACK) && m_flNextPrimaryAttack <= gpGlobals->curtime)
 	{
 		m_bDelayedFire1 = false;
 		if ( (m_iClip1 <= 0 && UsesClipsForAmmo1()) || ( !UsesClipsForAmmo1() && !pOwner->GetAmmoCount(m_iPrimaryAmmoType) ) )
@@ -780,7 +805,20 @@ void CWeaponShotgun::ItemPostFrame( void )
 		WeaponIdle( );
 		return;
 	}
-
+	/*
+	//Allow a refire as fast as the player can click
+	if (((pOwner->m_nButtons & IN_ATTACK) == false) || ((pOwner->m_nButtons & IN_ATTACK2) == false) && (m_flSoonestPrimaryAttack < gpGlobals->curtime))
+	{
+		m_flNextPrimaryAttack = gpGlobals->curtime - 0.1f;
+	}
+	else if ((pOwner->m_nButtons & IN_ATTACK) || ((pOwner->m_nButtons & IN_ATTACK2) == false) && (m_flNextPrimaryAttack < gpGlobals->curtime) && (m_iClip1 <= 0))
+	{
+		DryFire();
+	}
+	else if (((pOwner->m_nButtons & IN_ATTACK) == false) || ((pOwner->m_nButtons & IN_ATTACK2) == false) && (m_flSoonestPrimaryAttack > gpGlobals->curtime))
+	{
+		m_flNextPrimaryAttack = m_flSoonestPrimaryAttack;
+	}	*/
 }
 
 
@@ -850,6 +888,23 @@ void CWeaponShotgun::ItemHolsterFrame( void )
 		GetOwner()->RemoveAmmo( ammoFill, GetPrimaryAmmoType() );
 		m_iClip1 += ammoFill;
 	}
+}
+
+//-----------------------------------------------------------------------------
+const WeaponProficiencyInfo_t *CWeaponShotgun::GetProficiencyValues()
+{
+	static WeaponProficiencyInfo_t proficiencyTable[] =
+	{
+		{ 1.00, 0.36 },	//poor	16.666
+		{ 1.00, 0.45 },	//average 13.333
+		{ 1.00, 0.50 },	//good 12
+		{ 1.00, 0.60 },	//very good	10
+		{ 1.00, 1.00 },	//perfect 6
+	};
+
+	COMPILE_TIME_ASSERT(ARRAYSIZE(proficiencyTable) == WEAPON_PROFICIENCY_PERFECT + 1);
+
+	return proficiencyTable;
 }
 
 //==================================================

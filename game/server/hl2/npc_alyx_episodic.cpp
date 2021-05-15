@@ -1113,7 +1113,7 @@ void CNPC_Alyx::DoMobbedCombatAI(void)
 	// Alyx's gun can never run out of ammo. Allow Alyx to ignore LOW AMMO warnings
 	// if she's in a close quarters fight with several enemies. She'll attempt to reload
 	// as soon as her combat situation is less pressing.
-	if (HasCondition(COND_MOBBED_BY_ENEMIES))
+	if (HasCondition(COND_MOBBED_BY_ENEMIES) && !g_pGameRules->IsSkillLevel(SKILL_HARD))	// Unless DIABOLICAL
 	{
 		ClearCondition(COND_LOW_PRIMARY_AMMO);
 	}
@@ -1552,7 +1552,7 @@ bool CNPC_Alyx::FInViewCone(CBaseEntity *pEntity)
 //-----------------------------------------------------------------------------
 bool CNPC_Alyx::CanSeeEntityInDarkness(CBaseEntity *pEntity)
 {
-	/*
+	
 	// Alyx can see enemies that are right next to her
 	// Robin: Disabled, made her too effective, you could safely leave her alone.
 	if ( pEntity->IsNPC() )
@@ -1560,7 +1560,7 @@ bool CNPC_Alyx::CanSeeEntityInDarkness(CBaseEntity *pEntity)
 	if ( (pEntity->WorldSpaceCenter() - EyePosition()).LengthSqr() < (80*80) )
 	return true;
 	}
-	*/
+	
 
 	CBasePlayer *pPlayer = UTIL_PlayerByIndex(1);
 	if (pPlayer && pEntity != pPlayer)
@@ -2864,9 +2864,9 @@ void CNPC_Alyx::AimGun(void)
 //-----------------------------------------------------------------------------
 Vector CNPC_Alyx::GetActualShootPosition(const Vector &shootOrigin)
 {
-	if (HasShotgun() && GetEnemy() && GetEnemy()->Classify() == CLASS_ZOMBIE && random->RandomInt(0, 1) == 1)
+	if (HasShotgun() && GetEnemy() && GetEnemy()->Classify() == CLASS_ZOMBIE)	//&& random->RandomInt(0, 1) == 1
 	{
-		// 50-50 zombie headshots with shotgun!
+		// 100% zombie headshots with shotgun!
 		return GetEnemy()->HeadTarget(shootOrigin);
 	}
 

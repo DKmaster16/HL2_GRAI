@@ -56,6 +56,7 @@ extern ConVar sk_npc_head;
 // Bodyshot damage scale
 ConVar sk_zombie_bullet_damage_scale("sk_zombie_bullet_damage_scale", "0.375");	// Including .357
 ConVar sk_zombie_buckshot_damage_scale("sk_zombie_buckshot_damage_scale", "0.75");
+ConVar sk_zombie_explosive_damage_scale("sk_zombie_explosive_damage_scale", "1.25");
 ConVar sk_zombie_head("sk_zombie_head", "2.0");
 ConVar sk_zombie_head_357("sk_zombie_head_357", "5.0");
 ConVar sk_zombie_head_buckshot_pointblank("sk_zombie_head_buckshot_pointblank", "3.0");
@@ -802,7 +803,7 @@ HeadcrabRelease_t CNPC_BaseZombie::ShouldReleaseHeadcrab( const CTakeDamageInfo 
 		// If I was killed by a club...
 		if ( info.GetDamageType() & DMG_CLUB)
 		{
-			if (GetEnemy() && GetEnemy()->IsPlayer())
+			if (GetEnemy() && GetEnemy()->IsPlayer() && !hl2_episodic.GetBool())
 			{
 				// Killed by a crowbar. Release a living crab.
 				return RELEASE_IMMEDIATE;
@@ -876,10 +877,10 @@ int CNPC_BaseZombie::OnTakeDamage_Alive( const CTakeDamageInfo &inputInfo )
 		}
 	}
 
-	// Take reduced damage from explotions, the same scale as buckshot damage. 
-	if (g_pGameRules->IsSkillLevel(SKILL_HARD) && (info.GetDamageType() & DMG_BLAST))
+	// Take increased damage from explotions, to counter the health increase. 
+	if ((info.GetDamageType() & DMG_BLAST))
 	{
-		info.ScaleDamage(sk_zombie_buckshot_damage_scale.GetFloat() );
+		info.ScaleDamage(sk_zombie_explosive_damage_scale.GetFloat() );
 	}
 
 	if ( ShouldIgnite( info ) )

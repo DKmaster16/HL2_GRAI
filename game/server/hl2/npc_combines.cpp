@@ -258,14 +258,6 @@ float CNPC_CombineS::GetHitgroupDamageMultiplier(int iHitGroup, const CTakeDamag
 					return (sk_combine_s_head_357.GetFloat());
 				}
 			}
-			if (g_pGameRules->IsSkillLevel(SKILL_HARD))
-			{
-				return (sk_combine_s_head.GetFloat() * sk_combine_s_hard_damage_scale.GetFloat());
-			}
-			else
-			{
-				return (sk_combine_s_head.GetFloat());
-			}
 		}
 		if (g_pGameRules->IsSkillLevel(SKILL_HARD))
 		{

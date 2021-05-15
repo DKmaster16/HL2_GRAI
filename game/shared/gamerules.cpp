@@ -9,6 +9,7 @@
 #include "ammodef.h"
 #include "tier0/vprof.h"
 #include "KeyValues.h"
+#include "bullet_manager.h"
 #include "iachievementmgr.h"
 
 #ifdef CLIENT_DLL
@@ -621,6 +622,7 @@ float CGameRules::WeaponTraceEntity( CBaseEntity *pEntity, const Vector &vecStar
 void CGameRules::CreateStandardEntities()
 {
 	g_pPlayerResource = (CPlayerResource*)CBaseEntity::Create( "player_manager", vec3_origin, vec3_angle );
+	g_pBulletManager = (CBulletManager*)CBaseEntity::Create("bullet_manager", vec3_origin, vec3_angle);
 	g_pPlayerResource->AddEFlags( EFL_KEEP_ON_RECREATE_ENTITIES );
 }
 

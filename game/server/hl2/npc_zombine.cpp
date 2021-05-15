@@ -50,8 +50,8 @@ enum
 #define MIN_SPRINT_DISTANCE 64.0f
 #define MAX_SPRINT_DISTANCE 1024.0f
 
-#define SPRINT_CHANCE_VALUE 35	// Was 10
-#define SPRINT_CHANCE_VALUE_DARKNESS 50	// Was 50
+#define SPRINT_CHANCE_VALUE 25	// Was 10
+#define SPRINT_CHANCE_VALUE_DARKNESS 65	// Was 50
 
 #define GRENADE_PULL_MAX_DISTANCE 256.0f
 
@@ -529,6 +529,8 @@ void CNPC_Zombine::TraceAttack( const CTakeDamageInfo &info, const Vector &vecDi
 	}
 }
 
+extern ConVar sk_plr_dmg_fraggrenade;
+
 void CNPC_Zombine::HandleAnimEvent( animevent_t *pEvent )
 {
 	if ( pEvent->event == AE_ZOMBINE_PULLPIN )
@@ -559,7 +561,7 @@ void CNPC_Zombine::HandleAnimEvent( animevent_t *pEvent )
 
 				pGrenade->SetParent( this, iAttachment );
 
-				pGrenade->SetDamage( 120.0f );
+				pGrenade->SetDamage(sk_plr_dmg_fraggrenade.GetFloat());
 				m_hGrenade = pGrenade;
 				
 				EmitSound( "Zombine.ReadyGrenade" );

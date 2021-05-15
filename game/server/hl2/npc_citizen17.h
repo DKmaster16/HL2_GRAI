@@ -226,6 +226,7 @@ public:
 	bool			ShouldLookForHealthItem();
 
 //#if HL2_EPISODIC
+	bool			CheckCanTossHealthKit(CBaseCombatCharacter *pThrowAt);
 	void			TossHealthKit( CBaseCombatCharacter *pThrowAt, const Vector &offset ); // create a healthkit and throw it at someone
 	void			InputForceHealthKitToss( inputdata_t &inputdata );
 //#endif

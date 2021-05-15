@@ -1223,7 +1223,6 @@ int CNPC_Citizen::SelectScheduleHeal()
 					return SCHED_CITIZEN_HEAL;
 				}
 			}
-
 		}
 		
 		if ( m_pSquad )
@@ -1264,7 +1263,7 @@ int CNPC_Citizen::SelectScheduleHeal()
 	
 	return SCHED_NONE;
 
-//#else
+/*#else
 
 	if ( CanHeal() )
 	{
@@ -1312,7 +1311,7 @@ int CNPC_Citizen::SelectScheduleHeal()
 	}
 
 	return SCHED_NONE;
-
+	*/
 }
 
 //-----------------------------------------------------------------------------
@@ -1882,12 +1881,13 @@ void CNPC_Citizen::HandleAnimEvent( animevent_t *pEvent )
 	{
 		CBaseCombatCharacter *pTarget = dynamic_cast<CBaseCombatCharacter *>(GetTarget());
 		// Heal my target (if within range)
-		if (USE_EXPERIMENTAL_MEDIC_CODE() && IsMedic() && pTarget->IsPlayer())
+		float dist = (GetLocalOrigin() - GetTarget()->GetLocalOrigin()).Length();
+		if (USE_EXPERIMENTAL_MEDIC_CODE() && IsMedic() && pTarget->IsPlayer() && dist > HEAL_TARGET_RANGE * 0.5f)
 		{
 			Assert(pTarget);
-			if ( pTarget )
+			if (pTarget)
 			{
-				m_flPlayerHealTime 	= gpGlobals->curtime + sk_citizen_heal_toss_player_delay.GetFloat();;
+//				m_flPlayerHealTime 	= gpGlobals->curtime + sk_citizen_heal_toss_player_delay.GetFloat();
 				TossHealthKit( pTarget, Vector(48.0f, 0.0f, 0.0f)  );
 			}
 		}
@@ -3433,10 +3433,7 @@ bool CNPC_Citizen::ShouldHealTarget( CBaseEntity *pTarget, bool bActiveUse )
 	{
 		Vector toPlayer = ( pTarget->GetAbsOrigin() - GetAbsOrigin() );
 	 	if (( bActiveUse || !HaveCommandGoal() || toPlayer.Length() < HEAL_TARGET_RANGE) 
-//#ifdef HL2_EPISODIC
-			&& fabs(toPlayer.z) < HEAL_TARGET_RANGE_Z
-//#endif
-			)
+			&& fabs(toPlayer.z) < HEAL_TARGET_RANGE_Z	)
 	 	{
 			if ( pTarget->m_iHealth > 0 )
 			{
@@ -3522,9 +3519,6 @@ bool CNPC_Citizen::ShouldHealTossTarget( CBaseEntity *pTarget, bool bActiveUse )
 	if ( IsSpeaking() )
 		return false;
 
-	if (!pTarget->IsPlayer())
-		return false;
-
 	bool bTargetIsPlayer = pTarget->IsPlayer();
 
 	// Don't heal or give ammo to targets in vehicles
@@ -3557,7 +3551,7 @@ bool CNPC_Citizen::ShouldHealTossTarget( CBaseEntity *pTarget, bool bActiveUse )
 				( !bTargetIsPlayer && m_flAllyHealTime <= gpGlobals->curtime ) );
 
 			// Only heal if we're ready
-			if ( bReadyToHeal )
+			if (bReadyToHeal && CheckCanTossHealthKit(UTIL_GetLocalPlayer()))
 			{
 				int requiredHealth;
 
@@ -3679,53 +3673,100 @@ void	CNPC_Citizen::TossHealthKit(CBaseCombatCharacter *pThrowAt, const Vector &o
 		CTraceFilterSkipTwoEntities tracefilter( this, pThrowAt, COLLISION_GROUP_NONE );
 		tossVelocity = VecCheckToss( this, &tracefilter, medKitOriginPoint, destinationPoint, 0.233f, 1.0f, false );
 	}
-	else
+	else	
 	{
 		tossVelocity = VecCheckThrow( this, medKitOriginPoint, destinationPoint, MEDIC_THROW_SPEED, 1.0f );
-
-		if (vec3_origin == tossVelocity)
-		{
-			// if out of range, just throw it as close as I can
-			tossVelocity = destinationPoint - medKitOriginPoint;
-
-			// rotate upwards against gravity
-			float len = VectorLength(tossVelocity);
-			tossVelocity *= (MEDIC_THROW_SPEED / len);
-			tossVelocity.z += 0.57735026918962576450914878050196 * MEDIC_THROW_SPEED;
-		}
 	}
-
-	// create a healthkit and toss it into the world
-	CBaseEntity *pHealthKit = CreateEntityByName( "item_healthkit" );
-	Assert(pHealthKit);
-	if (pHealthKit)
+	/*
+	if (vec3_origin == tossVelocity)
 	{
-		pHealthKit->SetAbsOrigin( medKitOriginPoint );
-		pHealthKit->SetOwnerEntity( this );
-		// pHealthKit->SetAbsVelocity( tossVelocity );
-		DispatchSpawn( pHealthKit );
-
+		// rotate upwards against gravity
+		float len = VectorLength(tossVelocity);
+		tossVelocity *= (MEDIC_THROW_SPEED / len);
+		tossVelocity.z += 0.57735026918962576450914878050196 * MEDIC_THROW_SPEED;
+	}
+	*/
+	if (vec3_origin != tossVelocity)
+	{
+		// create a healthkit and toss it into the world
+		CBaseEntity *pHealthKit = CreateEntityByName("item_healthkit");
+		Assert(pHealthKit);
+		if (pHealthKit)
 		{
-			IPhysicsObject *pPhysicsObject = pHealthKit->VPhysicsGetObject();
-			Assert( pPhysicsObject );
-			if ( pPhysicsObject )
+			pHealthKit->SetAbsOrigin(medKitOriginPoint);
+			pHealthKit->SetOwnerEntity(this);
+			// pHealthKit->SetAbsVelocity( tossVelocity );
+			DispatchSpawn(pHealthKit);
 			{
-				unsigned int cointoss = random->RandomInt(0,0xFF); // int bits used for bools
+				IPhysicsObject *pPhysicsObject = pHealthKit->VPhysicsGetObject();
+				Assert(pPhysicsObject);
+				if (pPhysicsObject)
+				{
+					unsigned int cointoss = random->RandomInt(0, 0xFF); // int bits used for bools
 
-				// some random precession
-				Vector angDummy(random->RandomFloat(-200,200), random->RandomFloat(-200,200), 
-					cointoss & 0x01 ? random->RandomFloat(200,600) : -1.0f * random->RandomFloat(200,600));
-				pPhysicsObject->SetVelocity( &tossVelocity, &angDummy );
+					// some random precession
+					Vector angDummy(random->RandomFloat(-200, 200), random->RandomFloat(-200, 200),
+						cointoss & 0x01 ? random->RandomFloat(200, 600) : -1.0f * random->RandomFloat(200, 600));
+					pPhysicsObject->SetVelocity(&tossVelocity, &angDummy);
+					m_flPlayerHealTime = gpGlobals->curtime + sk_citizen_heal_toss_player_delay.GetFloat();
+				}
 			}
 		}
+		else
+		{
+			m_flPlayerHealTime = gpGlobals->curtime + 1;
+			Warning("Citizen tried to heal but could not spawn item_healsthkit!\n");
+		}
+	}
+}
+
+bool	CNPC_Citizen::CheckCanTossHealthKit(CBaseCombatCharacter *pThrowAt)
+{
+	Assert(pThrowAt);
+	Vector vEyePos = GetAbsOrigin();
+	trace_t tr;
+	AI_TraceLOS(vEyePos, pThrowAt->EyePosition(), this, &tr);
+	if (tr.fraction != 1.0)
+	{
+		m_flPlayerHealTime = gpGlobals->curtime + 1;
+		return false;
 	}
 	else
 	{
-		Warning("Citizen tried to heal but could not spawn item_healthkit!\n");
+		return true;
+	}
+	/*
+	Vector forward, right, up;
+	GetVectors(&forward, &right, &up);
+	Vector medKitOriginPoint = WorldSpaceCenter() + (forward * 20.0f);
+	Vector destinationPoint;
+	// this doesn't work without a moveparent: pThrowAt->ComputeAbsPosition( offset, &destinationPoint );
+	VectorTransform(offset, pThrowAt->EntityToWorldTransform(), destinationPoint);
+	// flatten out any z change due to player looking up/down
+	destinationPoint.z = pThrowAt->EyePosition().z;
+
+	Vector tossVelocity;
+	if (npc_citizen_medic_throw_style.GetInt() == 0)
+	{
+		CTraceFilterSkipTwoEntities tracefilter(this, pThrowAt, COLLISION_GROUP_NONE);
+		tossVelocity = VecCheckToss(this, &tracefilter, medKitOriginPoint, destinationPoint, 0.233f, 1.0f, false);
+	}
+	else
+	{
+		tossVelocity = VecCheckThrow(this, medKitOriginPoint, destinationPoint, MEDIC_THROW_SPEED, 1.0f);
 	}
 
+	if (vec3_origin == tossVelocity)
+	{
+		m_flPlayerHealTime = gpGlobals->curtime + 2;
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+	*/
 }
-
 //-----------------------------------------------------------------------------
 // cause an immediate call to TossHealthKit with some default numbers
 //-----------------------------------------------------------------------------
@@ -3926,8 +3967,8 @@ AI_BEGIN_CUSTOM_NPC( npc_citizen, CNPC_Citizen )
 		SCHED_CITIZEN_HEAL_TOSS,
 
 	"	Tasks"
-//  "		TASK_GET_PATH_TO_TARGET				0"
-//  "		TASK_MOVE_TO_TARGET_RANGE			50"
+//	"		TASK_GET_PATH_TO_TARGET				0"
+//	"		TASK_MOVE_TO_TARGET_RANGE			300"
 	"		TASK_STOP_MOVING					0"
 	"		TASK_FACE_IDEAL						0"
 //	"		TASK_SAY_HEAL						0"

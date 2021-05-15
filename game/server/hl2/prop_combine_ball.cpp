@@ -1236,11 +1236,17 @@ void CPropCombineBall::OnHitEntity( CBaseEntity *pHitEntity, float flSpeed, int 
 					{
 //						if ( pHitEntity->Classify() != CLASS_PLAYER_ALLY || ( pHitEntity->Classify() == CLASS_PLAYER_ALLY && m_bStruckEntity == false ) )
 						{
-							if (FClassnameIs(pHitEntity, "npc_antlionguard") ||
+							if (hl2_episodic.GetBool() == true && FClassnameIs(pHitEntity, "npc_mossman") ||
+								(pHitEntity->GetOwnerEntity() && FClassnameIs(pHitEntity->GetOwnerEntity(), "npc_mossman")))
+							{
+								info.SetDamageType(FVPHYSICS_NO_NPC_IMPACT_DMG);
+								info.SetDamage(0);
+							}
+							else if (FClassnameIs(pHitEntity, "npc_antlionguard") ||
 								(pHitEntity->GetOwnerEntity() && FClassnameIs(pHitEntity->GetOwnerEntity(), "npc_antlionguard")))
 							{
 								info.SetDamageType(FVPHYSICS_NO_NPC_IMPACT_DMG);
-								info.SetDamage(50);
+								info.SetDamage(sk_npc_dmg_combineball.GetFloat());
 							}
 							else
 							{

@@ -109,6 +109,18 @@ ConVar sk_strider_num_missiles_npc("sk_strider_num_missiles_npc", "10");
 ConVar strider_missile_suppress_dist( "strider_missile_suppress_dist", "240" );
 ConVar strider_missile_suppress_time( "strider_missile_suppress_time", "3" );
 
+ConVar sk_strider_normal_shoot_duration("sk_strider_normal_shoot_duration", "2.5");
+ConVar sk_strider_normal_shoot_on_target_time("sk_strider_normal_shoot_on_target_time", "0.4");
+ConVar sk_strider_normal_shoot_downtime("sk_strider_normal_shoot_downtime", "1.0");
+ConVar sk_strider_normal_shoot_variation("sk_strider_normal_shoot_variation", "1.0");
+ConVar sk_strider_normal_rate_of_fire("sk_strider_normal_rate_of_fire", "5");
+
+ConVar sk_strider_aggressive_shoot_duration("sk_strider_aggressive_shoot_duration", "1.2");
+ConVar sk_strider_aggressive_shoot_on_target_time("sk_strider_aggressive_shoot_on_target_time", "0.36");
+ConVar sk_strider_aggressive_shoot_on_target_time_direct("sk_strider_aggressive_shoot_on_target_time_direct", "0.9");
+ConVar sk_strider_aggressive_shoot_downtime("sk_strider_aggressive_shoot_downtime", "1.25");
+ConVar sk_strider_aggressive_shoot_variation("sk_strider_aggressive_shoot_variation", "0.24");
+ConVar sk_strider_aggressive_rate_of_fire("sk_strider_aggressive_rate_of_fire", "8.333");	// 500 RPM used to be 600 RPM
 
 //-----------------------------------------------------------------------------
 
@@ -125,20 +137,22 @@ enum bodygroups
 
 //-----------------------------------------------------------------------------
 
-#define STRIDER_DEFAULT_SHOOT_DURATION			2.5 // spend this much time stitching to each target.
-#define STRIDER_SHOOT_ON_TARGET_TIME			0.5 // How much of DEFAULT_SHOOT_DURATION is spent on-target (vs. stitching up to a target)
-#define STRIDER_SHOOT_VARIATION					1.0 // up to 1 second of variance
-#define STRIDER_SHOOT_DOWNTIME					1.0 // This much downtime between bursts
+#define STRIDER_DEFAULT_SHOOT_DURATION			sk_strider_normal_shoot_duration.GetFloat() // spend this much time stitching to each target.
+#define STRIDER_SHOOT_ON_TARGET_TIME			sk_strider_normal_shoot_on_target_time.GetFloat() // How much of DEFAULT_SHOOT_DURATION is spent on-target (vs. stitching up to a target)
+#define STRIDER_SHOOT_VARIATION					sk_strider_normal_shoot_variation.GetFloat() // up to 1 second of variance
+#define STRIDER_SHOOT_DOWNTIME					sk_strider_normal_shoot_downtime.GetFloat() // This much downtime between bursts
+#define STRIDER_DEFAULT_RATE_OF_FIRE			sk_strider_normal_rate_of_fire.GetFloat()	// Rounds per second
+
 #define STRIDER_SUBSEQUENT_TARGET_DURATION		1.5 // Spend this much time stitching to targets chosen by distributed fire.
 #define STRIDER_IGNORE_TARGET_DURATION			1.0
 #define STRIDER_IGNORE_PLAYER_DURATION			1.5
-#define STRIDER_DEFAULT_RATE_OF_FIRE			5	// Rounds per second
 
-#define STRIDER_EP1_RATE_OF_FIRE			 7.5f	// used to be 10
-#define STRIDER_EP1_SHOOT_ON_TARGET_TIME	 0.3f
-#define STRIDER_EP1_SHOOT_DURATION			 1.2f	// used to be 1,1
-#define STRIDER_EP1_SHOOT_DOWNTIME			 1.0f
-#define STRIDER_EP1_SHOOT_VARIATION			 0.3f
+#define STRIDER_EP1_RATE_OF_FIRE			 sk_strider_aggressive_rate_of_fire.GetFloat()	// used to be 10
+#define STRIDER_EP1_SHOOT_ON_TARGET_TIME	 sk_strider_aggressive_shoot_on_target_time.GetFloat()
+#define STRIDER_EP1_SHOOT_ON_TARGET_TIME_DIRECT	 sk_strider_aggressive_shoot_on_target_time_direct.GetFloat()
+#define STRIDER_EP1_SHOOT_DURATION			 sk_strider_aggressive_shoot_duration.GetFloat()	// used to be 1,1
+#define STRIDER_EP1_SHOOT_DOWNTIME			 sk_strider_aggressive_shoot_downtime.GetFloat()
+#define STRIDER_EP1_SHOOT_VARIATION			 sk_strider_aggressive_shoot_variation.GetFloat()
 
 //Animation events
 #define STRIDER_AE_FOOTSTEP_LEFT		1
@@ -1007,7 +1021,7 @@ void CNPC_Strider::GatherConditions()
 
 		if( m_hPlayersMissile )
 		{
-			if( !m_pMinigun->IsShooting() && GetEnemy() && GetEnemy()->IsPlayer() )
+			if ( !m_pMinigun->IsShooting() && GetEnemy() && GetEnemy()->IsPlayer() && g_pGameRules->IsSkillLevel(SKILL_EASY) )
 			{
 				// If the missile is closer to the player than I am, stay suppressed. This is essentially
 				// allowing the missile to strike me if it was fired off before I started shooting. 
@@ -2755,7 +2769,7 @@ void CNPC_Strider::MakeTracer( const Vector &vecTracerSrc, const trace_t &tr, in
 
 	flTracerDist = VectorNormalize( vecDir );
 
-	UTIL_Tracer( vecTracerSrc, tr.endpos, 0, TRACER_DONT_USE_ATTACHMENT, 5000, true, "StriderTracer" );
+	UTIL_Tracer( vecTracerSrc, tr.endpos, 0, TRACER_DONT_USE_ATTACHMENT, 9000, true, "StriderTracer" );
 }
 
 //---------------------------------------------------------
@@ -3881,9 +3895,22 @@ void CNPC_Strider::OnMinigunStopShooting( CBaseEntity *pTarget )
 //---------------------------------------------------------
 float CNPC_Strider::GetMinigunRateOfFire()
 {
-	if( IsUsingAggressiveBehavior() && m_bMinigunUseDirectFire )
+	if (IsUsingAggressiveBehavior() && m_bMinigunUseDirectFire)
+	{
+		if (g_pGameRules->IsSkillLevel(SKILL_EASY) && m_iHealth <= (GetMaxHealth() / sk_strider_num_missiles1.GetFloat())
+			|| g_pGameRules->IsSkillLevel(SKILL_HARD) && m_iHealth <= (GetMaxHealth() / sk_strider_num_missiles3.GetFloat())
+			|| g_pGameRules->IsSkillLevel(SKILL_MEDIUM) && m_iHealth <= (GetMaxHealth() / sk_strider_num_missiles2.GetFloat()))
+		{
+			return STRIDER_EP1_RATE_OF_FIRE * 0.5f;
+		}
 		return STRIDER_EP1_RATE_OF_FIRE;
-
+	}
+		if (g_pGameRules->IsSkillLevel(SKILL_EASY) && m_iHealth <= (GetMaxHealth() / sk_strider_num_missiles1.GetFloat())
+			|| g_pGameRules->IsSkillLevel(SKILL_HARD) && m_iHealth <= (GetMaxHealth() / sk_strider_num_missiles3.GetFloat())
+			|| g_pGameRules->IsSkillLevel(SKILL_MEDIUM) && m_iHealth <= (GetMaxHealth() / sk_strider_num_missiles2.GetFloat()))
+		{
+			return STRIDER_DEFAULT_RATE_OF_FIRE * 0.5f;
+		}
 	return STRIDER_DEFAULT_RATE_OF_FIRE;
 }
 
@@ -3900,7 +3927,7 @@ float CNPC_Strider::GetMinigunOnTargetTime()
 			// On target the whole time. Just send a large number that
 			// will be clipped, since shooting duration is random and
 			// we don't know how long the burst will actually be.
-			return 100.0f;
+			return STRIDER_EP1_SHOOT_ON_TARGET_TIME_DIRECT;
 		}
 
 		return STRIDER_EP1_SHOOT_ON_TARGET_TIME;
@@ -4973,7 +5000,8 @@ void CStriderMinigun::StartShooting( IStriderMinigunHost *pHost, CBaseEntity *pT
 	// don't twitch while shooting
 	m_nextTwitchTime = FLT_MAX;
 
-	if( pTarget->IsPlayer() )
+	CNPC_Strider *pStrider = dynamic_cast<CNPC_Strider *>(pHost->GetEntity());
+	if( pTarget->IsPlayer() && pStrider->IsUsingAggressiveBehavior() )
 	{
 		// Don't shoot a player in the back if they aren't looking. 
 		// Give them a chance to see they're being fired at.
@@ -5369,7 +5397,7 @@ void CStriderMinigun::Think( IStriderMinigunHost *pHost, float dt )
 			pHost->ShootMinigun( pTargetPoint, GetAimError() );
 		}
 
-		m_nextBulletTime = gpGlobals->curtime + (1.0f / pHost->GetMinigunRateOfFire() );
+			m_nextBulletTime = gpGlobals->curtime + (1.0f / pHost->GetMinigunRateOfFire());
 	}
 }
 

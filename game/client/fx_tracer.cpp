@@ -13,7 +13,7 @@
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
-#define	TRACER_SPEED			1225 
+#define	TRACER_SPEED			9000 
 
 //-----------------------------------------------------------------------------
 // Purpose: 
@@ -79,7 +79,7 @@ void TracerCallback( const CEffectData &data )
 
 	// Grab the data
 	Vector vecStart = GetTracerOrigin( data );
-	float flVelocity = data.m_flScale;
+	float flVelocity = TRACER_SPEED;
 	bool bWhiz = (data.m_fFlags & TRACER_FLAG_WHIZ);
 	int iEntIndex = data.entindex();
 
@@ -95,8 +95,8 @@ void TracerCallback( const CEffectData &data )
 		VectorMA( data.m_vStart, 4, vright, foo );
 		foo[2] -= 0.5f;
 
-		FX_PlayerTracer( foo, (Vector&)data.m_vOrigin );
-		return;
+//		FX_PlayerTracer( foo, (Vector&)data.m_vOrigin );
+//		return;
 	}
 	
 	// Use default velocity if none specified

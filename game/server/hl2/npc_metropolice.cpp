@@ -676,13 +676,36 @@ void CNPC_MetroPolice::Spawn(void)
 
 	m_hManhack = NULL;
 
+	if (!m_bSimpleCops && Q_strnicmp(STRING(gpGlobals->mapname), "d1_canals_07", 14))
+	{
+		if (Weapon_OwnsThisType("weapon_smg1") && random->RandomInt(0, 2) == 0)	// 1/3 of smg metrocops wield shotguns
+		{
+			CBaseCombatWeapon *pWeapon = Weapon_Create("weapon_shotgun");
+			Weapon_Equip(pWeapon);
+		}
+		else if (random->RandomInt(0, 3) == 0)	// 1/4 of all cops have .357 Magnum
+		{
+			CBaseCombatWeapon *pWeapon = Weapon_Create("weapon_357");
+			Weapon_Equip(pWeapon);
+			m_fWeaponDrawn = false;
+		}
+		if (hl2_episodic.GetBool())
+		{
+			m_iManhacks = 2;
+		}
+		else
+		{
+			m_iManhacks = 1;
+		}
+	}
+
 	if (GetActiveWeapon())
 	{
 		CBaseCombatWeapon *pWeapon;
 
 		pWeapon = GetActiveWeapon();
 
-		if (!FClassnameIs(pWeapon, "weapon_pistol"))
+		if (!FClassnameIs(pWeapon, "weapon_pistol") && !FClassnameIs(pWeapon, "weapon_357"))
 		{
 			m_fWeaponDrawn = true;
 		}
@@ -722,15 +745,6 @@ void CNPC_MetroPolice::Spawn(void)
 	m_flPreChaseYaw = 0;
 
 	SetUse(&CNPC_MetroPolice::PrecriminalUse);
-	if (!m_bSimpleCops)
-	{
-		if (Weapon_OwnsThisType("weapon_smg1") && random->RandomInt(0, 2) == 0)	// 1/3 of smg metrocops wield shotguns
-		{
-			CBaseCombatWeapon *pWeapon = Weapon_Create("weapon_shotgun");
-			Weapon_Equip( pWeapon );
-		}
-		m_iManhacks = 1;
-	}
 
 	// Start us with a visible manhack if we have one
 	if (m_iManhacks)
@@ -1185,7 +1199,7 @@ CBaseEntity *CNPC_MetroPolice::GetShootTarget()
 
 // Ranges across which to tune fire rates
 const float MIN_PISTOL_MODIFY_DIST = 7 * 36;	// 7 yards - very close
-const float MAX_PISTOL_MODIFY_DIST = 50 * 36;	// 50 yards - very far
+const float MAX_PISTOL_MODIFY_DIST = 35 * 36;	// 35 yards - very far
 
 // Range for rest period minimums
 const float MIN_MIN_PISTOL_REST_INTERVAL = 0.15;	// The bare minimum rest time between bursts (He's very close)
@@ -1200,8 +1214,8 @@ const int 	MIN_MIN_PISTOL_BURST = 1;	// Bare minimum number of shots in a burst 
 const int 	MAX_MIN_PISTOL_BURST = 3;	// Maximum number of bonus shots in a minimum burst (He's very close)
 
 // Range for burst maximums
-const int 	MIN_MAX_PISTOL_BURST = 1;	// Bare minimum max number of shots in a burst (he's very far)
-const int 	MAX_MAX_PISTOL_BURST = 18;	// No more than the pistol's magazine capacity (He's very close)
+const int 	MIN_MAX_PISTOL_BURST = 2;	// Bare minimum max number of shots in a burst (he's very far)
+const int 	MAX_MAX_PISTOL_BURST = 9;	// No more than the pistol's magazine capacity (He's very close)
 
 #define METROCOP_LARGER_BURST_RANGE	(12.0f * 45.0f) // If an enemy is 15 yards away, fire larger continuous bursts.
 
@@ -1239,6 +1253,14 @@ void CNPC_MetroPolice::OnUpdateShotRegulator()
 		// Add some noise into the pistol
 		GetShotRegulator()->SetBurstInterval(0.175f, 0.25f);
 	}
+	else if (Weapon_OwnsThisType("weapon_357"))
+	{
+		if (m_nBurstMode == BURST_NOT_ACTIVE)
+		{
+			GetShotRegulator()->SetBurstShotCountRange(GetActiveWeapon()->GetMinBurst(), GetActiveWeapon()->GetMaxBurst());
+			GetShotRegulator()->SetRestInterval(0.6, 1.2);
+		}
+	}
 	else if (Weapon_OwnsThisType("weapon_smg1"))
 	{
 		if (GetEnemy() && HasCondition(COND_CAN_RANGE_ATTACK1))
@@ -1254,8 +1276,11 @@ void CNPC_MetroPolice::OnUpdateShotRegulator()
 	}
 	else if (Weapon_OwnsThisType("weapon_shotgun"))
 	{
-			GetShotRegulator()->SetBurstInterval(0.8, 1.2);
-			GetShotRegulator()->SetRestInterval(0.8, 1.2);
+		if (m_nBurstMode == BURST_NOT_ACTIVE)
+		{
+			GetShotRegulator()->SetBurstInterval(0.5, 1.0);
+			GetShotRegulator()->SetRestInterval(0.5, 1.0);
+		}
 	}
 }
 
@@ -3092,6 +3117,17 @@ Activity CNPC_MetroPolice::NPC_TranslateActivity(Activity newActivity)
 		return ACT_COVER_SMG1_LOW;
 
 
+/*	if (Weapon_OwnsThisType("weapon_357"))
+	{
+		if (newActivity == ACT_RELOAD || CapabilitiesGet() & bits_CAP_DUCK && newActivity == ACT_RELOAD_LOW)
+		{
+			//Emit 6 shells for hand gun reloading
+			animevent_t fakeEvent;
+			fakeEvent.pSource = this;
+			fakeEvent.event = EVENT_WEAPON_HG_RELOAD;
+			GetActiveWeapon()->Operator_HandleAnimEvent(&fakeEvent, this);
+		}
+	}*/
 	return newActivity;
 }
 
@@ -3398,6 +3434,8 @@ int CNPC_MetroPolice::SelectCombatSchedule()
 		return SCHED_TAKE_COVER_FROM_ENEMY;
 	}
 
+//	float flDistSq = GetEnemy()->WorldSpaceCenter().DistToSqr(WorldSpaceCenter());
+//	float flDot = DotProduct2D(vecTargetToGun2D, vecVelocity2D);
 	if (HasBaton() && BatonActive() == true)
 	{
 		if (HasCondition(COND_CAN_MELEE_ATTACK1))
@@ -3425,7 +3463,24 @@ int CNPC_MetroPolice::SelectCombatSchedule()
 		}
 		return SCHED_METROPOLICE_MOVE_TO_MELEE;
 	}
+	/*else if ( m_NextChargeTimer.Expired() && GetEnemy()->IsPlayer() && flDistSq < 64 && fabs(GetEnemy()->GetAbsOrigin().z - GetAbsOrigin().z) < 64 )	//&& flDot > 0.7
+	{
+		// Make sure not trying to kick through a window or something. 
+		trace_t tr;
+		Vector vecSrc, vecEnd;
 
+		vecSrc = WorldSpaceCenter();
+		vecEnd = GetEnemy()->WorldSpaceCenter();
+
+		AI_TraceLine(vecSrc, vecEnd, MASK_SHOT, this, COLLISION_GROUP_NONE, &tr);
+		if (tr.m_pEnt != GetEnemy())
+		{
+			return COND_NONE;
+		}
+		m_NextChargeTimer.Set(1, 3);
+		return SCHED_METROPOLICE_SHOVE;
+	}
+	*/
 	if (HasCondition(COND_CAN_RANGE_ATTACK1))
 	{
 		if (!GetShotRegulator()->IsInRestInterval())
@@ -3930,6 +3985,7 @@ void CNPC_MetroPolice::TraceAttack(const CTakeDamageInfo &info, const Vector &ve
 
 float CNPC_MetroPolice::GetHitgroupDamageMultiplier(int iHitGroup, const CTakeDamageInfo &info)
 {
+extern ConVar sk_npc_arm;
 	switch (iHitGroup)
 	{
 	case HITGROUP_CHEST:
@@ -3943,12 +3999,12 @@ float CNPC_MetroPolice::GetHitgroupDamageMultiplier(int iHitGroup, const CTakeDa
 				flDist = (GetAbsOrigin() - info.GetAttacker()->GetAbsOrigin()).Length();
 			}
 
-			if (flDist <= 252.0f)
+			if (flDist > 252.0f)
 			{
-				return 2.0f;
+				return sk_npc_arm.GetFloat();
 			}
 		}
-		if (info.GetAmmoType() == GetAmmoDef()->Index("Pistol") || info.GetAmmoType() == GetAmmoDef()->Index("AR2"))
+		if (info.GetAmmoType() == GetAmmoDef()->Index("Pistol"))
 		{
 			return 1.0f;
 		}
@@ -4268,7 +4324,7 @@ int CNPC_MetroPolice::SelectSchedule(void)
 	// This will cause the cops to run backwards + shoot at the same time
 	if (!bHighHealth && !HasBaton())
 	{
-		if (GetActiveWeapon() && (GetActiveWeapon()->m_iClip1 <= 6))
+		if (GetActiveWeapon() && !Weapon_OwnsThisType("weapon_357") && (GetActiveWeapon()->m_iClip1 <= 6))
 		{
 			m_Sentences.Speak("METROPOLICE_COVER_LOW_AMMO");
 			return SCHED_HIDE_AND_RELOAD;
@@ -5102,7 +5158,7 @@ void CNPC_MetroPolice::BuildScheduleTestBits(void)
 //-----------------------------------------------------------------------------
 WeaponProficiency_t CNPC_MetroPolice::CalcWeaponProficiency(CBaseCombatWeapon *pWeapon)
 {
-	if (FClassnameIs(pWeapon, "weapon_pistol"))
+	if (FClassnameIs(pWeapon, "weapon_pistol") || FClassnameIs(pWeapon, "weapon_357"))
 	{
 		if (!Q_strnicmp(STRING(gpGlobals->mapname), "d1_trainstation_04", 14))
 		{
@@ -5111,31 +5167,46 @@ WeaponProficiency_t CNPC_MetroPolice::CalcWeaponProficiency(CBaseCombatWeapon *p
 		else
 			if (g_pGameRules->IsSkillLevel(SKILL_HARD))	// better accuracy on hard
 			{
-				return WEAPON_PROFICIENCY_PERFECT;			//5
+				return WEAPON_PROFICIENCY_VERY_GOOD;			//4/7
 			}
 			else
 				if (g_pGameRules->IsSkillLevel(SKILL_EASY))	// worse accuracy on easy
 				{
-					return WEAPON_PROFICIENCY_AVERAGE;		//12.5
+					return WEAPON_PROFICIENCY_AVERAGE;		//7/12.25
 				}
 				else
 				{
-					return WEAPON_PROFICIENCY_VERY_GOOD;	// 7
+					return WEAPON_PROFICIENCY_GOOD;	//5.6/9.8
 				}
 	}
 	if (FClassnameIs(pWeapon, "weapon_smg1"))
 	{
 		if (g_pGameRules->IsSkillLevel(SKILL_HARD))
 		{
-			return WEAPON_PROFICIENCY_VERY_GOOD;	//4
+			return WEAPON_PROFICIENCY_GOOD;		//5/8
 		}
 		else if (g_pGameRules->IsSkillLevel(SKILL_EASY))
 		{
-			return WEAPON_PROFICIENCY_AVERAGE;		//8.25
+			return WEAPON_PROFICIENCY_POOR;		//6.25/10
 		}
 		else
 		{
-			return WEAPON_PROFICIENCY_GOOD;			//5
+			return WEAPON_PROFICIENCY_AVERAGE;	//5.5/8.8
+		}
+	}
+	if (FClassnameIs(pWeapon, "weapon_shotgun"))
+	{
+		if (g_pGameRules->IsSkillLevel(SKILL_HARD))
+		{
+			return WEAPON_PROFICIENCY_GOOD;		//5/8
+		}
+		else if (g_pGameRules->IsSkillLevel(SKILL_EASY))
+		{
+			return WEAPON_PROFICIENCY_POOR;		//6.25/10
+		}
+		else
+		{
+			return WEAPON_PROFICIENCY_AVERAGE;	//5.5/8.8
 		}
 	}
 	return BaseClass::CalcWeaponProficiency(pWeapon);
@@ -5550,7 +5621,7 @@ SCHED_METROPOLICE_ESTABLISH_LINE_OF_FIRE,
 "		TASK_SET_FAIL_SCHEDULE			SCHEDULE:SCHED_FAIL_ESTABLISH_LINE_OF_FIRE"
 "		TASK_FACE_ENEMY					0"
 "		TASK_SET_TOLERANCE_DISTANCE		48"
-"		TASK_GET_PATH_TO_ENEMY_LKP_LOS	0"
+"		TASK_GET_FLANK_RADIUS_PATH_TO_ENEMY_LOS	252"
 "		TASK_SPEAK_SENTENCE				6"	// METROPOLICE_SENTENCE_MOVE_INTO_POSITION
 "		TASK_RUN_PATH					0"
 "		TASK_METROPOLICE_RESET_LEDGE_CHECK_TIME 0"

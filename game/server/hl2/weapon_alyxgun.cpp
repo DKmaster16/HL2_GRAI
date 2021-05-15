@@ -286,7 +286,7 @@ bool IsAlyxInInjuredMode( void )
 //-----------------------------------------------------------------------------
 const Vector& CWeaponAlyxGun::GetBulletSpread( void )
 {
-	static const Vector cone = VECTOR_CONE_05DEGREES;	// was 2, now 0.5 (new)
+	static const Vector cone = VECTOR_CONE_1DEGREES;	// was 2
 	static const Vector injuredCone = VECTOR_CONE_5DEGREES;	// was 6
 
 	if ( IsAlyxInInjuredMode() )

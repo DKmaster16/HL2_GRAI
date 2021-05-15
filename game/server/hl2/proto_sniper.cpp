@@ -50,10 +50,12 @@ ConVar sniperviewdist("sniperviewdist", "35" );
 ConVar showsniperdist("showsniperdist", "0" );
 ConVar sniperspeak( "sniperspeak", "0" );
 ConVar sniper_xbox_delay( "sniper_xbox_delay", "1" );
+ConVar sk_sniper_diabolical_paint_scale("sk_sniper_diabolical_paint_scale", "0.75");
 
 // Moved to HL2_SharedGameRules because these are referenced by shared AmmoDef functions
 extern ConVar sk_dmg_sniper_penetrate_plr;
 extern ConVar sk_dmg_sniper_penetrate_npc;
+ConVar sniper_alyx_laser("sniper_alyx_laser", "1");
 
 // No model, impervious to damage.
 #define SF_SNIPER_HIDDEN		(1 << 16)
@@ -82,7 +84,7 @@ extern ConVar sk_dmg_sniper_penetrate_npc;
 #define	SNIPER_DEFAULT_PAINT_NPC_TIME_NOISE		0.75f
 #endif
 
-#define SNIPER_SUBSEQUENT_PAINT_TIME	( ( IsXbox() ) ? 1.0f : 0.4f )
+#define SNIPER_SUBSEQUENT_PAINT_TIME	( ( g_pGameRules->IsSkillLevel(SKILL_HARD) ) ? 0.3f : 0.4f )
 
 #define SNIPER_FOG_PAINT_ENEMY_TIME	    0.25f
 #define SNIPER_PAINT_DECOY_TIME			2.0f
@@ -642,10 +644,20 @@ void CProtoSniper::LaserOff( void )
 void CProtoSniper::LaserOn( const Vector &vecTarget, const Vector &vecDeviance )
 {
 	// NO laser on Diabolical difficulty!
-	if (!m_pBeam && !g_pGameRules->IsSkillLevel(SKILL_HARD))
+	CBasePlayer *pPlayer = AI_GetSinglePlayer();
+	Disposition_t relation = IRelationType(pPlayer);
+	if ( !m_pBeam )	//&& !g_pGameRules->IsSkillLevel(SKILL_HARD) && pPlayer->IRelationType(this) == D_HT
 	{
+		if (relation == D_LI || sniper_alyx_laser.GetBool())	// Alyx is our sniper!
+		{
+			m_pBeam = CBeam::BeamCreate("effects/laser1.vmt", 1.5f);
+			m_pBeam->SetColor(255, 175, 0);	// Paint her laser orange
+		} 
+		else if (!g_pGameRules->IsSkillLevel(SKILL_HARD))	// && pPlayer->IRelationType(this) != D_LI
+		{
 			m_pBeam = CBeam::BeamCreate("effects/bluelaser1.vmt", 1.0f);
 			m_pBeam->SetColor(0, 100, 255);
+		}
 	}
 	else
 	{
@@ -672,12 +684,19 @@ void CProtoSniper::LaserOn( const Vector &vecTarget, const Vector &vecDeviance )
 	
 	// The beam is backwards, sortof. The endpoint is the sniper. This is
 	// so that the beam can be tapered to very thin where it emits from the sniper.
-	if (!g_pGameRules->IsSkillLevel(SKILL_HARD))
+	if (relation == D_LI || !g_pGameRules->IsSkillLevel(SKILL_HARD))
 	{
 		m_pBeam->PointsInit(vecInitialAim, GetBulletOrigin());
 		m_pBeam->SetBrightness(255);
 		m_pBeam->SetNoise(0);
-		m_pBeam->SetWidth(1.0f);
+		if (relation == D_LI && sniper_alyx_laser.GetBool())
+		{
+			m_pBeam->SetWidth(1.5f);
+		}
+		else
+		{
+			m_pBeam->SetWidth(1.0f);
+		}
 		m_pBeam->SetEndWidth(0);
 		m_pBeam->SetScrollRate(0);
 		m_pBeam->SetFadeLength(0);
@@ -827,9 +846,11 @@ void CProtoSniper::PaintTarget( const Vector &vecTarget, float flPaintTime )
 #endif
 
 	trace_t tr;
+	CBasePlayer *pPlayer = AI_GetSinglePlayer();
+	Disposition_t relation = IRelationType(pPlayer);
 
 	UTIL_TraceLine( vecStart, vecStart + vecCurrentDir * 8192, MASK_SHOT, this, COLLISION_GROUP_NONE, &tr );
-	if (!g_pGameRules->IsSkillLevel(SKILL_HARD))
+	if (relation == D_LI || !g_pGameRules->IsSkillLevel(SKILL_HARD))
 	{
 		m_pBeam->SetStartPos(tr.endpos);
 		m_pBeam->RelinkBeam();
@@ -2052,6 +2073,12 @@ void CProtoSniper::StartTask( const Task_t *pTask )
 					m_flKeyfieldPaintTime
 				;
 
+				// Faster target acquisition
+				if (g_pGameRules->IsSkillLevel(SKILL_HARD))
+				{
+					m_flPaintTime *= sk_sniper_diabolical_paint_scale.GetFloat();
+				}
+
 				if( IsFastSniper() )
 				{
 					// Get the shot off a little faster.
@@ -3176,7 +3203,7 @@ void CSniperBullet::Precache()
 void CSniperBullet::BulletThink( void )
 {
 	// Set the bullet up to think again.
-	SetNextThink( gpGlobals->curtime + 0.05 );
+	SetNextThink( gpGlobals->curtime + 0.01 );
 
 	if( !GetOwnerEntity() )
 	{
@@ -3234,11 +3261,7 @@ void CSniperBullet::BulletThink( void )
 		GetOwnerEntity()->FireBullets( 1, vecStart, m_vecDir, vec3_origin, flDist, m_AmmoType, 0 );
 		m_iImpacts++;
 
-#ifdef HL2_EPISODIC
-		if( tr.m_pEnt->IsNPC() || m_iImpacts == NUM_PENETRATIONS )
-#else	 
 		if( tr.m_pEnt->m_takedamage == DAMAGE_YES || m_iImpacts == NUM_PENETRATIONS )
-#endif//HL2_EPISODIC
 		{
 			// Bullet stops when it hits an NPC, or when it has penetrated enough times.
 			

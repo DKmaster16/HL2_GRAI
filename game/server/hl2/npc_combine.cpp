@@ -38,6 +38,10 @@
 
 int g_fCombineQuestion;				// true if an idle grunt asked a question. Cleared when someone answers. YUCK old global from grunt code
 
+ConVar ai_combine_max_jump_rise("ai_combine_max_jump_rise", "64");
+ConVar ai_combine_max_jump_distance("ai_combine_max_jump_distance", "250");
+ConVar ai_combine_max_jump_drop("ai_combine_max_jump_drop", "192");
+
 #define COMBINE_SKIN_DEFAULT		0
 #define COMBINE_SKIN_SHOTGUNNER		1
 
@@ -52,9 +56,9 @@ int g_fCombineQuestion;				// true if an idle grunt asked a question. Cleared wh
 
 #define COMBINE_NUM_DECOYS 5
 
-#define COMBINE_EYE_STANDING_POSITION	Vector( 0, 0, 66 )
+#define COMBINE_EYE_STANDING_POSITION	Vector( 0, 0, 62 )	// ( 0, 0, 66 )
 #define COMBINE_GUN_STANDING_POSITION	Vector( 0, 0, 57 )
-#define COMBINE_EYE_CROUCHING_POSITION	Vector( 0, 0, 40 )
+#define COMBINE_EYE_CROUCHING_POSITION	Vector( 0, 0, 38 )	// ( 0, 0, 40 )
 #define COMBINE_GUN_CROUCHING_POSITION	Vector( 0, 0, 36 )
 #define COMBINE_SHOTGUN_STANDING_POSITION	Vector( 0, 0, 36 )
 #define COMBINE_SHOTGUN_CROUCHING_POSITION	Vector( 0, 0, 36 )
@@ -63,7 +67,8 @@ int g_fCombineQuestion;				// true if an idle grunt asked a question. Cleared wh
 #define COMBINE_DECOY_RADIUS	360
 #define COMBINE_FEAR_ANTLION_DIST_SQR	Square(360)
 #define COMBINE_FEAR_ZOMBIE_DIST_SQR	Square(60)
-
+#define COMBINE_LARGER_BURST_RANGE	(12.0f * 21.0f) // If an enemy is 21 feet away, soldiers fire larger continuous bursts.
+#define COMBINE_SINGLE_FIRE_RANGE	(36.0f * 21.0f) // If an enemy is 21 yards away, soldiers fire in single mode.
 //-----------------------------------------------------------------------------
 // Static stuff local to this file.
 //-----------------------------------------------------------------------------
@@ -225,6 +230,29 @@ bool CNPC_Combine::CreateComponents()
 	return true;
 }
 
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+bool CNPC_Combine::IsJumpLegal(const Vector &startPos, const Vector &apex, const Vector &endPos) const
+{
+	float MAX_JUMP_RISE		= ai_combine_max_jump_rise.GetFloat();
+	float MAX_JUMP_DISTANCE = ai_combine_max_jump_distance.GetFloat();
+	float MAX_JUMP_DROP		= ai_combine_max_jump_drop.GetFloat();
+
+	trace_t tr;
+	UTIL_TraceHull(startPos, startPos, GetHullMins(), GetHullMaxs(), MASK_NPCSOLID, this, COLLISION_GROUP_NONE, &tr);
+	if (tr.startsolid)
+	{
+		// Trying to start a jump in solid! Consider checking for this in CAI_MoveProbe::JumpMoveLimit.
+		Assert(0);
+		return false;
+	}
+
+	if (BaseClass::IsJumpLegal(startPos, apex, endPos, MAX_JUMP_RISE, MAX_JUMP_DROP, MAX_JUMP_DISTANCE))
+	{
+		return true;
+	}
+	return false;
+}
 
 //------------------------------------------------------------------------------
 // Purpose: Don't look, only get info from squad.
@@ -347,7 +375,7 @@ void CNPC_Combine::Spawn( void )
 	SetSolid( SOLID_BBOX );
 	AddSolidFlags( FSOLID_NOT_STANDABLE );
 	SetMoveType( MOVETYPE_STEP );
-	SetBloodColor( BLOOD_COLOR_RED );
+	SetBloodColor( BLOOD_COLOR_COMBINE );
 	m_flFieldOfView			= -0.2;// indicates the width of this NPC's forward view cone ( as a dotproduct result )
 	m_NPCState				= NPC_STATE_NONE;
 	m_flNextGrenadeCheck	= gpGlobals->curtime + 1;
@@ -1032,14 +1060,14 @@ void CNPC_Combine::StartTask( const Task_t *pTask )
 
 	case TASK_COMBINE_IGNORE_ATTACKS:
 		// must be in a squad of 3 or more members
-//		if (m_pSquad && m_pSquad->NumMembers() > 2)
-//		{
+		if (m_pSquad && m_pSquad->NumMembers() > 2)
+		{
 			// the enemy must be far enough away
-//			if (GetEnemy() && (GetEnemy()->WorldSpaceCenter() - WorldSpaceCenter()).Length() > 256.0 )
+			if (GetEnemy() && (GetEnemy()->WorldSpaceCenter() - WorldSpaceCenter()).Length() > 256.0 )
 			{
 				m_flNextAttack	= gpGlobals->curtime + pTask->flTaskData;
 			}
-//		}
+		}
 		TaskComplete( );
 		break;
 
@@ -1126,10 +1154,31 @@ void CNPC_Combine::StartTask( const Task_t *pTask )
 
 	case TASK_RANGE_ATTACK1:
 	{
-		m_nShots = GetActiveWeapon()->GetRandomBurst();
 		m_flShotDelay = GetActiveWeapon()->GetFireRate();
-		m_flNextAttack = gpGlobals->curtime + m_flShotDelay - 0.1;	// was - 0.1
+			if (GetAbsOrigin().DistTo(GetEnemy()->GetAbsOrigin()) <= COMBINE_LARGER_BURST_RANGE)
+			{
+				if (!HasShotgun())
+				{
+					// Longer burst
+					m_nShots = GetActiveWeapon()->GetRandomBurst() * 3;
+				}
+					m_flNextAttack = gpGlobals->curtime + m_flShotDelay - 0.1;	// was - 0.1
+			}
+			else if (GetAbsOrigin().DistTo(GetEnemy()->GetAbsOrigin()) >= COMBINE_SINGLE_FIRE_RANGE && !HasShotgun())
+			{
+				{
+					// Single shot
+					m_nShots = 1;
 
+					// Longer intervals to simulate single shooting
+					m_flNextAttack = gpGlobals->curtime + m_flShotDelay - random->RandomFloat(-0.1, 0.1);	// was - 0.1
+				}
+			}
+			else
+			{
+				m_nShots = GetActiveWeapon()->GetRandomBurst();
+				m_flNextAttack = gpGlobals->curtime + m_flShotDelay + random->RandomFloat(0.3, 0.1);	// was - 0.1
+			}
 		ResetIdealActivity(ACT_RANGE_ATTACK1);
 		m_flLastAttackTime = gpGlobals->curtime;
 	}
@@ -1422,6 +1471,18 @@ void CNPC_Combine::BuildScheduleTestBits( void )
 	{
 		SetCustomInterruptCondition( COND_COMBINE_ON_FIRE );
 	}
+
+	if (IsCurSchedule(SCHED_COMBINE_COMBAT_FAIL))
+	{
+		SetCustomInterruptCondition(COND_NEW_ENEMY);
+		SetCustomInterruptCondition(COND_LIGHT_DAMAGE);
+		SetCustomInterruptCondition(COND_HEAVY_DAMAGE);
+	}
+	else if (IsCurSchedule(SCHED_COMBINE_MOVE_TO_MELEE))
+	{
+		SetCustomInterruptCondition(COND_HEAR_DANGER);
+		SetCustomInterruptCondition(COND_HEAR_MOVE_AWAY);
+	}
 }
 
 
@@ -1628,18 +1689,16 @@ bool CNPC_Combine::OnObstructionPreSteer(AILocalMoveGoal_t *pMoveGoal, float dis
 	return BaseClass::OnObstructionPreSteer(pMoveGoal, distClear, pResult);
 }
 
-*/
 int CNPC_Combine::SelectScheduleNoDirectEnemy()
 {
 	// If you can't attack, but there's a physics object in front of you, destroy it
-/*
 	if ( m_hBlockingProp )
 	{
 		SetTarget(m_hBlockingProp);
 		m_hBlockingProp = NULL;
 		return SCHED_COMBINE_SMASH_PROP;
 	}
-*/
+
 	// Now is a good time to flank.
 	if (IsInSquad() && GetSquad()->NumMembers() > 3 && IsStrategySlotRangeOccupied(SQUAD_SLOT_ATTACK1, SQUAD_SLOT_ATTACK2) && OccupyStrategySlotRange(SQUAD_SLOT_FLANK_FIRST, SQUAD_SLOT_FLANK_LAST))
 	{
@@ -1648,7 +1707,7 @@ int CNPC_Combine::SelectScheduleNoDirectEnemy()
 
 	return SCHED_CHASE_ENEMY;
 }
-
+*/
 //-----------------------------------------------------------------------------
 // Select the combat schedule
 //-----------------------------------------------------------------------------
@@ -1929,8 +1988,7 @@ int CNPC_Combine::SelectCombatSchedule()
 */
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
-#define COMBINE_LARGER_BURST_RANGE	(12.0f * 21.0f) // If an enemy is 21 feet away, soldiers fire larger continuous bursts.
-#define COMBINE_SINGLE_FIRE_RANGE	(36.0f * 40.0f) // If an enemy is 40 yards away, soldiers fire in single mode.
+/*
 void CNPC_Combine::OnUpdateShotRegulator()
 {
 	BaseClass::OnUpdateShotRegulator();
@@ -1939,25 +1997,29 @@ void CNPC_Combine::OnUpdateShotRegulator()
 	{
 		if (GetAbsOrigin().DistTo(GetEnemy()->GetAbsOrigin()) <= COMBINE_LARGER_BURST_RANGE)
 		{
-			if (!HasShotgun())
-			{
-				// Longer burst
-				int longBurst = random->RandomInt(10, 15);
-				GetShotRegulator()->SetBurstShotsRemaining(longBurst);
-			}
-				GetShotRegulator()->SetRestInterval(0.15, 0.25);
+				if (!HasShotgun())
+				{
+					// Longer burst
+					int longBurst = random->RandomInt(10, 15);
+					GetShotRegulator()->SetBurstShotsRemaining(longBurst);
+				}
+				GetShotRegulator()->SetRestInterval(0.15f, 0.25f);
 		}
-		else if (GetAbsOrigin().DistTo(GetEnemy()->GetAbsOrigin()) <= COMBINE_SINGLE_FIRE_RANGE && !HasShotgun())
+		else if (GetAbsOrigin().DistTo(GetEnemy()->GetAbsOrigin()) >= COMBINE_SINGLE_FIRE_RANGE && !HasShotgun())
 		{
-			int shortBurst = random->RandomInt(1, 3);
+			{
+				// Shorter burst
+				int shortBurst = random->RandomInt(1, 3);
 
-			GetShotRegulator()->SetBurstShotsRemaining(shortBurst);
-			GetShotRegulator()->SetRestInterval(0.5, 0.9);
-			GetShotRegulator()->SetBurstInterval(0.2, 0.4);
+				// Longer intervals to simulate single shooting
+				GetShotRegulator()->SetBurstShotsRemaining(shortBurst);
+				GetShotRegulator()->SetRestInterval(0.9f, 1.5f);
+				GetShotRegulator()->SetBurstInterval(0.2f, 0.5f);
+			}
 		}
 	}
 }
-
+*/
 //-----------------------------------------------------------------------------
 // Purpose:
 // Input  :
@@ -2264,15 +2326,24 @@ int CNPC_Combine::SelectScheduleAttack()
 	// hurt it with bullets, so become grenade happy.
 	if (GetEnemy() && GetEnemy()->Classify() == CLASS_COMBINE && FClassnameIs(GetEnemy(), "npc_turret_floor"))
 	{
-		if (CanGrenadeEnemy() && OccupyStrategySlot(SQUAD_SLOT_GRENADE1))
+		// Don't do this until I've been fighting the turret for a few seconds
+		float flTimeAtFirstHand = GetEnemies()->TimeAtFirstHand(GetEnemy());
+		if (flTimeAtFirstHand != AI_INVALID_TIME)
 		{
-			if (FClassnameIs(GetActiveWeapon(), "weapon_smg1") && gpGlobals->curtime > m_flNextAltFireTime && HasCondition(COND_CAN_RANGE_ATTACK1))
+			float flTimeEnemySeen = gpGlobals->curtime - flTimeAtFirstHand;
+			if (flTimeEnemySeen > 2.0)
 			{
-				return SCHED_COMBINE_AR2_ALTFIRE;
-			}
-			else
-			{
-				return SCHED_RANGE_ATTACK2;
+				if (CanGrenadeEnemy() && OccupyStrategySlot(SQUAD_SLOT_GRENADE1))
+				{
+					if (FClassnameIs(GetActiveWeapon(), "weapon_smg1") && gpGlobals->curtime > m_flNextAltFireTime && HasCondition(COND_CAN_RANGE_ATTACK1))
+					{
+						return SCHED_COMBINE_AR2_ALTFIRE;
+					}
+					else
+					{
+						return SCHED_RANGE_ATTACK2;
+					}
+				}
 			}
 		}
 
@@ -2562,13 +2633,14 @@ int CNPC_Combine::TranslateSchedule(int scheduleType)
 			*/
 	case SCHED_COMBINE_TAKECOVER_FAILED:
 	{
-		if (HasCondition(COND_CAN_RANGE_ATTACK1) && OccupyStrategySlotRange(SQUAD_SLOT_ATTACK1, SQUAD_SLOT_ATTACK2))
+		if (HasCondition(COND_CAN_RANGE_ATTACK1) && OccupyStrategySlotRange(SQUAD_SLOT_ATTACK1, SQUAD_SLOT_ATTACK2) | OccupyStrategySlotRange(SQUAD_SLOT_FLANK_FIRST, SQUAD_SLOT_FLANK_LAST))
 		{
 			return TranslateSchedule(SCHED_RANGE_ATTACK1);
 		}
-		else if (HasCondition(COND_CAN_RANGE_ATTACK1) && OccupyStrategySlotRange(SQUAD_SLOT_FLANK_FIRST, SQUAD_SLOT_FLANK_LAST))
+
+		if ( HasCondition(COND_CAN_RANGE_ATTACK2) && OccupyStrategySlot(SQUAD_SLOT_GRENADE1))
 		{
-			return TranslateSchedule(SCHED_RANGE_ATTACK1);
+			return TranslateSchedule(SCHED_RANGE_ATTACK2);
 		}
 
 		// -Run somewhere randomly
@@ -3452,7 +3524,7 @@ bool CNPC_Combine::CanAltFireEnemy( bool bUseFreeKnowledge )
 
 	if ( GetActiveWeapon() )
 	{
-		GetAttachment("righthand", vShootPosition);
+		GetActiveWeapon()->GetAttachment("muzzle", vShootPosition);
 	}
 
 	// Trace a hull about the size of the combine ball.
@@ -3461,19 +3533,19 @@ bool CNPC_Combine::CanAltFireEnemy( bool bUseFreeKnowledge )
 	float flLength = (vShootPosition - vecTarget).Length();
 
 	flLength *= tr.fraction;
-	//If the ball can travel 95% of the distance to the player then let the NPC shoot it. 
-	if (tr.fraction >= 0.95 && (!tr.m_pEnt || !tr.m_pEnt->IsWorld()) && flLength > 128.0f)	// (!tr.m_pEnt || !tr.m_pEnt->IsWorld()) && Thanks to Mapbase
+	//If the ball can travel 90% of the distance to the player then let the NPC shoot it. 
+	if (tr.fraction >= 0.90 && (!tr.m_pEnt || !tr.m_pEnt->IsWorld()))	// (!tr.m_pEnt || !tr.m_pEnt->IsWorld()) && Thanks to Mapbase //&& flLength > 128.0f
 	{
 		// Target is valid
 		m_vecAltFireTarget = vecTarget;
 		return true;
 	}
 
-	if (FClassnameIs(GetEnemy(), "npc_turret_floor") && flLength > 128.0f)
-	{
-		m_vecAltFireTarget = vecTarget;
-		return true;
-	}
+//	if (FClassnameIs(GetEnemy(), "npc_turret_floor"))
+//	{
+//		m_vecAltFireTarget = vecTarget;
+//		return true;
+//	}
 
 	// ---------------------------------------------------------------------
 	// Are any of my squad members near the intended grenade impact area?
@@ -3789,30 +3861,30 @@ WeaponProficiency_t CNPC_Combine::CalcWeaponProficiency(CBaseCombatWeapon *pWeap
 	{
 		if (g_pGameRules->IsSkillLevel(SKILL_HARD))
 		{
-			return WEAPON_PROFICIENCY_VERY_GOOD;	// 3/4.5
+			return WEAPON_PROFICIENCY_VERY_GOOD;	// 2/6
 		}
 		else if (g_pGameRules->IsSkillLevel(SKILL_EASY))
 		{
-			return WEAPON_PROFICIENCY_AVERAGE;		// 4/6
+			return WEAPON_PROFICIENCY_AVERAGE;		// 3/9
 		}
 		else
 		{
-			return WEAPON_PROFICIENCY_GOOD;			// 5/7.5
+			return WEAPON_PROFICIENCY_GOOD;			// 2.4/7.2
 		}
 	}
 	else if (FClassnameIs(pWeapon, "weapon_ar2"))
 	{
-		if (g_pGameRules->IsSkillLevel(SKILL_EASY))	// Poor accuracy on easy or map c17_07 plaza defense
+		if (g_pGameRules->IsSkillLevel(SKILL_EASY))
 		{
-			return WEAPON_PROFICIENCY_POOR;		// 6/9 nice.
+			return WEAPON_PROFICIENCY_POOR;		// 4/12
 		}
 		else if (g_pGameRules->IsSkillLevel(SKILL_MEDIUM))
 		{
-			return WEAPON_PROFICIENCY_AVERAGE;		// 5/7.5
+			return WEAPON_PROFICIENCY_AVERAGE;		// 3/9
 		}
 		else
 		{
-			return WEAPON_PROFICIENCY_GOOD;	// 4/6
+			return WEAPON_PROFICIENCY_GOOD;	// 2.4/7.2
 		}
 	}
 	else if (FClassnameIs(pWeapon, "weapon_shotgun"))
@@ -3821,23 +3893,32 @@ WeaponProficiency_t CNPC_Combine::CalcWeaponProficiency(CBaseCombatWeapon *pWeap
 		{
 			m_nSkin = COMBINE_SKIN_SHOTGUNNER;
 		}
+		if (g_pGameRules->IsSkillLevel(SKILL_HARD))
 		{
-			return WEAPON_PROFICIENCY_PERFECT;		// 6/9 nice.
+			return WEAPON_PROFICIENCY_VERY_GOOD;
+		}
+		else if (g_pGameRules->IsSkillLevel(SKILL_EASY))
+		{
+			return WEAPON_PROFICIENCY_AVERAGE;
+		}
+		else
+		{
+			return WEAPON_PROFICIENCY_GOOD;	
 		}
 	}
 	else if (FClassnameIs(pWeapon, "weapon_smg1"))
 	{
 		if (g_pGameRules->IsSkillLevel(SKILL_HARD))
 		{
-			return WEAPON_PROFICIENCY_VERY_GOOD;	// 4/6.65
+			return WEAPON_PROFICIENCY_VERY_GOOD;	// 4.5/7.2
 		}
 		else if (g_pGameRules->IsSkillLevel(SKILL_EASY))
 		{
-			return WEAPON_PROFICIENCY_POOR;			// 9/15
+			return WEAPON_PROFICIENCY_AVERAGE;			// 8.25/13.2
 		}
 		else
 		{
-			return WEAPON_PROFICIENCY_GOOD;			// 6/10
+			return WEAPON_PROFICIENCY_GOOD;			// 6.25/10
 		}
 	}
 
@@ -4088,6 +4169,7 @@ DEFINE_SCHEDULE
  "		TASK_WALK_PATH						0"
  "		TASK_WAIT_FOR_MOVEMENT				0"
  "		TASK_FACE_ENEMY						0"
+ "		TASK_COMBINE_SET_STANDING			0"
  "		TASK_PLAY_SEQUENCE					ACTIVITY:ACT_VICTORY_DANCE"
  ""
  "	Interrupts"
@@ -4138,7 +4220,7 @@ DEFINE_SCHEDULE
  "	Tasks "
  "		TASK_SET_FAIL_SCHEDULE			SCHEDULE:SCHED_FAIL_ESTABLISH_LINE_OF_FIRE"
  "		TASK_SET_TOLERANCE_DISTANCE		48"
- "		TASK_GET_PATH_TO_ENEMY_LKP_LOS	0"
+ "		TASK_GET_FLANK_RADIUS_PATH_TO_ENEMY_LOS	252"		//TASK_GET_PATH_TO_ENEMY_LKP_LOS 0
  "		TASK_COMBINE_SET_STANDING		1"
  "		TASK_SPEAK_SENTENCE				1"
  "		TASK_RUN_PATH					0"
@@ -4801,7 +4883,7 @@ DEFINE_SCHEDULE
  "		COND_ENEMY_DEAD"
  "		COND_CAN_MELEE_ATTACK1"
  )
-
+ /*
  DEFINE_SCHEDULE
  (
  SCHED_COMBINE_SMASH_PROP,
@@ -4814,6 +4896,7 @@ DEFINE_SCHEDULE
  "		COND_ENEMY_DEAD"
  "		COND_HEAR_DANGER"
  "		COND_HEAR_MOVE_AWAY"
- );
+ )
+ */;
  
  AI_END_CUSTOM_NPC()

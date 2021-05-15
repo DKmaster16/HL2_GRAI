@@ -1,526 +1,526 @@
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\client.pch
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\vc120.pdb
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\stdafx.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\replaycamera.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\animatedoffsettextureproxy.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\base_playeranimstate.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\baseparticleentity.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\beam_shared.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_basedoor.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_baseflex.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_playerresource.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_ragdoll_manager.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_shadowcontrol.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_spotlight_end.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_sun.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_team_objectiveresource.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_waterlodcontrol.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\cdll_bounded_cvars.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\cdll_util.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\clientsideeffects.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\clientsteamcontext.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\dummyproxy.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\effectsclient.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\entityoriginmaterialproxy.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\env_detail_controller.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\func_ladder.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\fx_interpvalue.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\fx_shelleject.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\fx_tracer.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\gamerules.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\haptic_utils.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\hud.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\hud_msg.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\hud_vehicle.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\movevars_shared.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\panelmetaclassmgr.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\point_bonusmaps_accessor.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\precache_register.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\predictableid.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\predictioncopy.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\proxypupil.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\recvproxy.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\rope_helpers.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\screenspaceeffects.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\spritemodel.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\texturescrollmaterialproxy.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\train.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\vgui_consolepanel.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\vgui_debugoverlaypanel.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\vgui_slideshow_display_screen.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\viewangleanim.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\weapon_parse.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\clientscoreboarddialog.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\achievements_ep1.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_basehelicopter.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_corpse.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_hl2_playerlocaldata.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_npc_combinegunship.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_thumper_dust.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_vehicle_jeep_episodic.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\fx_hl2_impacts.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\hl2_usermessages.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\hl_in_main.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\hud_battery.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\hud_locator.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\script_intro_shared.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\shieldproxy.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\survival_gamerules.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_particle_smokegrenade.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_steamjet.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_te_basebeam.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_te_beamlaser.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_te_bloodstream.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_te_decal.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_te_glassshatter.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_te_smoke.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\fx.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\achievementmgr.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_colorcorrection.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_entityparticletrail.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_env_screenoverlay.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_func_areaportalwindow.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_func_dust.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_func_smokevolume.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_particle_system.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_props.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_soundscape.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_tesla.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_vote_controller.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\clientsideeffects_test.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\collisionproperty.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\death_pose.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\debugoverlay_shared.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\detailobjectsystem.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\fx_impact.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\fx_water.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\gametrace_client.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\gamevars_shared.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\glow_outline_effect.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\haptic_msgs.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\hintmessage.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\history_resource.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\hud_closecaption.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\in_joystick.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\movehelper_client.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\particle_proxies.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\particlemgr.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\proxyentity.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\proxyplayer.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\sceneentity_shared.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\sequence_transitioner.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\simtimer.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\soundemittersystem.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\vgui_centerstringpanel.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\vgui_netgraphpanel.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\view_effects.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\warp_overlay.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\worlddimsproxy.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\baseviewport.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_barnacle.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_env_alyxtemp.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_info_teleporter_countdown.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\hud_health.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\hud_radar.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_particle_fire.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_smoke_trail.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_te_beamring.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_te_bubbles.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_te_footprint.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_te_legacytempents.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\cdll_replay.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\animatedentitytextureproxy.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\animation.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\baseentity_shared.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\baseplayer_shared.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_basecombatcharacter.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_basecombatweapon.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_env_particlescript.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_env_tonemap_controller.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_func_conveyor.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_func_monitor.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_gib.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_physmagnet.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_point_commentary_node.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\client_virtualreality.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\colorcorrectionmgr.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\decals.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\eventlist.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\functionproxy.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\fx_cube.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\fx_fleck.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\fx_quad.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\gamemovement.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\glow_overlay.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\hintsystem.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\hltvcamera.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\hud_autoaim.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\hud_element_helper.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\hud_filmdemo.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\hud_redraw.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\lamphaloproxy.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\message.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\physics_shared.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\props_shared.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\simple_keys.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\singleplay_gamerules.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\soundenvelope.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\teamplayroundbased_gamerules.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\vgui_loadingdiscpanel.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\view.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\voice_banmgr.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\weapon_parse_default.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\weapon_selection.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\commandmenu.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\teammenu.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_plasma_beam_node.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_strider.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\episodic_screenspaceeffects.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\fx_antlion.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\hl_gamemovement.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\hud_flashlight.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\hud_posture.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\vgui_rootpanel_hl2.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\sixense_convars.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_effects.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_te_beampoints.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_te_bspdecal.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_te_energysplash.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_te_killplayerattachments.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_te_projecteddecal.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_te_worlddecal.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\fx_line.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\entity_client_tools.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\achievement_saverestore.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\ammodef.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\baseachievement.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_baseplayer.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_sprite_perfmonitor.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_team.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_user_message_register.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_vehicle_jeep.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\cam_thirdperson.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\cdll_client_int.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\hud_chat.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\igamesystem.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\in_camera.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\interpolatedvar.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\mapentities_shared.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\menu.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\playerandobjectenumerator.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\playerspawncache.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\point_posecontroller.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\prediction.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\studio_stats.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\vgui_bitmapimage.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\vgui_grid.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\vgui_video.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\viewdebug.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\waterlodmaterialproxy.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\weapons_resource.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\intromenu.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\vguitextwindow.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_vehicle_airboat.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\clientmode_hlnormal.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\hud_weaponselection.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_te.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_te_beamfollow.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_te_breakmodel.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_te_dynamiclight.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_te_glowsprite.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_te_sparks.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_tracer.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\fx_discreetline.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\fx_sparks.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\achievements_hlx.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\alphamaterialproxy.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\baseanimatedtextureproxy.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\basecombatweapon_shared.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\baseprojectile.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\bone_accessor.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\bone_merge_cache.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_baseanimating.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_func_tracktrain.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_materialmodifycontrol.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_pixel_visibility.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_sprite.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_vehicle_choreo_generic.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\camomaterialproxy.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\classmap.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\clienteffectprecachesystem.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\cliententitylist.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\clientmode_shared.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\hud_bitmapnumericdisplay.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\hud_hintdisplay.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\in_main.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\perfvisualbenchmark.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\physics_main_shared.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\splinepatch.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\spritetrail.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\timematerialproxy.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\usermessages.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\vgui_bitmapbutton.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\vgui_int.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\view_beams.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\viewconeimage.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\basemodel_panel.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\mapoverview.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\basehlcombatweapon_shared.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_barney.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_basehlcombatweapon.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_env_starfield.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_npc_puppet.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_rotorwash.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_vehicle_crane.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_weapon_crossbow.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_weapon_physcannon.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\flesh_internal_material_proxy.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\fx_hl2_tracers.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\hl_prediction.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\hud_blood.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\hud_damageindicator.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\hud_quickinfo.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\in_sixense.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\in_sixense_gesture_bindings.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_basetempentity.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_impact_effects.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_smokestack.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_te_beamentpoint.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_te_beamringpoint.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_te_bubbletrail.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_te_fizz.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_te_muzzleflash.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_te_showline.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_testtraceline.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\particlesphererenderer.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\bonelist.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\activitylist.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\basepresence.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\baseviewmodel_shared.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_baseanimatingoverlay.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_breakableprop.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_dynamiclight.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_env_fog_controller.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_env_projectedtexture.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_fish.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_func_lod.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_func_rotating.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_info_overlay_accessor.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_physbox.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_point_camera.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_rope.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_waterbullet.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_world.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\cl_mat_stub.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\client_factorylist.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\client_thinklist.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\clientleafsystem.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\effect_dispatch_data.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\ehandle.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\entitylist_base.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\entityparticletrail_shared.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\env_wind_shared.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\fx_blood.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\fx_staticline.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\fx_trail.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\gamestringpool.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\geiger.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\hud_animationinfo.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\hud_crosshair.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\hud_numericdisplay.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\initializer.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\isnpcproxy.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\lampbeamproxy.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\mathproxy.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\particle_collision.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\particle_parse.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\particles_new.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\physics_main_client.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\physpropclientside.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\ragdoll.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\studio_shared.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\takedamageinfo.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\teamplay_gamerules.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\toggletextureproxy.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\util_shared.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\vgui_bitmappanel.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\vgui_fpspanel.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\view_scene.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\viewpostprocess.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\basemodelpanel.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\spectatorgui.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_citadel_effects.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_func_tankmortar.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_npc_antlionguard.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_prop_combine_ball.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_te_flare.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_weapon__stubs_hl2.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\death.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\hud_credits.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\hud_squadstatus.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_prop_vehicle.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_te_explosion.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_te_playerdecal.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\toolframework_client.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\mp3player.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\animatedtextureproxy.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\animatespecifictextureproxy.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\baseclientrendertargets.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\basecombatcharacter_shared.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\basegrenade_shared.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\beamdraw.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_ai_basehumanoid.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_ai_basenpc.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_baseentity.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_func_breakablesurf.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_func_occluder.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_hairball.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_plasma.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_rumble.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_slideshow_display.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_test_proxytoggle.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_vguiscreen.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\commentary_modelviewer.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\hud_basechat.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\hud_pdump.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\matrixproxy.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\mp_shareddefs.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\obstacle_pushaway.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\particle_litsmokeemitter.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\particle_property.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\particles_ez.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\particles_simple.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\physics_saverestore.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\saverestore.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\test_ehandle.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\vehicle_viewblend_shared.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\vgui_basepanel.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\vgui_game_viewport.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\vgui_messagechars.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\vgui_video_player.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\viewrender.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_antlion_dust.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_ar2_explosion.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_basehlplayer.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_npc_advisor.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_npc_rollermine.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_te_concussiveexplosion.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_vehicle_cannon.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_vort_charge_token.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_weapon_stunstick.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\hl2_gamerules.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\hud_ammo.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\hud_poisondamageindicator.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\hud_zoom.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_te_armorricochet.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_te_bloodsprite.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_te_effect_dispatch.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_te_largefunnel.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_te_physicsprop.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_te_spritespray.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\fx_envelope.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\achievement_notification_panel.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_baseviewmodel.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_colorcorrectionvolume.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_entitydissolve.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_fire_smoke.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_func_reflective_glass.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_lightglow.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_physicsprop.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_sceneentity.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\clientshadowmgr.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\flashlighteffect.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\fx_explosion.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\gamerules_register.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\gamestats.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\hud_basetimer.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\hud_hdrdemo.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\hud_weapon.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\multiplay_gamerules.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\particle_simple3d.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\particles_attractor.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\particles_localspace.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\particlesystemquery.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\physics.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\proxyhealth.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\ragdoll_shared.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\soundparametersinternal.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\sprite.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\text_message.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\usercmd.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\vgui_avatarimage.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\vgui_schemevisualizer.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\voice_status.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\iconpanel.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\navprogress.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\achievements_ep2.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\achievements_epx.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_env_headcrabcanister.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_npc_manhack.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_prop_scalable.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_script_intro.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_vehicle_prisoner_pod.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_weapon_hopwire.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\env_headcrabcanister_shared.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\fx_bugbait.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\hl2_clientmode.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\hud_suitpower.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_movie_explosion.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_recipientfilter.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_stickybolt.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_te_beaments.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_te_beamspline.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_te_clientprojectile.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_te_impact.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_te_particlesystem.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\c_te_sprite.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\smoke_fog_overlay.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\client_class.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\networkvar.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\posedebugger.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\simple_physics.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\vallocator.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\compiledcaptionswap.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\jigglebones.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\sentence.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\vgui_controls.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\dt_utlvector_recv.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\in_mouse.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\bone_setup.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\rope_physics.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\scratchpadutils.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\studio.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\collisionutils.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\interval.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\mumble.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\crtmemdebug.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\filesystem_helpers.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\language.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\randoverride.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\rendertexture.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\sheetsimulator.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\dt_utlvector_common.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\interpolatortypes.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\memoverride.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\renamed_recvtable_compat.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\scratchpad3d.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\stringregistry.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\dt_recv.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\hud_lcd.obj
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\client.lib
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\client.exp
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\pointeroverride.obj
-d:\games\my first mod\sp\src\game\client\client_episodic.vpc.sentinel
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\client.dll
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\client.pdb
-d:\games\my first mod\sp\src\game\client\.\release_mod_episodic\client.dll
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\client (.353a799f.tlog\cl.command.1.tlog
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\client (.353a799f.tlog\cl.read.1.tlog
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\client (.353a799f.tlog\cl.write.1.tlog
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\client (.353a799f.tlog\client (episodic).write.1u.tlog
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\client (.353a799f.tlog\custombuild.command.1.tlog
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\client (.353a799f.tlog\custombuild.read.1.tlog
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\client (.353a799f.tlog\custombuild.write.1.tlog
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\client (.353a799f.tlog\link.command.1.tlog
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\client (.353a799f.tlog\link.read.1.tlog
-d:\games\my first mod\sp\src\game\client\release_mod_episodic\client (.353a799f.tlog\link.write.1.tlog
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\client.pch
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\vc120.pdb
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\stdafx.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\achievement_notification_panel.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\baseviewmodel_shared.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_baseanimatingoverlay.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_colorcorrection.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_env_fog_controller.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_env_screenoverlay.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_func_dust.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_lightglow.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_pixel_visibility.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_soundscape.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_tesla.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_waterbullet.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_waterlodcontrol.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\cdll_client_int.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\glow_outline_effect.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\hud_basechat.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\hud_pdump.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\in_main.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\particlemgr.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\proxyplayer.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\sceneentity_shared.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\sequence_transitioner.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\simple_keys.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\soundemittersystem.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\vgui_bitmapimage.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\vgui_loadingdiscpanel.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\vgui_video_player.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\voice_banmgr.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\weapon_parse.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\commandmenu.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\spectatorgui.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_basehlcombatweapon.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_env_starfield.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_npc_puppet.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_rotorwash.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_vehicle_jeep_episodic.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\flesh_internal_material_proxy.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\hl2_gamerules.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\hud_blood.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\hud_flashlight.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\hud_quickinfo.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\vgui_rootpanel_hl2.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\sixense_convars.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_movie_explosion.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_recipientfilter.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_te_armorricochet.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_te_basebeam.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_te_beamringpoint.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_te_bubbletrail.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_te_fizz.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_te_legacytempents.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\achievements_hlx.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\animatedtextureproxy.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\animatespecifictextureproxy.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\baseanimatedtextureproxy.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\basecombatcharacter_shared.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\basepresence.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\beam_shared.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_baseplayer.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_func_breakablesurf.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_info_overlay_accessor.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_particle_system.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_plasma.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_sceneentity.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\classmap.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\clientshadowmgr.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\entitylist_base.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\env_wind_shared.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\fx_cube.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\fx_interpvalue.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\fx_shelleject.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\fx_trail.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\gamestats.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\hud_chat.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\hud_msg.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\igamesystem.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\initializer.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\lampbeamproxy.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\mathproxy.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\obstacle_pushaway.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\particle_property.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\particles_ez.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\physics.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\predictableid.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\proxyhealth.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\ragdoll.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\teamplayroundbased_gamerules.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\vgui_debugoverlaypanel.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\vgui_slideshow_display_screen.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\viewangleanim.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\warp_overlay.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\weapon_selection.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\mapoverview.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_ar2_explosion.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_basehlplayer.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_prop_combine_ball.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_te_concussiveexplosion.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_vehicle_crane.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_weapon_hopwire.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\episodic_screenspaceeffects.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\fx_hl2_impacts.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\hl_in_main.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\hud_credits.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\hud_squadstatus.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_basetempentity.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_prop_vehicle.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_te_clientprojectile.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_te_glowsprite.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_te_smoke.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_tracer.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\fx_envelope.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\bonelist.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\replaycamera.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\animatedoffsettextureproxy.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\baseclientrendertargets.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\baseentity_shared.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_basecombatweapon.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_dynamiclight.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_env_particlescript.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_env_tonemap_controller.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_func_conveyor.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_func_occluder.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_func_tracktrain.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_materialmodifycontrol.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_point_camera.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_rumble.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_spotlight_end.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_sprite_perfmonitor.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_team.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_vehicle_choreo_generic.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\cdll_bounded_cvars.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\client_thinklist.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\clientmode_shared.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\geiger.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\hltvcamera.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\hud_bitmapnumericdisplay.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\hud_filmdemo.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\hud_vehicle.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\isnpcproxy.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\mapentities_shared.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\movehelper_client.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\particle_litsmokeemitter.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\particle_simple3d.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\particles_new.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\physics_saverestore.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\saverestore.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\takedamageinfo.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\text_message.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\util_shared.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\vgui_centerstringpanel.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\vgui_netgraphpanel.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\view_scene.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\viewconeimage.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\weapon_parse_default.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\basemodel_panel.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\navprogress.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\achievements_epx.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_env_headcrabcanister.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_npc_combinegunship.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_vort_charge_token.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_weapon_stunstick.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\fx_hl2_tracers.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\hl_prediction.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\hud_damageindicator.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\hud_radar.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_effects.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_te_beamring.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_te_bubbles.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_te_footprint.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_te_muzzleflash.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_te_sparks.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\fx.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\activitylist.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\basecombatweapon_shared.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_ai_basehumanoid.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_baseanimating.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_sun.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_test_proxytoggle.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_vote_controller.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\cliententitylist.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\clientsideeffects_test.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\commentary_modelviewer.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\gamevars_shared.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\haptic_msgs.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\hud.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\hud_redraw.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\in_joystick.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\menu.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\particlesystemquery.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\physics_shared.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\precache_register.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\predictioncopy.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\ragdoll_shared.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\soundparametersinternal.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\studio_shared.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\studio_stats.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\vehicle_viewblend_shared.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\vgui_bitmapbutton.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\vgui_grid.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\vgui_video.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\viewdebug.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\worlddimsproxy.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\baseviewport.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_antlion_dust.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_barney.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_corpse.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_hl2_playerlocaldata.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_npc_antlionguard.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_prop_scalable.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_thumper_dust.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_vehicle_prisoner_pod.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_weapon_physcannon.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\fx_bugbait.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\hl2_usermessages.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\hud_ammo.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\hud_poisondamageindicator.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\script_intro_shared.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\survival_gamerules.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_particle_fire.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_smoke_trail.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_te_beampoints.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_te_bspdecal.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_te_explosion.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_te_physicsprop.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_te_spritespray.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\fx_discreetline.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\toolframework_client.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\mp3player.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\ammodef.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\base_playeranimstate.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\baseparticleentity.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\baseplayer_shared.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_baseentity.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_func_areaportalwindow.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_func_lod.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_func_rotating.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_hairball.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_physmagnet.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_point_commentary_node.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_vehicle_jeep.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\cam_thirdperson.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\cdll_util.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\clientsideeffects.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\collisionproperty.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\colorcorrectionmgr.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\debugoverlay_shared.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\dummyproxy.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\effectsclient.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\entityoriginmaterialproxy.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\flashlighteffect.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\fx_explosion.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\gamerules_register.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\gamestringpool.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\hud_basetimer.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\hud_element_helper.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\hud_hintdisplay.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\interpolatedvar.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\movevars_shared.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\panelmetaclassmgr.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\playerandobjectenumerator.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\point_bonusmaps_accessor.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\prediction.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\spritemodel.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\timematerialproxy.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\usermessages.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\vgui_bitmappanel.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\vgui_game_viewport.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\vgui_messagechars.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\view.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\waterlodmaterialproxy.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\basemodelpanel.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\vguitextwindow.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_plasma_beam_node.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_te_flare.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_weapon__stubs_hl2.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\fx_antlion.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\hl_gamemovement.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\hud_health.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\hud_suitpower.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_particle_smokegrenade.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_stickybolt.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_te_beamfollow.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_te_breakmodel.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_te_effect_dispatch.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_te_largefunnel.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_te_projecteddecal.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_testtraceline.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\smoke_fog_overlay.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\cdll_replay.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\alphamaterialproxy.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\baseachievement.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\bone_accessor.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_ai_basenpc.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_basedoor.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_breakableprop.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_entitydissolve.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_env_projectedtexture.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_fish.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_func_monitor.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_func_smokevolume.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_physicsprop.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_ragdoll_manager.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_shadowcontrol.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_sprite.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_user_message_register.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_vguiscreen.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\clientsteamcontext.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\detailobjectsystem.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\fx_fleck.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\fx_quad.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\fx_water.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\haptic_utils.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\hud_autoaim.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\hud_hdrdemo.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\hud_weapon.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\multiplay_gamerules.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\particle_proxies.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\particles_attractor.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\particles_simple.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\physpropclientside.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\props_shared.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\simtimer.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\soundenvelope.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\test_ehandle.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\train.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\vgui_consolepanel.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\vgui_fpspanel.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\view_effects.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\voice_status.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\weapons_resource.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\iconpanel.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\teammenu.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_func_tankmortar.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_npc_manhack.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_script_intro.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_vehicle_cannon.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_weapon_crossbow.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\clientmode_hlnormal.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\hud_posture.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\shieldproxy.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\in_sixense.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\in_sixense_gesture_bindings.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_impact_effects.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_te.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_te_beaments.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_te_beamspline.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_te_decal.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_te_glassshatter.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_te_playerdecal.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\fx_sparks.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\achievement_saverestore.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\animatedentitytextureproxy.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\animation.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\basegrenade_shared.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\beamdraw.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_baseflex.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_props.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_slideshow_display.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_team_objectiveresource.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\camomaterialproxy.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\client_factorylist.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\client_virtualreality.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\death_pose.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\decals.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\env_detail_controller.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\func_ladder.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\fx_impact.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\fx_tracer.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\gamerules.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\gametrace_client.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\glow_overlay.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\history_resource.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\hud_crosshair.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\hud_numericdisplay.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\in_camera.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\matrixproxy.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\mp_shareddefs.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\particle_collision.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\particle_parse.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\particles_localspace.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\perfvisualbenchmark.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\physics_main_shared.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\singleplay_gamerules.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\splinepatch.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\spritetrail.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\toggletextureproxy.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\vgui_avatarimage.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\vgui_schemevisualizer.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\viewpostprocess.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\clientscoreboarddialog.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\achievements_ep1.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_basehelicopter.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_env_alyxtemp.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_npc_advisor.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_npc_rollermine.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_vehicle_airboat.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\death.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\hud_battery.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\hud_locator.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\hud_zoom.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_smokestack.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_te_beamlaser.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_te_bloodsprite.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_te_dynamiclight.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_te_killplayerattachments.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_te_showline.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_te_worlddecal.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\fx_line.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\achievementmgr.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\baseprojectile.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\bone_merge_cache.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_basecombatcharacter.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_baseviewmodel.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_colorcorrectionvolume.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_entityparticletrail.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_fire_smoke.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_func_reflective_glass.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_gib.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_physbox.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_playerresource.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_rope.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_world.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\cl_mat_stub.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\clienteffectprecachesystem.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\clientleafsystem.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\effect_dispatch_data.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\ehandle.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\entityparticletrail_shared.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\eventlist.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\functionproxy.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\fx_blood.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\fx_staticline.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\gamemovement.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\hintmessage.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\hintsystem.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\hud_animationinfo.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\hud_closecaption.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\lamphaloproxy.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\message.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\physics_main_client.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\playerspawncache.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\point_posecontroller.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\proxyentity.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\proxypupil.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\recvproxy.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\rope_helpers.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\screenspaceeffects.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\sprite.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\teamplay_gamerules.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\texturescrollmaterialproxy.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\usercmd.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\vgui_basepanel.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\vgui_int.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\view_beams.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\viewrender.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\intromenu.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\achievements_ep2.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\basehlcombatweapon_shared.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_barnacle.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_citadel_effects.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_info_teleporter_countdown.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_strider.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\env_headcrabcanister_shared.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\hl2_clientmode.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\hud_weaponselection.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_steamjet.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_te_beamentpoint.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_te_bloodstream.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_te_energysplash.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_te_impact.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_te_particlesystem.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\c_te_sprite.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\particlesphererenderer.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\entity_client_tools.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\collisionutils.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\jigglebones.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\scratchpadutils.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\studio.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\dt_utlvector_common.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\in_mouse.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\dt_utlvector_recv.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\hud_lcd.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\dt_recv.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\interpolatortypes.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\mumble.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\bone_setup.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\renamed_recvtable_compat.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\rope_physics.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\sentence.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\compiledcaptionswap.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\interval.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\networkvar.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\posedebugger.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\simple_physics.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\vallocator.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\client_class.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\memoverride.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\scratchpad3d.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\stringregistry.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\crtmemdebug.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\filesystem_helpers.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\language.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\randoverride.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\rendertexture.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\sheetsimulator.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\vgui_controls.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\client.lib
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\client.exp
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\pointeroverride.obj
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\client_episodic.vpc.sentinel
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\client.dll
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\client.pdb
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\.\release_mod_episodic\client.dll
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\client (.353a799f.tlog\cl.command.1.tlog
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\client (.353a799f.tlog\cl.read.1.tlog
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\client (.353a799f.tlog\cl.write.1.tlog
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\client (.353a799f.tlog\client (episodic).write.1u.tlog
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\client (.353a799f.tlog\custombuild.command.1.tlog
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\client (.353a799f.tlog\custombuild.read.1.tlog
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\client (.353a799f.tlog\custombuild.write.1.tlog
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\client (.353a799f.tlog\link.command.1.tlog
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\client (.353a799f.tlog\link.read.1.tlog
+f:\mods\grai code\source-sdk-2013\sp\src\game\client\release_mod_episodic\client (.353a799f.tlog\link.write.1.tlog

@@ -186,6 +186,7 @@ ConVar	sk_npc_chest( "sk_npc_chest","2" );		// was 1
 ConVar	sk_npc_stomach( "sk_npc_stomach","2" );	// was 1
 ConVar	sk_npc_arm( "sk_npc_arm","1" );
 ConVar	sk_npc_leg( "sk_npc_leg","1" );
+ConVar	sk_npc_point_blank_scale("sk_npc_point_blank_scale", "1.5");
 ConVar	showhitlocation( "showhitlocation", "0" );
 
 // Squad debugging
@@ -193,18 +194,18 @@ ConVar  ai_debug_squads( "ai_debug_squads", "0" );
 ConVar  ai_debug_loners( "ai_debug_loners", "0" );
 
 // Shoot trajectory
-ConVar	ai_lead_time( "ai_lead_time","0.0677" );	//0.0
+ConVar	ai_lead_time( "ai_lead_time","-0.05" );	//0.0
 ConVar	ai_shot_stats( "ai_shot_stats", "0" );
 ConVar	ai_shot_stats_term( "ai_shot_stats_term", "1000" );
 ConVar	ai_shot_bias( "ai_shot_bias", "1.0" );
 
 // AI spread. Changes were made for balance reasons
-ConVar	ai_spread_defocused_cone_multiplier( "ai_spread_defocused_cone_multiplier","4.0" );	// was 3.0
-ConVar	ai_spread_cone_focus_time( "ai_spread_cone_focus_time","2.0" );	// was 0.6
-ConVar	ai_spread_pattern_focus_time( "ai_spread_pattern_focus_time","2.7" );	// was 0.8
+ConVar	ai_spread_defocused_cone_multiplier( "ai_spread_defocused_cone_multiplier","3.0" );	// was 3.0
+ConVar	ai_spread_cone_focus_time( "ai_spread_cone_focus_time","1.8" );	// was 0.6
+ConVar	ai_spread_pattern_focus_time( "ai_spread_pattern_focus_time","2.4" );	// was 0.8
 
-ConVar	ai_reaction_delay_idle( "ai_reaction_delay_idle","0.2" );
-ConVar	ai_reaction_delay_alert( "ai_reaction_delay_alert", "0.05" );
+ConVar	ai_reaction_delay_idle( "ai_reaction_delay_idle","0.25" );
+ConVar	ai_reaction_delay_alert( "ai_reaction_delay_alert", "0.15" );
 
 ConVar ai_strong_optimizations( "ai_strong_optimizations", ( IsX360() ) ? "1" : "0" );
 bool AIStrongOpt( void )
@@ -1200,7 +1201,7 @@ void CAI_BaseNPC::TraceAttack( const CTakeDamageInfo &info, const Vector &vecDir
 	}
 
 	// Airboat gun will impart major force if it's about to kill him....
-	if ( info.GetDamageType() & DMG_AIRBOAT )
+/*	if ( info.GetDamageType() & DMG_AIRBOAT )
 	{
 		if ( subInfo.GetDamage() >= GetHealth() )
 		{
@@ -1209,6 +1210,21 @@ void CAI_BaseNPC::TraceAttack( const CTakeDamageInfo &info, const Vector &vecDir
 			{
 				subInfo.ScaleDamageForce( 400.0f * 65.0f / flMagnitude );
 			}
+		}
+	}
+*/
+	if (info.GetDamageType() & DMG_BULLET)
+	{
+		float flDist = FLT_MAX;
+
+		if (info.GetAttacker())
+		{
+			flDist = (GetAbsOrigin() - info.GetAttacker()->GetAbsOrigin()).Length();
+		}
+
+		if ( flDist < 96 )
+		{
+			subInfo.ScaleDamage(sk_npc_point_blank_scale.GetFloat());
 		}
 	}
 
@@ -9598,7 +9614,14 @@ Vector CAI_BaseNPC::GetActualShootPosition( const Vector &shootOrigin )
 #endif
 
 	// lead for some fraction of a second.
-	return (vecTargetPosition + ( GetEnemy()->GetSmoothedVelocity() * ai_lead_time.GetFloat() ));
+	if (Classify() == CLASS_PLAYER_ALLY_VITAL)
+	{
+		return vecTargetPosition;
+	}
+	else
+	{
+		return (vecTargetPosition + (GetEnemy()->GetSmoothedVelocity() * ai_lead_time.GetFloat()));
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -9613,7 +9636,7 @@ float CAI_BaseNPC::GetSpreadBias( CBaseCombatWeapon *pWeapon, CBaseEntity *pTarg
 	if ( pEnemyInfo )
 	{
 		float timeToFocus = ai_spread_pattern_focus_time.GetFloat();
-		if ( timeToFocus > 0.0 )
+		if ( timeToFocus > 0.0 && Classify() != CLASS_PLAYER_ALLY_VITAL )
 		{
 			float timeSinceValidEnemy = gpGlobals->curtime - pEnemyInfo->timeValidEnemy;
 			if ( timeSinceValidEnemy < 0.0f )
@@ -9656,7 +9679,8 @@ Vector CAI_BaseNPC::GetAttackSpread( CBaseCombatWeapon *pWeapon, CBaseEntity *pT
 			if ( timeSinceValidEnemy < timeToFocus )
 			{
 				float coneMultiplier = ai_spread_defocused_cone_multiplier.GetFloat();
-				if ( coneMultiplier > 1.0 )
+
+				if ( coneMultiplier > 1.0 && !Weapon_OwnsThisType("weapon_shotgun") )
 				{
 					float scale = 1.0 - timeSinceValidEnemy / timeToFocus;
 					Assert( scale >= 0.0 && scale <= 1.0 );
@@ -12622,7 +12646,7 @@ bool CAI_BaseNPC::IsCoverPosition( const Vector &vecThreat, const Vector &vecPos
 
 	AI_TraceLOS( vecThreat, vecPosition, this, &tr, &filter );
 
-	if( tr.fraction != 1.0 && hl2_episodic.GetBool() )
+	if( tr.fraction != 1.0 )
 	{
 		if( tr.m_pEnt->m_iClassname == m_iClassname )
 		{

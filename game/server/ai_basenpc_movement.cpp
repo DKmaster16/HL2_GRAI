@@ -25,7 +25,9 @@
 //=============================================================================
 // PATHING & HIGHER LEVEL MOVEMENT
 //-----------------------------------------------------------------------------
-
+ConVar ai_human_max_jump_rise("ai_human_max_jump_rise", "32");
+ConVar ai_human_max_jump_distance("ai_human_max_jump_distance", "250");
+ConVar ai_human_max_jump_drop("ai_human_max_jump_drop", "192");
 //-----------------------------------------------------------------------------
 // Purpose: Static debug function to force all selected npcs to go to the 
 //			given node
@@ -318,9 +320,9 @@ bool CAI_BaseNPC::IsJumpLegal( const Vector &startPos, const Vector &apex, const
 //-----------------------------------------------------------------------------
 bool CAI_BaseNPC::IsJumpLegal( const Vector &startPos, const Vector &apex, const Vector &endPos ) const
 {
-	const float MAX_JUMP_RISE		= 80.0f;
-	const float MAX_JUMP_DISTANCE	= 250.0f;
-	const float MAX_JUMP_DROP		= 192.0f;
+	const float MAX_JUMP_RISE		= ai_human_max_jump_rise.GetFloat();	//80.0f
+	const float MAX_JUMP_DISTANCE	= ai_human_max_jump_distance.GetFloat();	//250.0f
+	const float MAX_JUMP_DROP		= ai_human_max_jump_drop.GetFloat();	//192.0f
 
 	return IsJumpLegal( startPos, apex, endPos, MAX_JUMP_RISE, MAX_JUMP_DROP, MAX_JUMP_DISTANCE );
 }
