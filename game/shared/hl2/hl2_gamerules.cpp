@@ -1814,6 +1814,7 @@ bool CHalfLife2::ShouldBurningPropsEmitLight()
 #define BULLET_IMPULSE(grains, ftpersec)	((ftpersec)*12*BULLET_MASS_GRAINS_TO_KG(grains)*BULLET_IMPULSE_EXAGGERATION)
 #define BULLET_SPEED(ftpersec) (0.12*ftpersec)	// inches per centisecond
 #define BULLET_MASS(grains) (BULLET_MASS_GRAINS_TO_KG(grains)*100)	// centigrams
+#define BULLET_DIAMETER(inches) (inches/2)	// inch/2
 CAmmoDef *GetAmmoDef()
 {
 	static CAmmoDef def;
@@ -1823,35 +1824,34 @@ CAmmoDef *GetAmmoDef()
 	{
 		bInitted = true;
 
-		def.AddAmmoType("AR2",				DMG_BULLET,					TRACER_LINE_AND_WHIZ,	"sk_plr_dmg_ar2",			"sk_npc_dmg_ar2",			"sk_max_ar2",			BULLET_SPEED(750),	BULLET_MASS(520), BULLET_IMPULSE(520, 750), AMMO_DARK_ENERGY);
-		def.AddAmmoType("AlyxGun",			DMG_BULLET,					TRACER_LINE,			"sk_plr_dmg_alyxgun",		"sk_npc_dmg_alyxgun",		"sk_max_alyxgun",		BULLET_SPEED(1200),	BULLET_MASS(180), BULLET_IMPULSE(180, 1200), 0);
-		def.AddAmmoType("Pistol",			DMG_BULLET,					TRACER_LINE_AND_WHIZ,	"sk_plr_dmg_pistol",		"sk_npc_dmg_pistol",		"sk_max_pistol",		BULLET_SPEED(1320),	BULLET_MASS(124), BULLET_IMPULSE(124, 1320), 0);
-		def.AddAmmoType("SMG1",				DMG_BULLET,					TRACER_LINE_AND_WHIZ,	"sk_plr_dmg_smg1",			"sk_npc_dmg_smg1",			"sk_max_smg1",			BULLET_SPEED(2380),	BULLET_MASS(26), BULLET_IMPULSE(26, 2380), 0);
-		def.AddAmmoType("357",				DMG_BULLET,					TRACER_LINE_AND_WHIZ,	"sk_plr_dmg_357",			"sk_npc_dmg_357",			"sk_max_357",			BULLET_SPEED(1475),	BULLET_MASS(180), BULLET_IMPULSE(180, 1475), 0 );	
-		def.AddAmmoType("XBowBolt",			DMG_BULLET,					TRACER_LINE,			"sk_plr_dmg_crossbow",		"sk_npc_dmg_crossbow",		"sk_max_crossbow",		BULLET_SPEED(208),	BULLET_MASS(1316), BULLET_IMPULSE(1316, 208), 0 );		//5264
-		def.AddAmmoType("Slug",				DMG_BULLET,					TRACER_LINE_AND_WHIZ,	"sk_plr_dmg_slug",			"sk_npc_dmg_slug",			"sk_max_slug",			BULLET_SPEED(1600),	BULLET_MASS(438), BULLET_IMPULSE(438, 1600), 0 );	
-		def.AddAmmoType("Buckshot",			DMG_BULLET | DMG_BUCKSHOT,	TRACER_LINE,			"sk_plr_dmg_buckshot",		"sk_npc_dmg_buckshot",		"sk_max_buckshot",		BULLET_SPEED(1325),	BULLET_MASS(53.8), BULLET_IMPULSE(53.8, 1325), 0 );
-		def.AddAmmoType("RPG_Round",		DMG_BURN,					TRACER_NONE,			"sk_plr_dmg_rpg_round",		"sk_npc_dmg_rpg_round",		"sk_max_rpg_round",		0, 0, 0, 0 );
-		def.AddAmmoType("SMG1_Grenade",		DMG_BURN,					TRACER_NONE,			"sk_plr_dmg_smg1_grenade",	"sk_npc_dmg_smg1_grenade",	"sk_max_smg1_grenade",	0, 0, 0, 0 );
-		def.AddAmmoType("SniperRound",		DMG_BULLET | DMG_SNIPER,	TRACER_NONE,			"sk_plr_dmg_sniper_round",	"sk_npc_dmg_sniper_round",	"sk_max_sniper_round",	BULLET_SPEED(750), BULLET_MASS(5200), BULLET_IMPULSE(5200, 750), AMMO_DARK_ENERGY );
-		def.AddAmmoType("SniperPenetratedRound", DMG_BULLET | DMG_SNIPER, TRACER_NONE,			"sk_dmg_sniper_penetrate_plr", "sk_dmg_sniper_penetrate_npc", "sk_max_sniper_round", BULLET_SPEED(750), BULLET_MASS(1040), BULLET_IMPULSE(1040, 750), AMMO_DARK_ENERGY );
-		def.AddAmmoType("Grenade",			DMG_BURN,					TRACER_NONE,			"sk_plr_dmg_grenade",		"sk_npc_dmg_grenade",		"sk_max_grenade",	0,	0, 0, 0 );
-		def.AddAmmoType("Thumper",			DMG_SONIC,					TRACER_NONE,			10, 10, 2, 0, 0, 0, 0 );
-		def.AddAmmoType("Gravity",			DMG_CLUB,					TRACER_NONE,			0,	0, 8, 0, 0, 0, 0 );
-//		def.AddAmmoType("Extinguisher",		DMG_BURN,					TRACER_NONE,			0,	0, 100, 0, 0 ); // OMEGA LUL
-		def.AddAmmoType("Battery",			DMG_CLUB,					TRACER_NONE,			NULL, NULL, NULL, 0, 0, 0, 0 );
-		def.AddAmmoType("GaussEnergy",		DMG_SHOCK,					TRACER_NONE,			"sk_jeep_gauss_damage",		"sk_jeep_gauss_damage", "sk_max_gauss_round",		BULLET_SPEED(4000),	BULLET_MASS(650), BULLET_IMPULSE(650, 8000), 0 ); // hit like a 10kg weight at 400 in/s
-		def.AddAmmoType("CombineCannon",	DMG_BULLET,					TRACER_LINE,			"sk_npc_dmg_gunship_to_plr", "sk_npc_dmg_gunship", NULL, BULLET_SPEED(750),	BULLET_MASS(5200), 0.5 * 750 * 12, AMMO_DARK_ENERGY ); // hit like a 0.5kg weight at 750 ft/s
-		def.AddAmmoType("AirboatGun",		DMG_AIRBOAT,				TRACER_LINE,			"sk_plr_dmg_airboat",		"sk_npc_dmg_airboat",		NULL,			BULLET_SPEED(750), BULLET_MASS(1500),	BULLET_IMPULSE(1500, 750), AMMO_DARK_ENERGY );
-		def.AddAmmoType("StriderMinigun",	DMG_BULLET,					TRACER_LINE,			"sk_npc_dmg_strider_to_plr", "sk_npc_dmg_strider", "sk_npc_dmg_strider", BULLET_SPEED(750), BULLET_MASS(5200),	1.0 * 750 * 12, AMMO_FORCE_DROP_IF_CARRIED | AMMO_DARK_ENERGY ); // hit like a 1.0kg weight at 750 ft/s
-		def.AddAmmoType("StriderMinigunDirect", DMG_BULLET,				TRACER_LINE,			"sk_npc_dmg_strider_to_plr_direct", "sk_npc_dmg_strider_direct", "sk_npc_dmg_strider_direct", BULLET_SPEED(750), BULLET_MASS(5200), 0.25 * 750 * 12, AMMO_FORCE_DROP_IF_CARRIED | AMMO_DARK_ENERGY ); // hit like a 0.2kg weight at 750 ft/s
-		def.AddAmmoType("HelicopterGun",	DMG_BULLET,					TRACER_LINE_AND_WHIZ,	"sk_npc_dmg_helicopter_to_plr", "sk_npc_dmg_helicopter",	"sk_max_smg1",	BULLET_SPEED(750), BULLET_MASS(1500),	BULLET_IMPULSE(1500, 750), AMMO_FORCE_DROP_IF_CARRIED | AMMO_INTERPRET_PLRDAMAGE_AS_DAMAGE_TO_PLAYER | AMMO_DARK_ENERGY);
-		def.AddAmmoType("AR2AltFire",		DMG_DISSOLVE,				TRACER_NONE,			0, 0, "sk_max_ar2_altfire", 0, 0, 0, 0 );
-		def.AddAmmoType("Grenade",			DMG_BURN,					TRACER_NONE,			"sk_plr_dmg_grenade",		"sk_npc_dmg_grenade",		"sk_max_grenade",	0,	0, 0, 0 );
+		def.AddAmmoType("AR2",				DMG_BULLET,					TRACER_LINE_AND_WHIZ,	"sk_plr_dmg_ar2",			"sk_npc_dmg_ar2",			"sk_max_ar2",			BULLET_SPEED(750),	BULLET_MASS(520), BULLET_DIAMETER(1), BULLET_IMPULSE(520, 750), AMMO_DARK_ENERGY);
+		def.AddAmmoType("AlyxGun",			DMG_BULLET,					TRACER_LINE,			"sk_plr_dmg_alyxgun",		"sk_npc_dmg_alyxgun",		"sk_max_alyxgun",		BULLET_SPEED(1200),	BULLET_MASS(180), BULLET_DIAMETER(.45), BULLET_IMPULSE(180, 1200), 0);
+		def.AddAmmoType("Pistol",			DMG_BULLET,					TRACER_LINE_AND_WHIZ,	"sk_plr_dmg_pistol",		"sk_npc_dmg_pistol",		"sk_max_pistol",		BULLET_SPEED(1325),	BULLET_MASS(124), BULLET_DIAMETER(.355), BULLET_IMPULSE(124, 1320), 0);
+		def.AddAmmoType("SMG1",				DMG_BULLET,					TRACER_LINE_AND_WHIZ,	"sk_plr_dmg_smg1",			"sk_npc_dmg_smg1",			"sk_max_smg1",			BULLET_SPEED(2380),	BULLET_MASS(26), BULLET_DIAMETER(.18), BULLET_IMPULSE(26, 2380), 0);
+		def.AddAmmoType("357",				DMG_BULLET,					TRACER_LINE_AND_WHIZ,	"sk_plr_dmg_357",			"sk_npc_dmg_357",			"sk_max_357",			BULLET_SPEED(1475),	BULLET_MASS(180), BULLET_DIAMETER(.357), BULLET_IMPULSE(180, 1475), 0 );	
+		def.AddAmmoType("XBowBolt",			DMG_BULLET,					TRACER_LINE,			"sk_plr_dmg_crossbow",		"sk_npc_dmg_crossbow",		"sk_max_crossbow",		BULLET_SPEED(208),	BULLET_MASS(1316), BULLET_DIAMETER(1), BULLET_IMPULSE(1316, 208), 0 );		//5264
+		def.AddAmmoType("Slug",				DMG_BULLET,					TRACER_LINE_AND_WHIZ,	"sk_plr_dmg_slug",			"sk_npc_dmg_slug",			"sk_max_slug",			BULLET_SPEED(1600),	BULLET_MASS(438), BULLET_DIAMETER(.729), BULLET_IMPULSE(438, 1600), 0 );	
+		def.AddAmmoType("Buckshot",			DMG_BULLET | DMG_BUCKSHOT,	TRACER_LINE,			"sk_plr_dmg_buckshot",		"sk_npc_dmg_buckshot",		"sk_max_buckshot",		BULLET_SPEED(1325),	BULLET_MASS(53.8), BULLET_DIAMETER(.33), BULLET_IMPULSE(53.8, 1325), 0 );
+		def.AddAmmoType("RPG_Round",		DMG_BURN,					TRACER_NONE,			"sk_plr_dmg_rpg_round",		"sk_npc_dmg_rpg_round",		"sk_max_rpg_round",		0, 0, 0, 0, 0 );
+		def.AddAmmoType("SMG1_Grenade",		DMG_BURN,					TRACER_NONE,			"sk_plr_dmg_smg1_grenade",	"sk_npc_dmg_smg1_grenade",	"sk_max_smg1_grenade",	0, 0, 0, 0, 0 );
+		def.AddAmmoType("SniperRound",		DMG_BULLET | DMG_SNIPER,	TRACER_NONE,			"sk_plr_dmg_sniper_round",	"sk_npc_dmg_sniper_round",	"sk_max_sniper_round",	BULLET_SPEED(750), BULLET_MASS(5200), BULLET_DIAMETER(1), BULLET_IMPULSE(5200, 750), AMMO_DARK_ENERGY );
+		def.AddAmmoType("SniperPenetratedRound", DMG_BULLET | DMG_SNIPER, TRACER_NONE,			"sk_dmg_sniper_penetrate_plr", "sk_dmg_sniper_penetrate_npc", "sk_max_sniper_round", BULLET_SPEED(750), BULLET_MASS(1040), BULLET_DIAMETER(1), BULLET_IMPULSE(1040, 750), AMMO_DARK_ENERGY );
+		def.AddAmmoType("Grenade",			DMG_BURN,					TRACER_NONE,			"sk_plr_dmg_grenade",		"sk_npc_dmg_grenade",		"sk_max_grenade",	0, 0, 0, 0, 0 );
+		def.AddAmmoType("Thumper",			DMG_SONIC,					TRACER_NONE,			10, 10, 2, 0, 0, 0, 0, 0 );
+		def.AddAmmoType("Gravity",			DMG_CLUB,					TRACER_NONE,			0,	0, 8, 0, 0, 0, 0, 0 );
+		def.AddAmmoType("Battery",			DMG_CLUB,					TRACER_NONE,			NULL, NULL, NULL, 0, 0, 0, 0, 0 );
+		def.AddAmmoType("GaussEnergy",		DMG_SHOCK,					TRACER_NONE,			"sk_jeep_gauss_damage",		"sk_jeep_gauss_damage", "sk_max_gauss_round",		BULLET_SPEED(4000),	BULLET_MASS(650), BULLET_DIAMETER(1), BULLET_IMPULSE(650, 8000), 0 ); // hit like a 10kg weight at 400 in/s
+		def.AddAmmoType("CombineCannon",	DMG_BULLET,					TRACER_LINE,			"sk_npc_dmg_gunship_to_plr", "sk_npc_dmg_gunship", NULL, BULLET_SPEED(750),	BULLET_MASS(5200), BULLET_DIAMETER(1), 0.5 * 750 * 12, AMMO_DARK_ENERGY ); // hit like a 0.5kg weight at 750 ft/s
+		def.AddAmmoType("AirboatGun",		DMG_AIRBOAT,				TRACER_LINE,			"sk_plr_dmg_airboat",		"sk_npc_dmg_airboat",		NULL,			BULLET_SPEED(750), BULLET_MASS(150),	BULLET_DIAMETER(1), BULLET_IMPULSE(15, 750), AMMO_DARK_ENERGY );
+		def.AddAmmoType("StriderMinigun",	DMG_BULLET,					TRACER_LINE,			"sk_npc_dmg_strider_to_plr", "sk_npc_dmg_strider", "sk_npc_dmg_strider", BULLET_SPEED(750), BULLET_MASS(5200),	BULLET_DIAMETER(1), 1.0 * 750 * 12, AMMO_FORCE_DROP_IF_CARRIED | AMMO_DARK_ENERGY ); // hit like a 1.0kg weight at 750 ft/s
+		def.AddAmmoType("StriderMinigunDirect", DMG_BULLET,				TRACER_LINE,			"sk_npc_dmg_strider_to_plr_direct", "sk_npc_dmg_strider_direct", "sk_npc_dmg_strider_direct", BULLET_SPEED(750), BULLET_DIAMETER(1), BULLET_MASS(5200), 0.25 * 750 * 12, AMMO_FORCE_DROP_IF_CARRIED | AMMO_DARK_ENERGY ); // hit like a 0.2kg weight at 750 ft/s
+		def.AddAmmoType("HelicopterGun",	DMG_BULLET,					TRACER_LINE_AND_WHIZ,	"sk_npc_dmg_helicopter_to_plr", "sk_npc_dmg_helicopter",	"sk_max_smg1",	BULLET_SPEED(750), BULLET_MASS(150),	BULLET_DIAMETER(1), BULLET_IMPULSE(1500, 750), AMMO_FORCE_DROP_IF_CARRIED | AMMO_INTERPRET_PLRDAMAGE_AS_DAMAGE_TO_PLAYER | AMMO_DARK_ENERGY);
+		def.AddAmmoType("AR2AltFire",		DMG_DISSOLVE,				TRACER_NONE,			0, 0, "sk_max_ar2_altfire", 0, 0, 0, 0, 0 );
+		def.AddAmmoType("Grenade",			DMG_BURN,					TRACER_NONE,			"sk_plr_dmg_grenade",		"sk_npc_dmg_grenade",		"sk_max_grenade",	0, 0, 0, 0, 0 );
 #ifdef HL2_EPISODIC
-		def.AddAmmoType("Hopwire",			DMG_BLAST,					TRACER_NONE,			"sk_plr_dmg_grenade",		"sk_npc_dmg_grenade",		"sk_max_hopwire",	0,	0, 0, 0 );
-		def.AddAmmoType("CombineHeavyCannon",	DMG_BULLET,				TRACER_LINE,			"sk_heavy_cannon_damage_to_plr", "sk_heavy_cannon_damage", NULL, BULLET_SPEED(8000), BULLET_MASS(5200), 10 * 750 * 12, AMMO_FORCE_DROP_IF_CARRIED| AMMO_DARK_ENERGY ); // hit like a 10 kg weight at 750 ft/s
-		def.AddAmmoType("ammo_proto1",			DMG_BULLET,				TRACER_LINE,		0,	0, 0, 0, 10, 0, 0 );
+		def.AddAmmoType("Hopwire",			DMG_BLAST,					TRACER_NONE,			"sk_plr_dmg_grenade",		"sk_npc_dmg_grenade",		"sk_max_hopwire",	0, 0, 0, 0, 0 );
+		def.AddAmmoType("CombineHeavyCannon",	DMG_BULLET,				TRACER_LINE,			"sk_heavy_cannon_damage_to_plr", "sk_heavy_cannon_damage", NULL, BULLET_SPEED(8000), BULLET_MASS(5200), BULLET_DIAMETER(2), 10 * 750 * 12, AMMO_FORCE_DROP_IF_CARRIED| AMMO_DARK_ENERGY ); // hit like a 10 kg weight at 750 ft/s
+		def.AddAmmoType("ammo_proto1",			DMG_BULLET,				TRACER_LINE,		0,	0, 0, 0, 0, 10, 0, 0 );
 #endif // HL2_EPISODIC
 	}
 

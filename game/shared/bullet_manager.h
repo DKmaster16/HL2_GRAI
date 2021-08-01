@@ -87,14 +87,16 @@ private:
 #endif
 
 	EHANDLE m_hCaller;
-//	EHANDLE	m_hLastHit;		//Last hit (I think it doesn't work)
+	EHANDLE	m_hLastHit;		//Last hit
 
 
 	float m_flBulletSpeed;  //The changeable bullet speed
 	float m_flBulletMass;  //The changeable bullet mass
+	float m_flBulletDiameter;  //The changeable bullet diameter
 	float m_flEntryDensity; //Sets when doing penetration test
 	float m_flInitialBulletSpeed;
 	float m_flInitialBulletMass;
+	float m_flInitialBulletDiameter;
 	float m_flRayLength;
 
 	float DesiredDistance; //Sets when doing penetration test
@@ -132,7 +134,7 @@ public:
 		g_Bullets.PurgeAndDeleteElements();
 	}
 	int AddBullet(CSimulatedBullet *pBullet);
-//	int AddDarkEnergyBullet(CDarkEnergyBullet *pDarkEnergyBullet);
+	//	int AddDarkEnergyBullet(CDarkEnergyBullet *pDarkEnergyBullet);
 #ifdef CLIENT_DLL
 	void ClientThink(void);
 #else

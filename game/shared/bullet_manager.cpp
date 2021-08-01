@@ -68,8 +68,8 @@ static void BulletStopSpeedCallback(ConVar *var, const char *pOldString)
 	else if (BulletManager())
 		BulletManager()->UpdateBulletStopSpeed();
 }
-ConVar sv_bullet_stop_speed("sv_bullet_stop_speed", "200");	
-
+ConVar sv_bullet_stop_speed("sv_bullet_stop_speed", "200");
+ConVar sv_bullet_speed_forced("sv_bullet_speed_forced", "1000000");
 
 
 LINK_ENTITY_TO_CLASS(bullet_manager, CBulletManager);
@@ -146,11 +146,11 @@ CSimulatedBullet::CSimulatedBullet(FireBulletsInfo_t info, Vector newdir, CBaseE
 
 	// Don't collide with the entity firing the bullet.
 	m_pIgnoreList->AddEntityToIgnore(p_eInfictor);
-//	CBaseEntity *pPlayerAlly;
-//	if (p_eInfictor->IsPlayer)	// Player shoots
-//	{
-//		m_pIgnoreList->AddEntityToIgnore(pPlayerAlly->Classify() = CLASS_PLAYER_ALLY);
-//	}
+	//	CBaseEntity *pPlayerAlly;
+	//	if (p_eInfictor->IsPlayer)	// Player shoots
+	//	{
+	//		m_pIgnoreList->AddEntityToIgnore(pPlayerAlly->Classify() = CLASS_PLAYER_ALLY);
+	//	}
 
 	// Don't collide with some optionally-specified entity. 
 	if (pAdditionalIgnoreEnt != NULL)
@@ -162,7 +162,12 @@ CSimulatedBullet::CSimulatedBullet(FireBulletsInfo_t info, Vector newdir, CBaseE
 	//m_szTracerName = (char*)p_eInfictor->GetTracerType(); 
 
 	// Basic information about the bullet
+	if (sv_bullet_speed_forced.GetInt() > 0){
+	m_flInitialBulletSpeed = m_flBulletSpeed = sv_bullet_speed_forced.GetInt();
+	}
+	else{
 	m_flInitialBulletSpeed = m_flBulletSpeed = GetAmmoDef()->GetAmmoOfIndex(bulletinfo.m_iAmmoType)->bulletSpeed;
+	}
 	m_flInitialBulletMass = m_flBulletMass = GetAmmoDef()->GetAmmoOfIndex(bulletinfo.m_iAmmoType)->bulletMass;
 	m_vecDirShooting = newdir;
 	m_vecOrigin = bulletinfo.m_vecSrc;
@@ -213,7 +218,7 @@ bool CSimulatedBullet::SimulateBullet(void)
 	{
 		m_vecTraceRay = m_vecOrigin + m_vecDirShooting * m_flBulletSpeed;
 	}
-	else 
+	else
 	{
 		m_flBulletSpeed += m_flBulletMass * m_vecDirShooting.z; // 0.8f
 		m_vecTraceRay = m_vecOrigin + m_vecDirShooting * m_flBulletSpeed;
@@ -267,37 +272,38 @@ bool CSimulatedBullet::SimulateBullet(void)
 	static int	tracerCount;
 	bool bulletSpeedCheck;
 	bulletSpeedCheck = false;
-//	int iAttachment = p_eInfictor->GetTracerAttachment();
+	//	int iAttachment = p_eInfictor->GetTracerAttachment();
 	trace_t tr;
 
 	if (m_bTraceHull)
-		UTIL_TraceHull(m_vecOrigin, m_vecTraceRay, Vector(-3, -3, -3), Vector(3, 3, 3), MASK_SHOT, m_pIgnoreList, &trace);
+		UTIL_TraceHull(m_vecOrigin, m_vecTraceRay, Vector(-m_flBulletDiameter, -m_flBulletDiameter, -m_flBulletDiameter),
+		Vector(m_flBulletDiameter, m_flBulletDiameter, m_flBulletDiameter), MASK_SHOT, m_pIgnoreList, &trace);
 	else
 		UTIL_TraceLine(m_vecOrigin, m_vecTraceRay, MASK_SHOT, m_pIgnoreList, &trace);
 
-//	if (!m_bWasInWater)
-//	{
-//		UTIL_Tracer(m_vecOrigin, trace.endpos, p_eInfictor->entindex(), TRACER_DONT_USE_ATTACHMENT, m_flBulletSpeed, true, p_eInfictor->GetTracerType());
-//	}
+	//	if (!m_bWasInWater)
+	//	{
+	//		UTIL_Tracer(m_vecOrigin, trace.endpos, p_eInfictor->entindex(), TRACER_DONT_USE_ATTACHMENT, m_flBulletSpeed, true, p_eInfictor->GetTracerType());
+	//	}
 
 #ifdef CLIENT_DLL
 	if (g_debug_client_bullets.GetBool())
 	{
 		debugoverlay->AddLineOverlay(trace.startpos, trace.endpos, 255, 0, 0, true, 10.0f);
 	}
-//	else if (GetAmmoDef()->Flags(GetAmmoTypeIndex()) & AMMO_DARK_ENERGY)
-//	{
-//		FX_PlayerTracer(vecTraceStart, m_vecOrigin);
-//	}
+	//	else if (GetAmmoDef()->Flags(GetAmmoTypeIndex()) & AMMO_DARK_ENERGY)
+	//	{
+	//		FX_PlayerTracer(vecTraceStart, m_vecOrigin);
+	//	}
 #else
 	if (g_debug_bullets.GetBool())
 	{
 		NDebugOverlay::Line(trace.startpos, trace.endpos, 255, 255, 255, true, 10.0f);
 	}
-//	else if (GetAmmoDef()->Flags(GetAmmoTypeIndex()) != AMMO_DARK_ENERGY)
-//	{
-//		NDebugOverlay::Line(trace.startpos, trace.endpos, 240, 200, 133, true, 0.02f);
-//	}
+	//	else if (GetAmmoDef()->Flags(GetAmmoTypeIndex()) != AMMO_DARK_ENERGY)
+	//	{
+	//		NDebugOverlay::Line(trace.startpos, trace.endpos, 240, 200, 133, true, 0.02f);
+	//	}
 	/*
 	const char *pszTracerName = p_eInfictor->GetTracerType();
 	int iAttachment = p_eInfictor->GetTracerAttachment();
@@ -616,8 +622,8 @@ bool CSimulatedBullet::EndSolid(trace_t &ptr)
 					else
 						DevMsg("Displacement penetration was tempolary disabled\n");
 				}
-			}
 #endif
+			}
 		}
 		else
 		{
@@ -715,12 +721,12 @@ void CSimulatedBullet::EntityImpact(trace_t &ptr)
 				}
 			}
 		}
-#if 0
+
 		if (ptr.m_pEnt == m_hLastHit)
 			return;
 
 		m_hLastHit = ptr.m_pEnt;
-#endif
+
 		float flActualDamage = g_pGameRules->GetAmmoDamage(p_eInfictor, ptr.m_pEnt, bulletinfo.m_iAmmoType);
 		float flActualForce = bulletinfo.m_flDamageForceScale;
 
@@ -731,10 +737,10 @@ void CSimulatedBullet::EntityImpact(trace_t &ptr)
 		flActualDamage *= Square(GetBulletSpeedRatio()) * GetBulletMassRatio() * -fldot; //And also affect damage by speed and weight modifications 
 		flActualForce *= GetBulletSpeedRatio() * GetBulletMassRatio() * -fldot;
 
-/*		if ((p_eInfictor->GetAbsOrigin().DistToSqr(m_vecEntryPosition)) <= 96)
+		/*		if ((p_eInfictor->GetAbsOrigin().DistToSqr(m_vecEntryPosition)) <= 96)
 		{
-			flActualDamage *= 3; // Do more damage at very close range, it deals low damage upclose for some reason...
-			flActualForce *= 2;
+		flActualDamage *= 3; // Do more damage at very close range, it deals low damage upclose for some reason...
+		flActualForce *= 2;
 		}*/
 		DevMsg("Hit: %s, Damage: %f, Force: %f \n", ptr.m_pEnt->GetClassname(), flActualDamage, flActualForce);
 
@@ -838,27 +844,27 @@ int CBulletManager::AddBullet(CSimulatedBullet *pBullet)
 //==================================================
 /*int CBulletManager::AddDarkEnergyBullet(CDarkEnergyBullet *pDarkEnergyBullet)
 {
-	if (pDarkEnergyBullet->GetAmmoTypeIndex() == -1)
-	{
-		return -1;
-	}
+if (pDarkEnergyBullet->GetAmmoTypeIndex() == -1)
+{
+return -1;
+}
 #ifdef CLIENT_DLL
-	DevMsg("Client Bullet Created (%i)\n", index);
-	if (g_Bullets.Count() == 1)
-	{
-		SetNextClientThink(gpGlobals->curtime + 0.01f);
-	}
+DevMsg("Client Bullet Created (%i)\n", index);
+if (g_Bullets.Count() == 1)
+{
+SetNextClientThink(gpGlobals->curtime + 0.01f);
+}
 #else
 //	DevMsg("Bullet Created (%i) LagCompensation %f\n", index, pDarkEnergyBullet->bulletinfo.m_flLatency);
 //	if (pDarkEnergyBullet->bulletinfo.m_flLatency != 0.0f)
 //		pDarkEnergyBullet->BulletThink(); //Pre-simulation
 
-	if (g_Bullets.Count() == 1)
-	{
-		SetNextThink(gpGlobals->curtime + 0.01f);
-	}
+if (g_Bullets.Count() == 1)
+{
+SetNextThink(gpGlobals->curtime + 0.01f);
+}
 #endif
-	return 1;
+return 1;
 }
 */
 
@@ -916,7 +922,7 @@ void CDarkEnergyBullet::BulletThink(void)
 	float flDist = (vecStart - vecEnd).Length();
 
 	//Msg(".");
-//	CAmmoDef*	pAmmoDef = GetAmmoDef();
+	//	CAmmoDef*	pAmmoDef = GetAmmoDef();
 
 	trace_t tr;
 	UTIL_TraceLine(vecStart, vecEnd, MASK_SHOT, p_eInflictor, COLLISION_GROUP_NONE, &tr);
@@ -927,7 +933,7 @@ void CDarkEnergyBullet::BulletThink(void)
 		GetOwnerEntity()->FireBullets(1, vecStart, m_vecDir, vec3_origin, flDist, m_AmmoType, 0);
 		m_iImpacts++;
 
-		if ( m_iImpacts == NUM_PENETRATIONS )
+		if (m_iImpacts == NUM_PENETRATIONS)
 		{
 			// Bullet stops when it has penetrated enough times.
 			Stop();
@@ -985,7 +991,7 @@ CDarkEnergyBullet::CDarkEnergyBullet(FireBulletsInfo_t info, Vector newdir, CBas
 	}
 	p_eInflictor = pOwner;
 
-//	UTIL_SetOrigin(p_eInflictor, vecOrigin);
+	//	UTIL_SetOrigin(p_eInflictor, vecOrigin);
 
 	m_vecDir = newdir;
 	VectorNormalize(m_vecDir);
@@ -997,7 +1003,7 @@ CDarkEnergyBullet::CDarkEnergyBullet(FireBulletsInfo_t info, Vector newdir, CBas
 	// the trace comes from the loop above that does penetration.
 	trace_t tr;
 	UTIL_TraceLine(GetAbsOrigin(), GetAbsOrigin() + m_vecDir * 8192, MASK_SOLID_BRUSHONLY, p_eInflictor, COLLISION_GROUP_NONE, &tr);
-//	UTIL_Tracer(vecOrigin, tr.endpos, 0, TRACER_DONT_USE_ATTACHMENT, m_flDarkBulletSpeed, true, "StriderTracer");
+	//	UTIL_Tracer(vecOrigin, tr.endpos, 0, TRACER_DONT_USE_ATTACHMENT, m_flDarkBulletSpeed, true, "StriderTracer");
 
 	SetThink(&CDarkEnergyBullet::BulletThink);
 	SetNextThink(gpGlobals->curtime);

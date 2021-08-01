@@ -1821,7 +1821,7 @@ void CBaseEntity::FireBullets(const FireBulletsInfo_t &info)
 		}
 
 		Vector vecSrc(info.m_vecSrc);
-		bool bTraceHull = (IsPlayer() && info.m_iShots > 1 && iShot % 2);
+		bool bTraceHull = 1;
 
 		CSimulatedBullet *pBullet = new CSimulatedBullet(info, vecDir, pAttacker, info.m_pAdditionalIgnoreEnt, bTraceHull
 #ifndef CLIENT_DLL

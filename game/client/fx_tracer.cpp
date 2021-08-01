@@ -13,7 +13,7 @@
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
-#define	TRACER_SPEED			9000 
+#define	TRACER_SPEED			15900 
 
 //-----------------------------------------------------------------------------
 // Purpose: 

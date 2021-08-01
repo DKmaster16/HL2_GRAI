@@ -1785,7 +1785,7 @@
       <Filter>Tools Framework</Filter>
     </ClInclude>
     <ClInclude Include="..\shared\bullet_manager.h">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\HL2 DLL</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -3509,7 +3509,7 @@
       <Filter>Tools Framework</Filter>
     </ClCompile>
     <ClCompile Include="..\shared\bullet_manager.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\HL2 DLL</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
