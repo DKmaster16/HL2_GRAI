@@ -131,6 +131,8 @@ ConVar	sk_helicopter_burstcount("sk_helicopter_burstcount", "12", 0, "How many s
 ConVar	sk_helicopter_burstcount_long("sk_helicopter_burstcount_long", "12", 0, "How many shot bursts to fire while deadly shooting. The bigger the number, the longer the firing is");
 ConVar	sk_helicopter_roundsperburst("sk_helicopter_roundsperburst", "5", 0, "How many shots to fire in a single burst");
 
+ConVar	sk_helicopter_shooting_vehicle_interval("sk_helicopter_shooting_vehicle_interval", "4", 0, "Interval between hits on vehicle in bullrush mode.");
+
 ConVar	sk_helicopter_burst_min_hitcount("sk_helicopter_burst_min_hitcount", "6");
 ConVar	sk_helicopter_burst_max_hitcount("sk_helicopter_burst_max_hitcount", "18");
 
@@ -2664,7 +2666,7 @@ void CNPC_AttackHelicopter::FireElectricityGun()
 //------------------------------------------------------------------------------
 // Here's what we do when we *are* firing
 //------------------------------------------------------------------------------
-#define INTERVAL_BETWEEN_HITS 4
+#define INTERVAL_BETWEEN_HITS sk_helicopter_shooting_vehicle_interval.GetInt()
 
 bool CNPC_AttackHelicopter::DoGunFiring(const Vector &vBasePos, const Vector &vGunDir, const Vector &vecFireAtPosition)
 {
@@ -3135,6 +3137,12 @@ void CNPC_AttackHelicopter::BullrushBombs()
 		CreateBomb(false, &vecVelocity, true);
 
 		VectorMA(vecVelocity, -2.0f, vecAcross, vecVelocity);
+		CreateBomb(false, &vecVelocity, true);
+
+		VectorMA(vecVelocity, 2.0f, vecAcross, vecVelocity);
+		CreateBomb(false, &vecVelocity, true);
+
+		VectorMA(vecVelocity, -4.0f, vecAcross, vecVelocity);
 		CreateBomb(false, &vecVelocity, true);
 	}
 

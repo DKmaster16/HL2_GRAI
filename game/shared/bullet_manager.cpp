@@ -503,7 +503,7 @@ bool CSimulatedBullet::EndSolid(trace_t &ptr)
 		DesiredDistance = 4.0f; // 4 units in hammer and no more(!)
 		break;
 	case CHAR_TEX_METAL:
-		DesiredDistance = 2.0f; // 2 units in hammer. We cannot penetrate a really 'fat' metal wall. Corners are good.
+		DesiredDistance = 1.0f; // 1 units in hammer. We cannot penetrate a really 'fat' metal wall. Corners are good.
 		break;
 	case CHAR_TEX_PLASTIC:
 		DesiredDistance = 16.0f; // 16 units in hammer: Plastic can more
@@ -584,7 +584,7 @@ bool CSimulatedBullet::EndSolid(trace_t &ptr)
 				if (!sv_bullet_unrealricochet.GetBool())
 				{
 					{
-						m_flBulletSpeed -= m_flBulletSpeed * (-fldot) * (0.1 / m_flBulletMass) * random->RandomFloat(1.00, 0.85);	// More mass = better ricochets
+						m_flBulletSpeed -= m_flBulletSpeed * (-fldot) * 0.1 * m_flBulletMass * random->RandomFloat(1.00, 0.85);	// More mass = better ricochets
 						m_flBulletMass -= m_flBulletMass * (-fldot) / 2;
 					}
 				}
@@ -727,8 +727,11 @@ void CSimulatedBullet::EntityImpact(trace_t &ptr)
 
 		m_hLastHit = ptr.m_pEnt;
 
-		float flActualDamage = g_pGameRules->GetAmmoDamage(p_eInfictor, ptr.m_pEnt, bulletinfo.m_iAmmoType);
-		float flActualForce = bulletinfo.m_flDamageForceScale;
+		float flMaxDamage = g_pGameRules->GetAmmoDamage(p_eInfictor, ptr.m_pEnt, bulletinfo.m_iAmmoType);
+		float flMaxForce = bulletinfo.m_flDamageForceScale;
+
+		float flActualDamage = flMaxDamage;
+		float flActualForce = flMaxForce;
 
 		//To make it more reallistic
 		float fldot = m_vecDirShooting.Dot(ptr.plane.normal);
@@ -737,11 +740,12 @@ void CSimulatedBullet::EntityImpact(trace_t &ptr)
 		flActualDamage *= Square(GetBulletSpeedRatio()) * GetBulletMassRatio() * -fldot; //And also affect damage by speed and weight modifications 
 		flActualForce *= GetBulletSpeedRatio() * GetBulletMassRatio() * -fldot;
 
-		/*		if ((p_eInfictor->GetAbsOrigin().DistToSqr(m_vecEntryPosition)) <= 96)
+		if (flActualDamage > flMaxDamage || flActualForce > flMaxForce)
 		{
-		flActualDamage *= 3; // Do more damage at very close range, it deals low damage upclose for some reason...
-		flActualForce *= 2;
-		}*/
+			flActualDamage = flMaxDamage;
+			flActualForce = flMaxForce;
+		}
+
 		DevMsg("Hit: %s, Damage: %f, Force: %f \n", ptr.m_pEnt->GetClassname(), flActualDamage, flActualForce);
 
 		CTakeDamageInfo dmgInfo(p_eInfictor, bulletinfo.m_pAttacker, flActualDamage, GetDamageType());

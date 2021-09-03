@@ -1460,8 +1460,8 @@ void CNPC_AntlionGuard::Shove( void )
 		Vector	traceDir = ( tr.endpos - tr.startpos );
 		VectorNormalize( traceDir );
 
-		// Generate enough force to make a 75kg guy move away at 600 in/sec
-		Vector vecForce = traceDir * ImpulseScale( 75, 600 );
+		// Generate enough force to make a 75kg guy move away at 500 in/sec
+		Vector vecForce = traceDir * ImpulseScale( 75, 500 );
 		CTakeDamageInfo info( this, this, vecForce, tr.endpos, damage, DMG_CLUB );
 		pHurt->TakeDamage( info );
 
@@ -2572,8 +2572,8 @@ void ApplyChargeDamage( CBaseEntity *pAntlionGuard, CBaseEntity *pTarget, float 
 	VectorNormalize( attackDir );
 	Vector offset = RandomVector( -32, 32 ) + pTarget->WorldSpaceCenter();
 
-	// Generate enough force to make a 75kg guy move away at 700 in/sec
-	Vector vecForce = attackDir * ImpulseScale( 75, 700 );
+	// Generate enough force to make a 75kg guy move away at 750 in/sec
+	Vector vecForce = attackDir * ImpulseScale( 75, 750 );
 
 	// Deal the damage
 	CTakeDamageInfo	info( pAntlionGuard, pAntlionGuard, vecForce, offset, flDamage, DMG_CLUB );

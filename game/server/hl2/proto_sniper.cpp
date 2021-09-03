@@ -648,7 +648,7 @@ void CProtoSniper::LaserOn( const Vector &vecTarget, const Vector &vecDeviance )
 	Disposition_t relation = IRelationType(pPlayer);
 	if ( !m_pBeam )	//&& !g_pGameRules->IsSkillLevel(SKILL_HARD) && pPlayer->IRelationType(this) == D_HT
 	{
-		if (relation == D_LI || sniper_alyx_laser.GetBool())	// Alyx is our sniper!
+		if (relation == D_LI && sniper_alyx_laser.GetBool())	// Alyx is our sniper!
 		{
 			m_pBeam = CBeam::BeamCreate("effects/laser1.vmt", 1.5f);
 			m_pBeam->SetColor(255, 175, 0);	// Paint her laser orange

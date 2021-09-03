@@ -934,8 +934,8 @@ void Hunter_ApplyChargeDamage( CBaseEntity *pHunter, CBaseEntity *pTarget, float
 	VectorNormalize( attackDir );
 	Vector offset = RandomVector( -32, 32 ) + pTarget->WorldSpaceCenter();
 
-	// Generate enough force to make a 75kg guy move away at 700 in/sec
-	Vector vecForce = attackDir * ImpulseScale( 75, 700 );
+	// Generate enough force to make a 75kg guy move away at 650 in/sec
+	Vector vecForce = attackDir * ImpulseScale( 75, 650 );
 
 	// Deal the damage
 	CTakeDamageInfo	info( pHunter, pHunter, vecForce, offset, flDamage, DMG_CLUB );

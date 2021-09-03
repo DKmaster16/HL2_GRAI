@@ -1,4 +1,4 @@
-﻿Build started 29.07.2021 15:36:07.
+﻿Build started 28.08.2021 13:39:04.
      1>Project "C:\Users\Yerkebulan Laptop\Desktop\Modding\GRAI\src\game\client\client_hl2.vcxproj" on node 2 (Rebuild target(s)).
      1>PreBuildEvent:
          if EXIST ..\..\..\game\mod_hl2\bin\.\client.dll for /f "delims=" %%A in ('attrib "..\..\..\game\mod_hl2\bin\.\client.dll"') do set valveTmpIsReadOnly="%%A"
@@ -1054,4 +1054,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:26.96
+Time Elapsed 00:00:26.78

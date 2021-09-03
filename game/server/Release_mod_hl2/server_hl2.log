@@ -1,4 +1,4 @@
-﻿Build started 29.07.2021 15:12:31.
+﻿Build started 28.08.2021 17:35:52.
      1>Project "C:\Users\Yerkebulan Laptop\Desktop\Modding\GRAI\src\game\server\server_hl2.vcxproj" on node 2 (Rebuild target(s)).
      1>PreBuildEvent:
          if EXIST ..\..\..\game\mod_hl2\bin\.\server.dll for /f "delims=" %%A in ('attrib "..\..\..\game\mod_hl2\bin\.\server.dll"') do set valveTmpIsReadOnly="%%A"
@@ -10,10 +10,10 @@
          :VCEnd
        CustomBuild:
          Compiling pointeroverride.asm
+          Assembling: C:\Users\Yerkebulan Laptop\Desktop\Modding\GRAI\src\public\tier0\pointeroverride.asm
          Microsoft (R) Macro Assembler Version 12.00.40629.0
          Copyright (C) Microsoft Corporation.  All rights reserved.
          
-          Assembling: C:\Users\Yerkebulan Laptop\Desktop\Modding\GRAI\src\public\tier0\pointeroverride.asm
          Running VPC CRC Check - server_hl2.vpc
          Access is denied.
        ClCompile:
@@ -1168,4 +1168,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:42.78
+Time Elapsed 00:00:42.35

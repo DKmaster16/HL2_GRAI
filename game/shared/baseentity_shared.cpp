@@ -1793,14 +1793,14 @@ void CBaseEntity::FireBullets(const FireBulletsInfo_t &info)
 	//-----------------------------------------------------
 	CShotManipulator Manipulator(info.m_vecDirShooting);
 
-	bool bDoTracers = false;
+//	bool bDoTracers = false;
 
-//	float flCumulativeDamage = 0.0f;
+	//	float flCumulativeDamage = 0.0f;
 
 	for (int iShot = 0; iShot < info.m_iShots; iShot++)
 	{
-//		bool bHitWater = false;
-//		bool bHitGlass = false;
+		//		bool bHitWater = false;
+		//		bool bHitGlass = false;
 
 		// Prediction is only usable on players
 		if (IsPlayer())
@@ -1828,7 +1828,6 @@ void CBaseEntity::FireBullets(const FireBulletsInfo_t &info)
 			, this
 #endif
 			);
-
 		BulletManager()->AddBullet(pBullet);
 
 		vecEnd = info.m_vecSrc + vecDir * info.m_flDistance;
@@ -1871,22 +1870,19 @@ void CBaseEntity::FireBullets(const FireBulletsInfo_t &info)
 		Vector vecTracerDest = tr.endpos;
 
 //		if ((info.m_iTracerFreq != 0) && (tracerCount++ % info.m_iTracerFreq) == 0)
+		{
+			Vector vecTracerSrc = vec3_origin;
+			ComputeTracerStartPosition(info.m_vecSrc, &vecTracerSrc);
+
+			trace_t Tracer;
+			Tracer = tr;
+			Tracer.endpos = vecTracerDest;
+
+			MakeTracer(vecTracerSrc, Tracer, pAmmoDef->TracerType(info.m_iAmmoType));
+		}
+//		else
 //		{
-		if ((pAmmoDef->DamageType(info.m_iAmmoType)) != DMG_BUCKSHOT)
-			{
-				Vector vecTracerSrc = vec3_origin;
-				ComputeTracerStartPosition(info.m_vecSrc, &vecTracerSrc);
-
-				trace_t Tracer;
-				Tracer = tr;
-				Tracer.endpos = vecTracerDest;
-
-				MakeTracer(vecTracerSrc, Tracer, pAmmoDef->TracerType(info.m_iAmmoType));
-			}
-			else
-			{
-				bDoTracers = true;
-			}
+//			bDoTracers = true;
 //		}
 		iSeed++;
 	}

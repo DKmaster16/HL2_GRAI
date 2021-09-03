@@ -75,6 +75,10 @@ DECLARE_CLIENT_EFFECT( "HunterTracer", HunterTracerCallback );
 void GaussTracerCallback( const CEffectData &data )
 {
 	float flVelocity = data.m_flScale;
+	if (!flVelocity)
+	{
+		flVelocity = 6500;
+	}
 	bool bWhiz = (data.m_fFlags & TRACER_FLAG_WHIZ);
 	FX_GaussTracer( (Vector&)data.m_vStart, (Vector&)data.m_vOrigin, flVelocity, bWhiz );
 }

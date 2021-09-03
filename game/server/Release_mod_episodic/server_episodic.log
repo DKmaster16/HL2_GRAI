@@ -1,4 +1,4 @@
-﻿Build started 01.08.2021 14:00:41.
+﻿Build started 03.09.2021 15:59:42.
      1>Project "C:\Users\Yerkebulan Laptop\Desktop\Modding\GRAI\src\game\server\server_episodic.vcxproj" on node 2 (Rebuild target(s)).
      1>PreBuildEvent:
          if EXIST ..\..\..\game\mod_episodic\bin\.\server.dll for /f "delims=" %%A in ('attrib "..\..\..\game\mod_episodic\bin\.\server.dll"') do set valveTmpIsReadOnly="%%A"
@@ -1204,4 +1204,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:54.01
+Time Elapsed 00:00:52.34

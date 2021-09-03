@@ -905,6 +905,8 @@ void CPropJeep::FireCannon( void )
 	Vector aimDir;
 	GetCannonAim( &aimDir );
 
+	Vector endPos = m_vecGunOrigin + (aimDir * MAX_TRACE_LENGTH);
+
 #if defined( WIN32 ) && !defined( _X360 ) 
 	// NVNT apply a punch on fire
 	HapticPunch(m_hPlayer,0,0,hap_jeep_cannon_mag.GetFloat());
@@ -915,6 +917,21 @@ void CPropJeep::FireCannon( void )
 	info.m_pAttacker = m_hPlayer;
 
 	FireBullets( info );
+
+	trace_t	tr;
+	UTIL_TraceLine(m_vecGunOrigin, endPos, MASK_SHOT, this, COLLISION_GROUP_NONE, &tr);
+
+	//Kick up an effect
+	if (!(tr.surface.flags & SURF_SKY))
+	{
+		UTIL_ImpactTrace(&tr, m_nBulletType, "ImpactJeep");
+
+		//Do a gauss explosion
+		CPVSFilter filter(tr.endpos);
+		te->GaussExplosion(filter, 0.0f, tr.endpos, tr.plane.normal, 0);
+	}
+
+	DrawBeam(m_vecGunOrigin, tr.endpos, 2.4);
 
 	// Register a muzzleflash for the AI
 	if ( m_hPlayer )

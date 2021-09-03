@@ -1373,8 +1373,8 @@ Vector CBaseCombatCharacter::CalcDamageForceVector( const CTakeDamageInfo &info 
 			Vector force = info.GetDamageForce();
 			force.x *= scale;
 			force.y *= scale;
-			// Try to always exaggerate the upward force because we've got pretty harsh gravity DK: Old was 1.15, now 1.1
-			force.z *= (force.z > 0) ? 1.1 : scale;
+			// Try to always exaggerate the upward force because we've got pretty harsh gravity
+			force.z *= (force.z > 0) ? 1.15 : scale;
 			return force;
 		}
 

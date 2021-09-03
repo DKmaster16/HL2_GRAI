@@ -72,6 +72,8 @@ int AE_ZOMBINE_PULLPIN;
 extern bool IsAlyxInDarknessMode();
 
 ConVar	sk_zombie_soldier_health( "sk_zombie_soldier_health","0");
+ConVar	sk_zombie_soldier_grenade_damage("sk_zombie_soldier_grenade_damage", "270");
+ConVar	sk_zombie_soldier_grenade_radius("sk_zombie_soldier_grenade_radius", "225");
 
 float g_flZombineGrenadeTimes = 0;
 
@@ -529,7 +531,7 @@ void CNPC_Zombine::TraceAttack( const CTakeDamageInfo &info, const Vector &vecDi
 	}
 }
 
-extern ConVar sk_plr_dmg_fraggrenade;
+//extern ConVar sk_plr_dmg_fraggrenade;
 
 void CNPC_Zombine::HandleAnimEvent( animevent_t *pEvent )
 {
@@ -561,7 +563,8 @@ void CNPC_Zombine::HandleAnimEvent( animevent_t *pEvent )
 
 				pGrenade->SetParent( this, iAttachment );
 
-				pGrenade->SetDamage(sk_plr_dmg_fraggrenade.GetFloat());
+				pGrenade->SetDamage(sk_zombie_soldier_grenade_damage.GetFloat());
+				pGrenade->SetDamageRadius(sk_zombie_soldier_grenade_radius.GetFloat());
 				m_hGrenade = pGrenade;
 				
 				EmitSound( "Zombine.ReadyGrenade" );

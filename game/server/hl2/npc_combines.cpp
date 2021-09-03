@@ -133,6 +133,7 @@ void CNPC_CombineS::Precache()
 
 	UTIL_PrecacheOther( "item_healthkit" );
 	UTIL_PrecacheOther( "item_healthvial" );
+	UTIL_PrecacheOther( "item_battery" );
 	UTIL_PrecacheOther( "weapon_frag" );
 	UTIL_PrecacheOther( "item_ammo_ar2_altfire" );
 //	UTIL_PrecacheOther( "item_ammo_smg1_grenade" );
@@ -402,6 +403,8 @@ void CNPC_CombineS::Event_Killed( const CTakeDamageInfo &info )
 					}
 				}
 			}
+			// Attempt to drop a grenade
+			DropItem("item_battery", WorldSpaceCenter() + RandomVector(-4, 4), RandomAngle(0, 360));
 		}
 
 		CHalfLife2 *pHL2GameRules = static_cast<CHalfLife2 *>(g_pGameRules);
