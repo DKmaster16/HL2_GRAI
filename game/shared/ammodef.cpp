@@ -218,7 +218,7 @@ bool CAmmoDef::AddAmmoType(char const* name, int damageType, int tracerType, int
 //-----------------------------------------------------------------------------
 void CAmmoDef::AddAmmoType(char const* name, int damageType, int tracerType, 
 	char const* plr_cvar, char const* npc_cvar, char const* carry_cvar, float bulletSpeed,
-	float bulletMass, float physicsForceImpulse, int nFlags, int minSplashSize, int maxSplashSize)
+	float bulletMass, float bulletDiameter, float physicsForceImpulse, int nFlags, int minSplashSize, int maxSplashSize)
 {
 	if ( AddAmmoType( name, damageType, tracerType, nFlags, minSplashSize, maxSplashSize ) == false )
 		return;
@@ -252,6 +252,7 @@ void CAmmoDef::AddAmmoType(char const* name, int damageType, int tracerType,
 	}
 	m_AmmoType[m_nAmmoIndex].bulletSpeed = bulletSpeed;
 	m_AmmoType[m_nAmmoIndex].bulletMass = bulletMass;
+	m_AmmoType[m_nAmmoIndex].bulletDiameter = bulletDiameter;
 	m_AmmoType[m_nAmmoIndex].physicsForceImpulse = physicsForceImpulse;
 	m_nAmmoIndex++;
 }
@@ -260,7 +261,7 @@ void CAmmoDef::AddAmmoType(char const* name, int damageType, int tracerType,
 // Purpose: Add an ammo type with it's damage & carrying capability specified via integers
 //-----------------------------------------------------------------------------
 void CAmmoDef::AddAmmoType(char const* name, int damageType, int tracerType, 
-	int plr_dmg, int npc_dmg, int carry, float bulletSpeed, float bulletMass, 
+	int plr_dmg, int npc_dmg, int carry, float bulletSpeed, float bulletMass, float bulletDiameter,
 	float physicsForceImpulse, int nFlags, int minSplashSize, int maxSplashSize )
 {
 	if ( AddAmmoType( name, damageType, tracerType, nFlags, minSplashSize, maxSplashSize ) == false )
@@ -271,6 +272,7 @@ void CAmmoDef::AddAmmoType(char const* name, int damageType, int tracerType,
 	m_AmmoType[m_nAmmoIndex].pMaxCarry = carry;
 	m_AmmoType[m_nAmmoIndex].bulletSpeed = bulletSpeed;
 	m_AmmoType[m_nAmmoIndex].bulletMass = bulletMass;
+	m_AmmoType[m_nAmmoIndex].bulletDiameter = bulletDiameter;
 	m_AmmoType[m_nAmmoIndex].physicsForceImpulse = physicsForceImpulse;
 
 	m_nAmmoIndex++;

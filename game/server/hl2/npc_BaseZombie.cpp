@@ -1274,7 +1274,7 @@ void CNPC_BaseZombie::Ignite( float flFlameLifetime, bool bNPCOnly, float flSize
 	}
 	else
 	{
-		SetHealth(MIN(m_iHealth, FLAME_DIRECT_DAMAGE_PER_SEC * (ZOMBIE_BURN_TIME * 2.0f + random->RandomFloat(-ZOMBIE_BURN_TIME_NOISE * 5.0f, ZOMBIE_BURN_TIME_NOISE * 5.0f))));
+		SetHealth(MIN(m_iHealth, FLAME_DIRECT_DAMAGE_PER_SEC * (ZOMBIE_BURN_TIME * 1.2f + random->RandomFloat(-ZOMBIE_BURN_TIME_NOISE * 3.0f, ZOMBIE_BURN_TIME_NOISE * 3.0f))));
 	}
 	// FIXME: use overlays when they come online
 	//AddOverlay( ACT_ZOM_WALK_ON_FIRE, false );

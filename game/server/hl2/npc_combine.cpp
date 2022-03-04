@@ -57,7 +57,7 @@ ConVar ai_combine_max_jump_drop("ai_combine_max_jump_drop", "192");
 #define COMBINE_NUM_DECOYS 5
 
 #define COMBINE_EYE_STANDING_POSITION	Vector( 0, 0, 62 )	// ( 0, 0, 66 )
-#define COMBINE_GUN_STANDING_POSITION	Vector( 0, 0, 57 )
+#define COMBINE_GUN_STANDING_POSITION	Vector( 0, 0, 55 )
 #define COMBINE_EYE_CROUCHING_POSITION	Vector( 0, 0, 38 )	// ( 0, 0, 40 )
 #define COMBINE_GUN_CROUCHING_POSITION	Vector( 0, 0, 36 )
 #define COMBINE_SHOTGUN_STANDING_POSITION	Vector( 0, 0, 36 )
@@ -228,6 +228,14 @@ bool CNPC_Combine::CreateComponents()
 
 	m_Sentences.Init( this, "NPC_Combine.SentenceParameters" );
 	return true;
+}
+//---------------------------------------------------------
+//---------------------------------------------------------
+void CNPC_Combine::AddEntityRelationship(CBaseEntity *pEntity, Disposition_t nDisposition, int nPriority)
+{
+	if (nDisposition == D_HT && pEntity->ClassMatches("npc_bullseye"))
+		UpdateEnemyMemory(pEntity, pEntity->GetAbsOrigin());
+	BaseClass::AddEntityRelationship(pEntity, nDisposition, nPriority);
 }
 
 //-----------------------------------------------------------------------------
@@ -659,7 +667,7 @@ bool CNPC_Combine::ShouldMoveAndShoot()
 	// "It's OK to move and shoot until gpGlobals->curtime == m_flStopMoveShootTime"
 	m_flStopMoveShootTime = FLT_MAX;
 
-	if( IsCurSchedule( SCHED_COMBINE_HIDE_AND_RELOAD, false ) )
+	if( IsCurSchedule( SCHED_COMBINE_HIDE_AND_RELOAD, true ) )
 		m_flStopMoveShootTime = gpGlobals->curtime + random->RandomFloat( 0.1f, 0.3f );
 
 	if( IsCurSchedule( SCHED_TAKE_COVER_FROM_BEST_SOUND, false ) )
@@ -671,7 +679,7 @@ bool CNPC_Combine::ShouldMoveAndShoot()
 	if( IsCurSchedule( SCHED_COMBINE_RUN_AWAY_FROM_BEST_SOUND, false ) )
 		m_flStopMoveShootTime = gpGlobals->curtime + random->RandomFloat(0.1f, 0.3f);
 
-	if( HasCondition( COND_NO_PRIMARY_AMMO, false ) )
+	if( HasCondition( COND_NO_PRIMARY_AMMO, true ) )
 		m_flStopMoveShootTime = gpGlobals->curtime + random->RandomFloat( 0.4f, 0.6f );
 
 	if( m_pSquad && IsCurSchedule( SCHED_COMBINE_TAKE_COVER1, false ) )
@@ -843,6 +851,27 @@ void CNPC_Combine::StartTask( const Task_t *pTask )
 
 	switch ( pTask->iTask )
 	{
+/*		case TASK_RELOAD:
+		{
+			if (!HasCondition(COND_LOW_PRIMARY_AMMO))
+			{
+				// Don't reload if you have done so while moving (See BACK_AWAY_AND_RELOAD schedule).
+				TaskComplete();
+				return;
+			}
+
+			Activity reloadGesture = TranslateActivity( ACT_GESTURE_RELOAD );
+			if ( reloadGesture != ACT_INVALID && IsPlayingGesture( reloadGesture ) )
+			{
+				ResetIdealActivity( ACT_IDLE );
+				return;
+			}
+
+			ResetIdealActivity(ACT_RELOAD);
+			BaseClass::StartTask(pTask);
+		}
+		break;
+*/
 	case TASK_COMBINE_SET_STANDING:
 		{
 			if ( pTask->flTaskData == 1.0f)
@@ -939,7 +968,7 @@ void CNPC_Combine::StartTask( const Task_t *pTask )
 		{
 			if (OccupyStrategySlot(SQUAD_SLOT_FLANK_FIRST))
 			{
-				// Only first flanker can signal (wtf, doesn't work!)
+				// Only first flanker can signal (doesn't work!)
 				SetIdealActivity(ACT_SIGNAL_ADVANCE);
 			}
 			// Any flanker can speak
@@ -1171,7 +1200,7 @@ void CNPC_Combine::StartTask( const Task_t *pTask )
 					m_nShots = 1;
 
 					// Longer intervals to simulate single shooting
-					m_flNextAttack = gpGlobals->curtime + m_flShotDelay - random->RandomFloat(-0.1, 0.1);	// was - 0.1
+					m_flNextAttack = gpGlobals->curtime + m_flShotDelay - random->RandomFloat(0, 0.1);	// was - 0.1
 				}
 			}
 			else
@@ -1765,7 +1794,7 @@ int CNPC_Combine::SelectCombatSchedule()
 				{
 					if (OccupyStrategySlotRange(SQUAD_SLOT_FLANK_FIRST, SQUAD_SLOT_FLANK_LAST))
 					{
-						SCHED_RANGE_ATTACK1;
+						return SCHED_RANGE_ATTACK1;
 					}
 					// If everyone else is attacking and I have line of fire, wait for a chance to cover someone.
 					else if( OccupyStrategySlot( SQUAD_SLOT_OVERWATCH ) )
@@ -1925,7 +1954,7 @@ int CNPC_Combine::SelectCombatSchedule()
 	}
 
 	// Try to be a flanker.
-	if (IsInSquad() && GetSquad()->NumMembers() > 3 && IsStrategySlotRangeOccupied(SQUAD_SLOT_ATTACK1, SQUAD_SLOT_ATTACK2) && OccupyStrategySlotRange(SQUAD_SLOT_FLANK_FIRST, SQUAD_SLOT_FLANK_LAST))
+	if (IsInSquad() && !FClassnameIs(GetEnemy(), "npc_bullseye") && GetSquad()->NumMembers() > 3 && IsStrategySlotRangeOccupied(SQUAD_SLOT_ATTACK1, SQUAD_SLOT_ATTACK2) && OccupyStrategySlotRange(SQUAD_SLOT_FLANK_FIRST, SQUAD_SLOT_FLANK_LAST))
 	{
 		return SCHED_COMBINE_FLANK_ENEMY;
 	}
@@ -2326,34 +2355,29 @@ int CNPC_Combine::SelectScheduleAttack()
 	// hurt it with bullets, so become grenade happy.
 	if (GetEnemy() && GetEnemy()->Classify() == CLASS_COMBINE && FClassnameIs(GetEnemy(), "npc_turret_floor"))
 	{
+		if (CanAltFireEnemy(true) && OccupyStrategySlot(SQUAD_SLOT_SPECIAL_ATTACK))
+			return SCHED_COMBINE_AR2_ALTFIRE;
+
+		if (CanGrenadeEnemy() && OccupyStrategySlot(SQUAD_SLOT_GRENADE1))
+			return SCHED_RANGE_ATTACK2;
+
 		// Don't do this until I've been fighting the turret for a few seconds
 		float flTimeAtFirstHand = GetEnemies()->TimeAtFirstHand(GetEnemy());
 		if (flTimeAtFirstHand != AI_INVALID_TIME)
 		{
 			float flTimeEnemySeen = gpGlobals->curtime - flTimeAtFirstHand;
-			if (flTimeEnemySeen > 2.0)
+			if (flTimeEnemySeen > 8.0)
 			{
-				if (CanGrenadeEnemy() && OccupyStrategySlot(SQUAD_SLOT_GRENADE1))
-				{
-					if (FClassnameIs(GetActiveWeapon(), "weapon_smg1") && gpGlobals->curtime > m_flNextAltFireTime && HasCondition(COND_CAN_RANGE_ATTACK1))
-					{
-						return SCHED_COMBINE_AR2_ALTFIRE;
-					}
-					else
-					{
-						return SCHED_RANGE_ATTACK2;
-					}
-				}
+				// If we're not in the viewcone of the turret, run up and hit it. Do this a bit later to
+				// give other squadmembers a chance to throw a grenade before I run in.
+				if (!GetEnemy()->MyNPCPointer()->FInViewCone(this))
+					return SCHED_COMBINE_CHARGE_TURRET;
+
+				if (OccupyStrategySlotRange(SQUAD_SLOT_FLANK_FIRST, SQUAD_SLOT_FLANK_LAST))
+					return SCHED_COMBINE_FLANK_ENEMY;
 			}
 		}
-
-		// If we're not in the viewcone of the turret, run up and hit it. Do this a bit later to
-		// give other squadmembers a chance to throw a grenade before I run in.
-		if (!GetEnemy()->MyNPCPointer()->FInViewCone(this))
-			return SCHED_COMBINE_CHARGE_TURRET;
-
-		if (OccupyStrategySlotRange(SQUAD_SLOT_FLANK_FIRST, SQUAD_SLOT_FLANK_LAST))
-			return SCHED_COMBINE_FLANK_ENEMY;
+		return SCHED_TAKE_COVER_FROM_ENEMY;
 	}
 
 	// When fighting against the player who's wielding a mega-physcannon, 
@@ -2427,7 +2451,7 @@ int CNPC_Combine::SelectScheduleAttack()
 			}
 		}
 
-//		DesireCrouch();
+		DesireCrouch();
 		return SCHED_TAKE_COVER_FROM_ENEMY;
 	}
 
@@ -2745,9 +2769,29 @@ int CNPC_Combine::TranslateSchedule(int scheduleType)
 
 		// No running away in the citadel!
 		if (ShouldChargePlayer())
-			return SCHED_RELOAD;
+			return SCHED_COMBINE_NORMAL_RELOAD;
 
 		return SCHED_COMBINE_HIDE_AND_RELOAD;
+	}
+	break;
+	case SCHED_COMBINE_NORMAL_RELOAD:
+	{
+		if (GetEnemy()->ClassMatches("npc_bullseye"))
+		{
+			// Refill the clip
+			if (GetActiveWeapon()->UsesClipsForAmmo1())
+			{
+				GetActiveWeapon()->m_iClip1 = GetActiveWeapon()->GetMaxClip1();
+				ClearCondition(COND_NO_PRIMARY_AMMO);
+				ClearCondition(COND_LOW_PRIMARY_AMMO);
+			}
+		}
+		else if (HasCondition(COND_NO_PRIMARY_AMMO) || HasCondition(COND_LOW_PRIMARY_AMMO))	// Don't reload if you have done so while moving.
+		{
+			return SCHED_RELOAD;
+		}
+		else
+			return SCHED_FAIL;
 	}
 	break;
 	case SCHED_RANGE_ATTACK1:
@@ -3194,7 +3238,7 @@ void CNPC_Combine::PainSound(const CTakeDamageInfo &info)
 		}
 
 		m_Sentences.Speak( pSentenceName, SENTENCE_PRIORITY_NORMAL, SENTENCE_CRITERIA_ALWAYS );
-		m_flNextPainSoundTime = gpGlobals->curtime + 1;
+		m_flNextPainSoundTime = gpGlobals->curtime + 2;
 	}
 }
 
@@ -3910,7 +3954,7 @@ WeaponProficiency_t CNPC_Combine::CalcWeaponProficiency(CBaseCombatWeapon *pWeap
 	{
 		if (g_pGameRules->IsSkillLevel(SKILL_HARD))
 		{
-			return WEAPON_PROFICIENCY_VERY_GOOD;	// 4.5/7.2
+			return WEAPON_PROFICIENCY_VERY_GOOD;	// 2/6
 		}
 		else if (g_pGameRules->IsSkillLevel(SKILL_EASY))
 		{
@@ -4340,13 +4384,13 @@ DEFINE_SCHEDULE
  SCHED_COMBINE_HIDE_AND_RELOAD,
 
  "	Tasks"
- "		TASK_SET_FAIL_SCHEDULE		SCHEDULE:SCHED_RELOAD"
+ "		TASK_SET_FAIL_SCHEDULE		SCHEDULE:SCHED_COMBINE_NORMAL_RELOAD"
  "		TASK_FIND_COVER_FROM_ENEMY	0"
- "		TASK_RUN_PATH				0"
+ "		TASK_RUN_PATH_TIMED			3"
  "		TASK_WAIT_FOR_MOVEMENT		0"
  "		TASK_REMEMBER				MEMORY:INCOVER"
  "		TASK_FACE_ENEMY				0"
- "		TASK_RELOAD					0"
+ "		TASK_SET_SCHEDULE			SCHEDULE:SCHED_COMBINE_NORMAL_RELOAD"
  ""
  "	Interrupts"
  "		COND_CAN_MELEE_ATTACK1"
@@ -4356,6 +4400,20 @@ DEFINE_SCHEDULE
  "		COND_HEAR_MOVE_AWAY"
  "		COND_GIVE_WAY"
  )
+ //=========================================================
+ // 	SCHED_COMBINE_NORMAL_RELOAD	
+ //=========================================================
+ DEFINE_SCHEDULE
+ (
+ SCHED_COMBINE_NORMAL_RELOAD,
+
+ "	Tasks"
+ "		TASK_STOP_MOVING							0"
+ "		TASK_RELOAD									0"
+ ""
+ "	Interrupts"
+ "		COND_HEAR_DANGER"
+ );
 
  //=========================================================
  // SCHED_COMBINE_SIGNAL_SUPPRESS

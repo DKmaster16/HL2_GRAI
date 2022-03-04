@@ -274,7 +274,20 @@ void CGameRules::RefreshSkillData ( bool forceUpdate )
 #ifdef HL2_DLL
 	// HL2 current only uses one skill config file that represents MEDIUM skill level and
 	// synthesizes EASY and HARD. (sjb)
-	Q_snprintf( szExec,sizeof(szExec), "exec skill_manifest.cfg\n" );
+//	Q_snprintf( szExec,sizeof(szExec), "exec skill_manifest.cfg\n" );
+
+	if (g_pGameRules->IsSkillLevel(SKILL_EASY))
+	{
+		Q_snprintf(szExec, sizeof(szExec), "exec skill_1.cfg\n");
+	}
+	else if (g_pGameRules->IsSkillLevel(SKILL_MEDIUM))
+	{
+		Q_snprintf(szExec, sizeof(szExec), "exec skill_2.cfg\n");
+	}
+	else if (g_pGameRules->IsSkillLevel(SKILL_HARD))
+	{
+		Q_snprintf(szExec, sizeof(szExec), "exec skill_3.cfg\n");
+	}
 
 	engine->ServerCommand( szExec );
 	engine->ServerExecute();

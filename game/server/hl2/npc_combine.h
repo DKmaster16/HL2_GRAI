@@ -179,6 +179,7 @@ private:
 		SCHED_COMBINE_VICTORY_DANCE,
 		SCHED_COMBINE_COMBAT_FACE,
 		SCHED_COMBINE_HIDE_AND_RELOAD,
+		SCHED_COMBINE_NORMAL_RELOAD,
 		SCHED_COMBINE_SIGNAL_SUPPRESS,
 		SCHED_COMBINE_ENTER_OVERWATCH,
 		SCHED_COMBINE_OVERWATCH,
@@ -328,6 +329,7 @@ public:
 
 	int				m_iTacticalVariant;
 	int				m_iPathfindingVariant;
+	void			AddEntityRelationship(CBaseEntity *pEntity, Disposition_t nDisposition, int nPriority);
 };
 
 

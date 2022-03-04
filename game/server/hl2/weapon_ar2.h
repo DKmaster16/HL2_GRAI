@@ -46,7 +46,7 @@ public:
 	void	Operator_HandleAnimEvent( animevent_t *pEvent, CBaseCombatCharacter *pOperator );
 
 	int		GetMinBurst( void ) { return 2; }	// was 2
-	int		GetMaxBurst( void ) { return 4; }	// was 5
+	int		GetMaxBurst( void ) { return 5; }	// was 5
 	float	GetMinRestTime( void ) { return 0.4; }
 	float	GetMaxRestTime( void ) { return 1.0; }
 	float	GetFireRate(void);
@@ -69,7 +69,7 @@ public:
 		static Vector plrRunCone = VECTOR_CONE_4DEGREES;	// Player sprint accuracy
 		static Vector plrJumpCone = VECTOR_CONE_15DEGREES;	// Player jump/midair accuracy
 		static Vector npcCone = VECTOR_CONE_1DEGREES;	// NPC cone when standing still
-		static Vector npcMoveCone = VECTOR_CONE_3DEGREES;	// NPC cone when moving
+		static Vector npcMoveCone = VECTOR_CONE_2DEGREES;	// NPC cone when moving
 		static Vector npcConeMidAir = VECTOR_CONE_4DEGREES;	// NPC cone when rappeling
 		static Vector vitalAllyCone = VECTOR_CONE_05DEGREES;	// Vital ally cone (Barney)
 

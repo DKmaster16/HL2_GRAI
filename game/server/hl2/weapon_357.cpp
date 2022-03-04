@@ -330,9 +330,9 @@ const WeaponProficiencyInfo_t *CWeapon357::GetProficiencyValues()
 	static WeaponProficiencyInfo_t proficiencyTable[] =
 	{
 		{ 9.00, 0.75 },	//poor	9/27
-		{ 4.00, 0.95 },	//average 4/12
-		{ 3.25, 0.95 },	//good 3.25/9.75
-		{ 2.50, 0.95 },	//very good	2.5/7.5
+		{ 3.00, 0.35 },	//average 3/9
+		{ 2.00, 0.35 },	//good 2/6
+		{ 1.00, 0.35 },	//very good	1/3
 		{ 1.00, 1.00 },	//perfect 1/3
 	};
 

@@ -1137,7 +1137,7 @@ int CBasePlayer::OnTakeDamage( const CTakeDamageInfo &inputInfo )
 	{
 		flBonus *= sk_armor_bonus_blast_scale.GetFloat();
 		flRatio *= sk_armor_ratio_blast_scale.GetFloat();
-		/**
+		/*
 		if (g_pGameRules->IsSkillLevel(SKILL_EASY))
 		{
 			// Armor takes 2.22 times less damage from explotions compared to diabolical. Bring it up to

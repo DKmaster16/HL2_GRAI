@@ -273,6 +273,8 @@ private:
 	// Can me enemy see me? 
 	bool CanEnemySeeMe( );
 
+	bool bHighHealth = ((float)GetHealth() / (float)GetMaxHealth() > 0.75f);
+	bool bLowHealth = ((float)GetHealth() / (float)GetMaxHealth() < 0.25f);
 	// Combat schedule selection 
 	int SelectMoveToLedgeSchedule();
 
@@ -366,6 +368,7 @@ private:
 		SCHED_METROPOLICE_ALERT_FACE_BESTSOUND,
 		SCHED_METROPOLICE_RETURN_TO_PRECHASE,
 		SCHED_METROPOLICE_SMASH_PROP,
+		SCHED_METROPOLICE_HIDE,
 	};
 
 	enum 

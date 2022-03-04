@@ -98,7 +98,7 @@ Vector VecCheckToss( CBaseEntity *pEntity, ITraceFilter *pFilter, Vector vecSpot
 	{
 		// toss a little bit to the left or right, not right down on the enemy's bean (head). 
 		vecSpot2 += right * ( random->RandomFloat(-8,8) + random->RandomFloat(-16,16) );
-		vecSpot2 += forward * ( random->RandomFloat(16,32) + random->RandomFloat(16,48) );	// toss a bit forward to compensate for imperfect midpoint
+		vecSpot2 += forward * ( random->RandomFloat(32,64) + random->RandomFloat(32,64) );	// toss a bit forward to compensate for imperfect midpoint
 	}
 
 	// calculate the midpoint and apex of the 'triangle'

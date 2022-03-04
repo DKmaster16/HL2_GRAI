@@ -61,15 +61,15 @@ extern ConVar sv_vehicle_autoaim_scale;
 #define CANNON_MAX_RIGHT_YAW		165.0f
 #define CANNON_MAX_LEFT_YAW			75.0f
 
-#define CANNON_HEAVY_SHOT_INTERVAL	0.2f
+#define CANNON_HEAVY_SHOT_INTERVAL	1.0f / sk_airboat_drain_rate.GetFloat();
 #define CANNON_SHAKE_INTERVAL		1.0f
 
 static ConVar sk_airboat_max_ammo("sk_airboat_max_ammo", "100" );
 static ConVar sk_airboat_recharge_rate("sk_airboat_recharge_rate", "15" );
-static ConVar sk_airboat_drain_rate("sk_airboat_drain_rate", "10" );
+ConVar sk_airboat_drain_rate("sk_airboat_drain_rate", "10" );
+ConVar sk_airboat_firingcone("sk_airboat_firingcone", "5.0", 0, "The angle in degrees of the cone in which the shots will be fired");
 static ConVar hud_airboathint_numentries( "hud_airboathint_numentries", "10", FCVAR_NONE );
-static ConVar airboat_fatal_stress( "airboat_fatal_stress", "2500", FCVAR_NONE, "Amount of stress in kg that would kill the airboat driver." );	// was 5000 kg
-
+static ConVar airboat_fatal_stress( "airboat_fatal_stress", "2000", FCVAR_NONE, "Amount of stress in kg that would kill the airboat driver." );	// was 5000 kg
 extern ConVar autoaim_max_dist;
 
 class CPropAirboat : public CPropVehicleDriveable
@@ -1568,140 +1568,144 @@ ConVar hap_airboat_gun_mag("hap_airboat_gun_mag", "3", 0);
 
 void CPropAirboat::FireGun( )
 {
-	// Get the gun position.
-	Vector	vecGunPosition;
-	Vector vecForward;
-	GetAttachment( m_nGunBarrelAttachment, vecGunPosition, &vecForward );
-	
-	// NOTE: For the airboat, unable to fire really means the aim is clamped
-	Vector vecAimPoint;
-	if ( !m_bUnableToFire )
+	if (gpGlobals->curtime >= m_flNextHeavyShotTime)
 	{
-		// Trace from eyes and see what we hit.
-		ComputeAimPoint( &vecAimPoint );
-	}
-	else
-	{
-		// We hit the clamp; just fire whichever way the gun is facing
-		VectorMA( vecGunPosition, 1000.0f, vecForward, vecAimPoint );
-	}
-	
-	// Get a ray from the gun to the target.
-	Vector vecRay = vecAimPoint - vecGunPosition;
-	VectorNormalize( vecRay );
-	
-	/*
-	// Get the aiming direction
-	Vector vecRay;
-	AngleVectors( vecGunAngles, &vecRay );
-	VectorNormalize( vecRay );
-	*/
-	
-	CAmmoDef *pAmmoDef = GetAmmoDef();
-	int ammoType = pAmmoDef->Index( "AirboatGun" );
+		// Get the gun position.
+		Vector	vecGunPosition;
+		Vector vecForward;
+		GetAttachment(m_nGunBarrelAttachment, vecGunPosition, &vecForward);
 
-#if defined( WIN32 ) && !defined( _X360 ) 
-	// NVNT punch the players haptics by the magnitude cvar each round fired
-	HapticPunch(m_hPlayer,0,0,hap_airboat_gun_mag.GetFloat());
-#endif
-
-	FireBulletsInfo_t info;
-	info.m_vecSrc = vecGunPosition;
-	info.m_vecDirShooting = vecRay;
-	info.m_flDistance = 4096;
-	info.m_iAmmoType = ammoType;
-	info.m_nFlags = FIRE_BULLETS_TEMPORARY_DANGER_SOUND;
-
-	if ( gpGlobals->curtime >= m_flNextHeavyShotTime )
-	{
-		info.m_iShots = 1;
-		info.m_vecSpread = VECTOR_CONE_PRECALCULATED;
-		info.m_flDamageForceScale = 1000.0f;
-	}
-	else
-	{
-		info.m_iShots = 2;
-		info.m_vecSpread = VECTOR_CONE_5DEGREES;
-	}
-
-	FireBullets( info );
-
-	CBaseEntity *pDriver = GetDriver();
-	CBasePlayer *pPlayerDriver;
-	if( pDriver && pDriver->IsPlayer() )
-	{
-		pPlayerDriver = dynamic_cast<CBasePlayer*>(pDriver);
-		if( pPlayerDriver )
+		// NOTE: For the airboat, unable to fire really means the aim is clamped
+		Vector vecAimPoint;
+		if (!m_bUnableToFire)
 		{
-			pPlayerDriver->RumbleEffect( RUMBLE_AIRBOAT_GUN, 0, RUMBLE_FLAG_LOOP|RUMBLE_FLAG_ONLYONE );
-		}
-	}
-
-	DoMuzzleFlash();
-
-	// NOTE: This must occur after FireBullets
-	if ( gpGlobals->curtime >= m_flNextHeavyShotTime )
-	{
-		m_flNextHeavyShotTime = gpGlobals->curtime + CANNON_HEAVY_SHOT_INTERVAL; 
-	}
-
-	if ( gpGlobals->curtime >= m_flNextGunShakeTime )
-	{
-		UTIL_ScreenShakeObject( this, WorldSpaceCenter(), 0.2, 250.0, CANNON_SHAKE_INTERVAL, 250, SHAKE_START );
-		m_flNextGunShakeTime = gpGlobals->curtime + 0.5 * CANNON_SHAKE_INTERVAL; 
-	}
-
-	// Specifically kill APC missiles in the cone. But we're going to totally cheat
-	// because it's hard to hit them when they are close. 
-	// Use the player's eye position as the center of the cone.
-	if ( !m_hPlayer )
-		return;
-
-	Vector vecEyeDirection, vecEyePosition;
-	if ( !m_bUnableToFire )
-	{
-		if ( IsX360() )
-		{
-			GetAttachment( m_nGunBarrelAttachment, vecEyePosition, &vecEyeDirection );
+			// Trace from eyes and see what we hit.
+			ComputeAimPoint(&vecAimPoint);
 		}
 		else
 		{
-			vecEyePosition = m_hPlayer->EyePosition();
-			m_hPlayer->EyeVectors( &vecEyeDirection, NULL, NULL );
+			// We hit the clamp; just fire whichever way the gun is facing
+			VectorMA(vecGunPosition, 1000.0f, vecForward, vecAimPoint);
 		}
-	}
-	else
-	{
-		vecEyePosition = vecGunPosition;
-		vecEyeDirection = vecRay;
-	}
 
-	CAPCMissile *pEnt = FindAPCMissileInCone( vecEyePosition, vecEyeDirection, 2.5f );
-	if ( pEnt && (pEnt->GetHealth() > 0) )
-	{
-		CTakeDamageInfo info( this, this, 1, DMG_AIRBOAT );
-		CalculateBulletDamageForce( &info, ammoType, vecRay, pEnt->WorldSpaceCenter() );
-		pEnt->TakeDamage( info );
+		// Get a ray from the gun to the target.
+		Vector vecRay = vecAimPoint - vecGunPosition;
+		VectorNormalize(vecRay);
 
-		Vector vecVelocity = pEnt->GetAbsVelocity();
+		/*
+		// Get the aiming direction
+		Vector vecRay;
+		AngleVectors( vecGunAngles, &vecRay );
+		VectorNormalize( vecRay );
+		*/
+		CAmmoDef *pAmmoDef = GetAmmoDef();
+		int ammoType = pAmmoDef->Index("AirboatGun");
 
-		// Pick a vector perpendicular to the vecRay which will push it away from the airboat
-		Vector vecPerp;
-		CrossProduct( Vector( 0, 0, 1 ), vecRay, vecPerp );
-		vecPerp.z = 0.0f;
-		if ( VectorNormalize( vecPerp ) > 1e-3 )
-		{
-			Vector vecCurrentDir;
-			GetVectors( &vecCurrentDir, NULL, NULL );
-			if ( DotProduct( vecPerp, vecCurrentDir ) > 0.0f )
+#if defined( WIN32 ) && !defined( _X360 ) 
+		// NVNT punch the players haptics by the magnitude cvar each round fired
+		HapticPunch(m_hPlayer, 0, 0, hap_airboat_gun_mag.GetFloat());
+#endif
+
+		FireBulletsInfo_t info;
+		info.m_vecSrc = vecGunPosition;
+		info.m_vecDirShooting = vecRay;
+		info.m_flDistance = 4096;
+		info.m_iAmmoType = ammoType;
+		info.m_nFlags = FIRE_BULLETS_TEMPORARY_DANGER_SOUND;
+
+		float flSinConeDegrees = sin(sk_airboat_firingcone.GetFloat() * 0.5f * (3.14f / 180.0f));
+		Vector vecSpread(flSinConeDegrees, flSinConeDegrees, flSinConeDegrees);
+
+		info.m_iShots = 1;
+		info.m_vecSpread = vecSpread;
+		//		info.m_flDamageForceScale = 1000.0f;
+		FireBullets(info);
+
+		/*	else
 			{
-				vecPerp *= -1.0f;
+			info.m_iShots = 1;
+			info.m_vecSpread = vecSpread;
 			}
+			*/
+		//	FireBullets( info );
 
-			vecPerp *= random->RandomFloat( 15, 25 );
-			vecVelocity += vecPerp;
-			pEnt->SetAbsVelocity( vecVelocity );
-//			pEnt->DisableGuiding();
+		CBaseEntity *pDriver = GetDriver();
+		CBasePlayer *pPlayerDriver;
+		if (pDriver && pDriver->IsPlayer())
+		{
+			pPlayerDriver = dynamic_cast<CBasePlayer*>(pDriver);
+			if (pPlayerDriver)
+			{
+				pPlayerDriver->RumbleEffect(RUMBLE_AIRBOAT_GUN, 0, RUMBLE_FLAG_LOOP | RUMBLE_FLAG_ONLYONE);
+			}
+		}
+
+		DoMuzzleFlash();
+
+		// NOTE: This must occur after FireBullets
+		if (gpGlobals->curtime >= m_flNextHeavyShotTime)
+		{
+			m_flNextHeavyShotTime = gpGlobals->curtime + CANNON_HEAVY_SHOT_INTERVAL;
+		}
+
+		if (gpGlobals->curtime >= m_flNextGunShakeTime)
+		{
+			UTIL_ScreenShakeObject(this, WorldSpaceCenter(), 0.2, 250.0, CANNON_SHAKE_INTERVAL, 250, SHAKE_START);
+			m_flNextGunShakeTime = gpGlobals->curtime + 0.5 * CANNON_SHAKE_INTERVAL;
+		}
+
+		// Specifically kill APC missiles in the cone. But we're going to totally cheat
+		// because it's hard to hit them when they are close. 
+		// Use the player's eye position as the center of the cone.
+		if (!m_hPlayer)
+			return;
+
+		Vector vecEyeDirection, vecEyePosition;
+		if (!m_bUnableToFire)
+		{
+			if (IsX360())
+			{
+				GetAttachment(m_nGunBarrelAttachment, vecEyePosition, &vecEyeDirection);
+			}
+			else
+			{
+				vecEyePosition = m_hPlayer->EyePosition();
+				m_hPlayer->EyeVectors(&vecEyeDirection, NULL, NULL);
+			}
+		}
+		else
+		{
+			vecEyePosition = vecGunPosition;
+			vecEyeDirection = vecRay;
+		}
+
+		CAPCMissile *pEnt = FindAPCMissileInCone(vecEyePosition, vecEyeDirection, 2.5f);
+		if (pEnt && (pEnt->GetHealth() > 0))
+		{
+			CTakeDamageInfo info(this, this, 1, DMG_AIRBOAT);
+			CalculateBulletDamageForce(&info, ammoType, vecRay, pEnt->WorldSpaceCenter());
+			pEnt->TakeDamage(info);
+
+			Vector vecVelocity = pEnt->GetAbsVelocity();
+
+			// Pick a vector perpendicular to the vecRay which will push it away from the airboat
+			Vector vecPerp;
+			CrossProduct(Vector(0, 0, 1), vecRay, vecPerp);
+			vecPerp.z = 0.0f;
+			if (VectorNormalize(vecPerp) > 1e-3)
+			{
+				Vector vecCurrentDir;
+				GetVectors(&vecCurrentDir, NULL, NULL);
+				if (DotProduct(vecPerp, vecCurrentDir) > 0.0f)
+				{
+					vecPerp *= -1.0f;
+				}
+
+				vecPerp *= random->RandomFloat(15, 25);
+				vecVelocity += vecPerp;
+				pEnt->SetAbsVelocity(vecVelocity);
+				//			pEnt->DisableGuiding();
+			}
 		}
 	}
 }

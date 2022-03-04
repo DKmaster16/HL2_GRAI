@@ -28,7 +28,7 @@
 #include "particlemgr.h"
 #include "c_vguiscreen.h"
 #include "c_team.h"
-#include "bullet_manager.h"
+//#include "bullet_manager.h"
 #include "c_rumble.h"
 #include "fmtstr.h"
 #include "achievementmgr.h"
@@ -831,8 +831,8 @@ void ClientModeShared::LevelInit( const char *newmap )
 	// Reset any player explosion/shock effects
 	CLocalPlayerFilter filter;
 	enginesound->SetPlayerDSP( filter, 0, true );
-	g_pBulletManager = (C_BulletManager *)CreateEntityByName("bullet_manager");
-	ClientEntityList().AddNonNetworkableEntity(g_pBulletManager);
+//	g_pBulletManager = (C_BulletManager *)CreateEntityByName("bullet_manager");
+//	ClientEntityList().AddNonNetworkableEntity(g_pBulletManager);
 }
 
 //-----------------------------------------------------------------------------

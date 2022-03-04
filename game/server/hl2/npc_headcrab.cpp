@@ -193,6 +193,7 @@ ConVar	sk_headcrab_melee_dmg( "sk_headcrab_melee_dmg","0");
 ConVar	sk_headcrab_poison_npc_damage( "sk_headcrab_poison_npc_damage", "0" );
 ConVar	sk_headcrab_357_damage_scale("sk_headcrab_357_damage_scale", "2.0");
 ConVar	sk_headcrab_buckshot_damage_scale("sk_headcrab_buckshot_damage_scale", "2.0");
+ConVar	sk_headcrab_bullet_damage_scale("sk_headcrab_bullet_damage_scale", "1.25");
 
 extern ConVar sk_npc_dmg_buckshot;
 extern ConVar sk_plr_num_shotgun_pellets;
@@ -1724,6 +1725,11 @@ int CBaseHeadcrab::OnTakeDamage_Alive( const CTakeDamageInfo &inputInfo )
 	}
 
 	float flScale = 1.0;
+
+	if (info.GetDamageType() & DMG_BULLET)
+	{
+		flScale = sk_headcrab_bullet_damage_scale.GetFloat();
+	}
 
 	if (info.GetAmmoType() == GetAmmoDef()->Index("357"))
 	{

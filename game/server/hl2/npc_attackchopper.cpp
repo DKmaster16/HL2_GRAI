@@ -126,7 +126,7 @@ static const char *s_pChunkModelName[CHOPPER_MAX_CHUNKS] =
 
 // CVars
 ConVar	sk_helicopter_health("sk_helicopter_health", "5600");
-ConVar	sk_helicopter_firingcone("sk_helicopter_firingcone", "20.0", 0, "The angle in degrees of the cone in which the shots will be fired");
+ConVar	sk_helicopter_firingcone("sk_helicopter_firingcone", "5.0", 0, "The angle in degrees of the cone in which the shots will be fired");
 ConVar	sk_helicopter_burstcount("sk_helicopter_burstcount", "12", 0, "How many shot bursts to fire after charging up. The bigger the number, the longer the firing is");
 ConVar	sk_helicopter_burstcount_long("sk_helicopter_burstcount_long", "12", 0, "How many shot bursts to fire while deadly shooting. The bigger the number, the longer the firing is");
 ConVar	sk_helicopter_roundsperburst("sk_helicopter_roundsperburst", "5", 0, "How many shots to fire in a single burst");
@@ -1835,6 +1835,7 @@ void CNPC_AttackHelicopter::ShootAtPlayer(const Vector &vBasePos, const Vector &
 	info.m_iTracerFreq = 1;
 	info.m_vecDirShooting = GetActualShootTrajectory(vBasePos);
 	info.m_nFlags = FIRE_BULLETS_TEMPORARY_DANGER_SOUND;
+	info.m_nFlags = AMMO_DARK_ENERGY;
 
 	DoMuzzleFlash();
 
@@ -2024,7 +2025,7 @@ void CNPC_AttackHelicopter::ShootInsideCircleOfDeath(const Vector &vBasePos, con
 
 	FireBulletsInfo_t info(1, vBasePos, vecFireDirection, VECTOR_CONE_PRECALCULATED, MAX_COORD_RANGE, m_iAmmoType);
 	info.m_iTracerFreq = 1;
-	info.m_nFlags = FIRE_BULLETS_TEMPORARY_DANGER_SOUND;
+	info.m_nFlags = FIRE_BULLETS_TEMPORARY_DANGER_SOUND | AMMO_DARK_ENERGY;
 
 	FireBullets(info);
 }
@@ -2087,6 +2088,7 @@ void CNPC_AttackHelicopter::ShootAtVehicle(const Vector &vBasePos, const Vector 
 
 			FireBulletsInfo_t info(1, vBasePos, vecShotDir, VECTOR_CONE_PRECALCULATED, MAX_COORD_RANGE, m_iAmmoType);
 			info.m_iTracerFreq = 1;
+			info.m_nFlags = AMMO_DARK_ENERGY;
 			FireBullets(info);
 		}
 
@@ -2108,6 +2110,7 @@ void CNPC_AttackHelicopter::ShootAtVehicle(const Vector &vBasePos, const Vector 
 
 		FireBulletsInfo_t info(1, vBasePos, vecDir, VECTOR_CONE_PRECALCULATED, MAX_COORD_RANGE, m_iAmmoType);
 		info.m_iTracerFreq = 1;
+		info.m_nFlags = AMMO_DARK_ENERGY;
 		FireBullets(info);
 		--nShotsRemaining;
 	}
@@ -2151,6 +2154,7 @@ void CNPC_AttackHelicopter::ShootAtVehicle(const Vector &vBasePos, const Vector 
 			// I put in all the default arguments simply so I could guarantee the first shot of one of the bursts always hits
 			FireBulletsInfo_t info(1, vBasePos, vecFireDirection, VECTOR_CONE_PRECALCULATED, MAX_COORD_RANGE, m_iAmmoType);
 			info.m_iTracerFreq = 1;
+			info.m_nFlags = AMMO_DARK_ENERGY;
 			FireBullets(info);
 		}
 		else
@@ -2468,6 +2472,7 @@ void CNPC_AttackHelicopter::ShootAtFacingDirection(const Vector &vBasePos, const
 				{
 					FireBulletsInfo_t info(1, vBasePos, vecDelta, VECTOR_CONE_PRECALCULATED, 8192, m_iAmmoType);
 					info.m_iTracerFreq = 1;
+					info.m_nFlags = AMMO_DARK_ENERGY;
 					FireBullets(info);
 					--nShotCount;
 				}
@@ -2486,6 +2491,7 @@ void CNPC_AttackHelicopter::ShootAtFacingDirection(const Vector &vBasePos, const
 
 	FireBulletsInfo_t info(nShotCount, vBasePos, vGunDir, vecSpread, 8192, m_iAmmoType);
 	info.m_iTracerFreq = 1;
+	info.m_nFlags = AMMO_DARK_ENERGY;
 	FireBullets(info);
 }
 
@@ -2743,7 +2749,7 @@ bool CNPC_AttackHelicopter::IsBombDropFair(const Vector &vecBombStartPos, const 
 		return true;
 
 	// Skip out if we're right above or behind the player.. that's unfair
-	if (GetEnemy() && GetEnemy()->IsPlayer())
+	if (GetEnemy() && GetEnemy()->IsPlayer() && !g_pGameRules->IsSkillLevel(SKILL_HARD))
 	{
 		// How much time will it take to fall?
 		// dx = 0.5 * a * t^2

@@ -24,6 +24,7 @@ struct Ammo_t
 	float				physicsForceImpulse;
 	float					bulletSpeed;
 	float					bulletMass;
+	float					bulletDiameter;
 	int					nMinSplashSize;
 	int					nMaxSplashSize;
 
@@ -57,7 +58,7 @@ enum AmmoFlags_t
 {
 	AMMO_FORCE_DROP_IF_CARRIED = 0x1,
 	AMMO_INTERPRET_PLRDAMAGE_AS_DAMAGE_TO_PLAYER = 0x2,
-	AMMO_DARK_ENERGY = 0x3,
+	AMMO_DARK_ENERGY = 0x4,
 };
 
 
@@ -88,14 +89,15 @@ public:
 
 	void				AddAmmoType(char const* name, int damageType, int tracerType,
 							int plr_dmg, int npc_dmg, int carry,
-							float bulletSpeed, float bulletMass, float physicsForceImpulse,
-							int nFlags, int minSplashSize = 4,
+							float bulletSpeed, float bulletMass, float bulletDiameter,
+							float physicsForceImpulse, int nFlags, int minSplashSize = 4,
 							int maxSplashSize = 8 );
 
 	void				AddAmmoType(char const* name, int damageType, int tracerType,
 							char const* plr_cvar, char const* npc_var,
 							char const* carry_cvar, float bulletSpeed,
-							float bulletMass, float physicsForceImpulse, int nFlags,
+							float bulletMass, float bulletDiameter,
+							float physicsForceImpulse, int nFlags,
 							int minSplashSize = 4, int maxSplashSize = 8 );
 	CAmmoDef(void);
 	virtual ~CAmmoDef( void );

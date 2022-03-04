@@ -68,6 +68,10 @@ ConVar ai_force_serverside_ragdoll( "ai_force_serverside_ragdoll", "0" );
 
 ConVar nb_last_area_update_tolerance( "nb_last_area_update_tolerance", "4.0", FCVAR_CHEAT, "Distance a character needs to travel in order to invalidate cached area" ); // 4.0 tested as sweet spot (for wanderers, at least). More resulted in little benefit, less quickly diminished benefit [7/31/2008 tom]
 
+ConVar sk_ammo_wpn_scale1("sk_ammo_wpn_scale1", "0.9");
+ConVar sk_ammo_wpn_scale2("sk_ammo_wpn_scale2", "0.6");
+ConVar sk_ammo_wpn_scale3("sk_ammo_wpn_scale3", "0.3");
+
 #ifndef _RETAIL
 ConVar ai_use_visibility_cache( "ai_use_visibility_cache", "1" );
 #define ShouldUseVisibilityCache() ai_use_visibility_cache.GetBool()
@@ -1905,20 +1909,32 @@ void CBaseCombatCharacter::Weapon_Drop( CBaseCombatWeapon *pWeapon, const Vector
 		return;
 
 	// If I'm an NPC, fill the weapon with ammo before I drop it. DK: Unless it's hard mode :>
-	if (GetFlags() & FL_NPC && !g_pGameRules->IsSkillLevel(SKILL_HARD))
+	if (GetFlags() & FL_NPC)
 	{
 		if ( pWeapon->UsesClipsForAmmo1() )
 		{
-			pWeapon->m_iClip1 = pWeapon->GetDefaultClip1();
-
-			if( FClassnameIs( pWeapon, "weapon_smg1" ) )
+			if (g_pGameRules->IsSkillLevel(SKILL_EASY))
 			{
-				// Drop enough ammo to kill 2 of me.
-				// Figure out how much damage one piece of this type of ammo does to this type of enemy.
-				float flAmmoDamage = g_pGameRules->GetAmmoDamage( UTIL_PlayerByIndex(1), this, pWeapon->GetPrimaryAmmoType() );
-				pWeapon->m_iClip1 = (GetMaxHealth() / flAmmoDamage) * 2;
+				pWeapon->m_iClip1 = pWeapon->GetDefaultClip1() * RandomFloat(sk_ammo_wpn_scale1.GetFloat(), 1.0f);
+
+				if (FClassnameIs(pWeapon, "weapon_smg1"))
+				{
+					// Drop enough ammo to kill just under 2 me.
+					// Figure out how much damage one piece of this type of ammo does to this type of enemy.
+					float flAmmoDamage = g_pGameRules->GetAmmoDamage(UTIL_PlayerByIndex(1), this, pWeapon->GetPrimaryAmmoType());
+					pWeapon->m_iClip1 = (GetMaxHealth() / flAmmoDamage) * RandomFloat(1.5, 2.0);	// A little bit of ranodmness
+				}
+			}
+			else if (g_pGameRules->IsSkillLevel(SKILL_MEDIUM))
+			{
+				pWeapon->m_iClip1 = pWeapon->GetDefaultClip1() * RandomFloat(sk_ammo_wpn_scale2.GetFloat(), 1.0f);
+			}
+			else
+			{
+				pWeapon->m_iClip1 = pWeapon->m_iClip1 * RandomFloat(sk_ammo_wpn_scale3.GetFloat(), 1.0f);
 			}
 		}
+
 		if ( pWeapon->UsesClipsForAmmo2() )
 		{
 			pWeapon->m_iClip2 = pWeapon->GetDefaultClip2();

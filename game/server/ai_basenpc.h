@@ -1575,6 +1575,7 @@ protected:
 	int					m_afMemory;
 	EHANDLE				m_hEnemyOccluder;	// The entity my enemy is hiding behind.
 
+	int					m_iAccumulatedShots;		// How many pellets hit me
 	float				m_flSumDamage;				// How much consecutive damage I've received
 	float				m_flLastDamageTime;			// Last time I received damage
 	float				m_flLastPlayerDamageTime;	// Last time I received damage from the player

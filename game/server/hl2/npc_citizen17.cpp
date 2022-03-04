@@ -2194,6 +2194,12 @@ bool CNPC_Citizen::ShouldLookForBetterWeapon()
 		{
 			bool bDefer = false;
 
+			if (FClassnameIs(pWeapon, "weapon_357"))
+			{
+				// Content to keep this weapon forever
+				m_flNextWeaponSearchTime = OTHER_DEFER_SEARCH_TIME;
+				bDefer = true;
+			}
 			if( FClassnameIs( pWeapon, "weapon_ar2" ) )
 			{
 				// Content to keep this weapon forever

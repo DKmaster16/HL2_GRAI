@@ -638,7 +638,7 @@ void CNPC_MetroPolice::Spawn(void)
 		AddSpawnFlags(SF_NPC_GAG);
 	}
 
-	if (m_bSimpleCops && !g_pGameRules->IsSkillLevel(SKILL_HARD))
+	if (m_bSimpleCops)	// && !g_pGameRules->IsSkillLevel(SKILL_HARD)
 	{
 		m_iHealth = sk_metropolice_simple_health.GetFloat();
 	}
@@ -676,7 +676,7 @@ void CNPC_MetroPolice::Spawn(void)
 
 	m_hManhack = NULL;
 
-	if (!m_bSimpleCops && Q_strnicmp(STRING(gpGlobals->mapname), "d1_canals_07", 14))
+	if (!m_bSimpleCops && Q_strnicmp(STRING(gpGlobals->mapname), "d1_canals_07", 14) && Q_strnicmp(STRING(gpGlobals->mapname), "d1_trainstation_04", 14))
 	{
 		if (Weapon_OwnsThisType("weapon_smg1") && random->RandomInt(0, 2) == 0)	// 1/3 of smg metrocops wield shotguns
 		{
@@ -3084,6 +3084,11 @@ Activity CNPC_MetroPolice::NPC_TranslateActivity(Activity newActivity)
 		return ACT_RUN_ON_FIRE;
 	}
 
+	if (bLowHealth && newActivity == ACT_RUN)
+	{
+		return ACT_RUN_HURT;
+	}
+
 	// If we're shoving, see if we should be more forceful in doing so
 	if (newActivity == ACT_PUSH_PLAYER)
 	{
@@ -4319,8 +4324,6 @@ int CNPC_MetroPolice::SelectSchedule(void)
 		}
 	}
 
-	bool bHighHealth = ((float)GetHealth() / (float)GetMaxHealth() > 0.75f);
-
 	// This will cause the cops to run backwards + shoot at the same time
 	if (!bHighHealth && !HasBaton())
 	{
@@ -4335,7 +4338,8 @@ int CNPC_MetroPolice::SelectSchedule(void)
 	{
 		if (bHighHealth)
 			return SCHED_RELOAD;
-
+		if (bLowHealth)
+			return SCHED_METROPOLICE_HIDE;
 		AnnounceOutOfAmmo();
 		return SCHED_HIDE_AND_RELOAD;
 	}
@@ -6122,6 +6126,28 @@ SCHED_METROPOLICE_SMASH_PROP,
 "	Interrupts"
 "		COND_NEW_ENEMY"
 "		COND_ENEMY_DEAD"
+);
+
+DEFINE_SCHEDULE
+(
+SCHED_METROPOLICE_HIDE,
+
+"	Tasks"
+"		TASK_STOP_MOVING					0"
+"		TASK_FIND_COVER_FROM_ENEMY			99"
+"		TASK_FIND_FAR_NODE_COVER_FROM_ENEMY	384"
+"		TASK_CLEAR_MOVE_WAIT				0"
+"		TASK_RUN_PATH						0"
+"		TASK_RELOAD							0"
+"		TASK_WAIT_FOR_MOVEMENT				0"
+"		TASK_SET_SCHEDULE					SCHEDULE:SCHED_COMBINE_WAIT_IN_COVER"
+
+"	"
+"	Interrupts"
+"	"
+"		COND_CAN_RANGE_ATTACK1"
+"		COND_NEW_ENEMY"
+"		COND_HEAR_DANGER"
 );
 
 AI_END_CUSTOM_NPC()

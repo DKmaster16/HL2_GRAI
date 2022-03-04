@@ -51,6 +51,9 @@ extern Vector PointOnLineNearestPoint(const Vector& vStartPos, const Vector& vEn
 
 ConVar mortar_visualize("mortar_visualize", "0");
 
+extern ConVar sk_airboat_drain_rate;
+extern ConVar sk_airboat_firingcone;
+
 BEGIN_DATADESC(CFuncTank)
 DEFINE_KEYFIELD(m_yawRate, FIELD_FLOAT, "yawrate"),
 DEFINE_KEYFIELD(m_yawRange, FIELD_FLOAT, "yawrange"),
@@ -2986,40 +2989,48 @@ void CFuncTankAirboatGun::DoImpactEffect(trace_t &tr, int nDamageType)
 //-----------------------------------------------------------------------------
 // Fires bullets
 //-----------------------------------------------------------------------------
-#define AIRBOAT_GUN_HEAVY_SHOT_INTERVAL	0.2f
+#define AIRBOAT_GUN_HEAVY_SHOT_INTERVAL	1.0f / sk_airboat_drain_rate.GetFloat();
 
 void CFuncTankAirboatGun::Fire(int bulletCount, const Vector &barrelEnd, const Vector &forward, CBaseEntity *pAttacker, bool bIgnoreSpread)
 {
-	CAmmoDef *pAmmoDef = GetAmmoDef();
-	int ammoType = pAmmoDef->Index("AirboatGun");
-
-	FireBulletsInfo_t info;
-	info.m_vecSrc = barrelEnd;
-	info.m_vecDirShooting = forward;
-	info.m_flDistance = 4096;
-	info.m_iAmmoType = ammoType;
-
 	if (gpGlobals->curtime >= m_flNextHeavyShotTime)
 	{
+		CAmmoDef *pAmmoDef = GetAmmoDef();
+		int ammoType = pAmmoDef->Index("AirboatGun");
+
+		FireBulletsInfo_t info;
+		info.m_vecSrc = barrelEnd;
+		info.m_vecDirShooting = forward;
+		info.m_flDistance = 4096;
+		info.m_iAmmoType = ammoType;
+
+		float flSinConeDegrees = sin(sk_airboat_firingcone.GetFloat() * 0.5f * (3.14f / 180.0f));
+		Vector vecSpread(flSinConeDegrees, flSinConeDegrees, flSinConeDegrees);
+
+
 		info.m_iShots = 1;
-		info.m_vecSpread = VECTOR_CONE_PRECALCULATED;
-		info.m_flDamageForceScale = 1000.0f;
+		info.m_vecSpread = vecSpread;
+		//		info.m_flDamageForceScale = 1000.0f;
+		FireBullets(info);
+
+		/*	else
+			{
+			info.m_iShots = 2;
+			info.m_vecSpread = VECTOR_CONE_5DEGREES;
+			}
+			*/
+		//	FireBullets(info);
+
+		DoMuzzleFlash();
+		m_flNextHeavyShotTime = gpGlobals->curtime + AIRBOAT_GUN_HEAVY_SHOT_INTERVAL;
+
 	}
-	else
-	{
-		info.m_iShots = 2;
-		info.m_vecSpread = VECTOR_CONE_5DEGREES;
-	}
-
-	FireBullets(info);
-
-	DoMuzzleFlash();
-
 	// NOTE: This must occur after FireBullets
-	if (gpGlobals->curtime >= m_flNextHeavyShotTime)
+/*	if (gpGlobals->curtime >= m_flNextHeavyShotTime)
 	{
 		m_flNextHeavyShotTime = gpGlobals->curtime + AIRBOAT_GUN_HEAVY_SHOT_INTERVAL;
 	}
+*/
 }
 
 

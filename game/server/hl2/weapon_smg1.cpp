@@ -56,9 +56,9 @@ public:
 	{
 		// Define "spread" parameters based on the "owner" and what they are doing
 		static Vector plrSingleCone = VECTOR_CONE_05DEGREES;	// Single Fire
-		static Vector plrAccurateCone = VECTOR_CONE_2DEGREES;	// Zooming or ducking
-		static Vector plrCone = VECTOR_CONE_3DEGREES;		// Standing, moving around, the default
-		static Vector plrRunCone = VECTOR_CONE_6DEGREES;	// Player sprint accuracy
+		static Vector plrAccurateCone = VECTOR_CONE_3DEGREES;	// Zooming or ducking
+		static Vector plrCone = VECTOR_CONE_4DEGREES;		// Standing, moving around, the default
+		static Vector plrRunCone = VECTOR_CONE_7DEGREES;	// Player sprint accuracy
 		static Vector plrJumpCone = VECTOR_CONE_15DEGREES;	// Player jump/midair accuracy
 		static Vector npcCone = VECTOR_CONE_2DEGREES;		// NPC cone when standing still
 		static Vector npcMoveCone = VECTOR_CONE_4DEGREES;	// NPC cone when moving
@@ -335,6 +335,7 @@ void CWeaponSMG1::Operator_HandleAnimEvent( animevent_t *pEvent, CBaseCombatChar
 		if (vecThrow == Vector(0, 0, 0)){
 			break;
 		}
+		BaseClass::WeaponSound(WPN_DOUBLE);
 
 		CGrenadeAR2 *pGrenade = (CGrenadeAR2*)Create("grenade_ar2", vecShootOrigin, vec3_angle, npc);
 		pGrenade->SetAbsVelocity(vecThrow);
@@ -643,11 +644,11 @@ const WeaponProficiencyInfo_t *CWeaponSMG1::GetProficiencyValues()
 {
 	static WeaponProficiencyInfo_t proficiencyTable[] =
 	{
-		{ 4.00,		0.75	},	//poor	8/16
-		{ 3.00,		0.65	},	//average 6/12
-		{ 2.00,		0.65	},	//good 4/8
-		{ 1.50,		0.65	},	//very good	3/6
-		{ 1.00,		1.0		},	//perfect 2/4
+		{ 4.15,		1.00	},	//poor	8.3/16.6
+		{ 3.50,		0.85	},	//average 7/14
+		{ 2.50,		0.85	},	//good 5/10
+		{ 1.50,		0.85	},	//very good	3/6
+		{ 1.00,		1.00	},	//perfect 2/4
 	};
 
 	COMPILE_TIME_ASSERT( ARRAYSIZE(proficiencyTable) == WEAPON_PROFICIENCY_PERFECT + 1);

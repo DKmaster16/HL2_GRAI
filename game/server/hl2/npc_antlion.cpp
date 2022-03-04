@@ -4006,6 +4006,9 @@ bool CNPC_Antlion::ShouldGib( const CTakeDamageInfo &info )
 
 	if ( info.GetDamageType() & (DMG_ALWAYSGIB|DMG_BLAST) )
 		return true;
+	
+	if ( info.GetDamageType() & (DMG_BUCKSHOT) && m_nSustainedDamage > sk_antlion_health.GetFloat()*0.6 )
+		return true;
 
 	if ( m_iHealth < -20 )
 		return true;

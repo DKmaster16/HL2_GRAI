@@ -13,28 +13,27 @@
 #include "effect_dispatch_data.h"
 #include "tier0/vprof.h"
 #include "decals.h"
-
-
+#include "func_break.h"
 CBulletManager *g_pBulletManager;
 CUtlLinkedList<CSimulatedBullet*> g_Bullets;
 
-#ifdef CLIENT_DLL//-------------------------------------------------
+//#ifdef CLIENT_DLL//-------------------------------------------------
 #include "engine/ivdebugoverlay.h"
-#include "c_te_effect_dispatch.h"
-ConVar g_debug_client_bullets("g_debug_client_bullets", "0", FCVAR_CHEAT);
-extern void FX_PlayerTracer(Vector& start, Vector& end);
-#else//-------------------------------------------------------------
+//#include "c_te_effect_dispatch.h"
+//ConVar g_debug_client_bullets("g_debug_client_bullets", "0", FCVAR_CHEAT);
+//extern void FX_PlayerTracer(Vector& start, Vector& end);
+//#else//-------------------------------------------------------------
 #include "te_effect_dispatch.h"
 #include "soundent.h"
 #include "player_pickup.h"
 #include "ilagcompensationmanager.h"
 ConVar g_debug_bullets("g_debug_bullets", "0", FCVAR_CHEAT, "Debug of bullet simulation\nThe white line shows the bullet trail.\nThe red line shows not passed penetration test.\nThe green line shows passed penetration test. Turn developer mode for more information.");
-#endif//------------------------------------------------------------
+//#endif//------------------------------------------------------------
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
-#define MAX_RICO_DOT_ANGLE 0.707f	//Maximum dot allowed for any ricochet
+#define MAX_RICO_DOT_ANGLE 0.5f	//Maximum dot allowed for any ricochet
 #define MIN_RICO_SPEED_PERC 0.1f	//Minimum speed percent allowed for any ricochet
 //#define NUM_PENETRATIONS	1		//Dark Energy Bullet penetration
 
@@ -69,7 +68,7 @@ static void BulletStopSpeedCallback(ConVar *var, const char *pOldString)
 		BulletManager()->UpdateBulletStopSpeed();
 }
 ConVar sv_bullet_stop_speed("sv_bullet_stop_speed", "200");
-ConVar sv_bullet_speed_forced("sv_bullet_speed_forced", "1000000");
+//ConVar sv_bullet_speed_forced("sv_bullet_speed_forced", "0");
 
 
 LINK_ENTITY_TO_CLASS(bullet_manager, CBulletManager);
@@ -111,7 +110,7 @@ CSimulatedBullet::CSimulatedBullet()
 	m_vecOrigin.Init();
 	m_vecDirShooting.Init();
 	m_flInitialBulletSpeed = m_flBulletSpeed = 0;
-	m_flInitialBulletMass = m_flBulletMass = 124;	// Default 9mm weight
+	m_flInitialBulletMass = m_flBulletMass = 0.8;	// Default 9mm weight
 	m_flEntryDensity = 0.0f;
 	bStuckInWall = false;
 
@@ -123,16 +122,16 @@ CSimulatedBullet::CSimulatedBullet()
 //==================================================
 CSimulatedBullet::CSimulatedBullet(FireBulletsInfo_t info, Vector newdir, CBaseEntity *pInfictor, CBaseEntity *pAdditionalIgnoreEnt,
 	bool bTraceHull
-#ifndef CLIENT_DLL
-	, CBaseEntity *pCaller
-#endif
+//#ifndef CLIENT_DLL
+//	, CBaseEntity *pCaller
+//#endif
 	)
 {
 	// Input validation
-	Assert(pInfictor);
-#ifndef CLIENT_DLL
-	Assert(pCaller);
-#endif
+//	Assert(pInfictor);
+//#ifndef CLIENT_DLL
+//	Assert(pCaller);
+//#endif
 
 	bulletinfo = info;			// Setup Fire bullets information here
 
@@ -161,20 +160,17 @@ CSimulatedBullet::CSimulatedBullet(FireBulletsInfo_t info, Vector newdir, CBaseE
 
 	//m_szTracerName = (char*)p_eInfictor->GetTracerType(); 
 
-	// Basic information about the bullet
-	if (sv_bullet_speed_forced.GetInt() > 0){
-	m_flInitialBulletSpeed = m_flBulletSpeed = sv_bullet_speed_forced.GetInt();
-	}
-	else{
+	// Basic information about the bullet (pInfictor->IsNPC() && sv_bullet_speed_forced.GetInt() > 0) 
 	m_flInitialBulletSpeed = m_flBulletSpeed = GetAmmoDef()->GetAmmoOfIndex(bulletinfo.m_iAmmoType)->bulletSpeed;
-	}
+	m_flBulletSpeed = m_flInitialBulletSpeed + RandomFloat(-50, 50);
 	m_flInitialBulletMass = m_flBulletMass = GetAmmoDef()->GetAmmoOfIndex(bulletinfo.m_iAmmoType)->bulletMass;
+	m_flBulletDiameter = GetAmmoDef()->GetAmmoOfIndex(bulletinfo.m_iAmmoType)->bulletDiameter;
 	m_vecDirShooting = newdir;
 	m_vecOrigin = bulletinfo.m_vecSrc;
 	m_bTraceHull = bTraceHull;
-#ifndef CLIENT_DLL
-	m_hCaller = pCaller;
-#endif
+//#ifndef CLIENT_DLL
+//	m_hCaller = pCaller;
+//#endif
 	m_flEntryDensity = 0.0f;
 	m_vecTraceRay = m_vecOrigin + m_vecDirShooting * m_flBulletSpeed;
 	m_flRayLength = m_flInitialBulletSpeed;
@@ -196,6 +192,20 @@ bool CSimulatedBullet::SimulateBullet(void)
 {
 	VPROF("C_SimulatedBullet::SimulateBullet");
 
+	if (!p_eInfictor)
+	{
+//		p_eInfictor = bulletinfo.m_pAttacker;
+
+		if (!p_eInfictor)
+			return false;
+	}
+/*#ifndef CLIENT_DLL
+	if (!m_hCaller)
+	{
+		return false;
+	}
+#endif
+*/
 	if (!IsFinite(m_flBulletSpeed))
 		return false;		 //prevent a weird crash
 
@@ -203,14 +213,6 @@ bool CSimulatedBullet::SimulateBullet(void)
 	Vector vecTraceStart(m_vecOrigin);
 	if (m_flBulletSpeed <= 0 || m_flBulletMass <= 0) //Avoid errors;
 		return false;
-
-	if (!p_eInfictor)
-	{
-		p_eInfictor = bulletinfo.m_pAttacker;
-
-		if (!p_eInfictor)
-			return false;
-	}
 
 	m_flRayLength = m_flBulletSpeed;
 
@@ -220,9 +222,8 @@ bool CSimulatedBullet::SimulateBullet(void)
 	}
 	else
 	{
-		m_flBulletSpeed += m_flBulletMass * m_vecDirShooting.z; // 0.8f
+		m_flBulletSpeed += m_flBulletMass * m_vecDirShooting.z; // 0.8f instead of mass
 		m_vecTraceRay = m_vecOrigin + m_vecDirShooting * m_flBulletSpeed;
-		m_flBulletSpeed -= (1 / m_flBulletMass) / m_flBulletSpeed * random->RandomFloat(0.9, 0.8);	// Doesn't account for bullet shape D:
 		m_vecDirShooting.z -= 0.1 / m_flBulletSpeed;
 	}
 #ifdef GAME_DLL
@@ -256,7 +257,7 @@ bool CSimulatedBullet::SimulateBullet(void)
 #endif
 	}
 
-#ifndef CLIENT_DLL
+//#ifndef CLIENT_DLL
 	if (m_bWasInWater)
 	{
 		CEffectData tracerData;
@@ -267,7 +268,7 @@ bool CSimulatedBullet::SimulateBullet(void)
 
 		DispatchEffect("TracerSound", tracerData);
 	}
-#endif
+//#endif
 
 	static int	tracerCount;
 	bool bulletSpeedCheck;
@@ -286,7 +287,7 @@ bool CSimulatedBullet::SimulateBullet(void)
 	//		UTIL_Tracer(m_vecOrigin, trace.endpos, p_eInfictor->entindex(), TRACER_DONT_USE_ATTACHMENT, m_flBulletSpeed, true, p_eInfictor->GetTracerType());
 	//	}
 
-#ifdef CLIENT_DLL
+/*#ifdef 0 //CLIENT_DLL
 	if (g_debug_client_bullets.GetBool())
 	{
 		debugoverlay->AddLineOverlay(trace.startpos, trace.endpos, 255, 0, 0, true, 10.0f);
@@ -295,7 +296,7 @@ bool CSimulatedBullet::SimulateBullet(void)
 	//	{
 	//		FX_PlayerTracer(vecTraceStart, m_vecOrigin);
 	//	}
-#else
+#else*/
 	if (g_debug_bullets.GetBool())
 	{
 		NDebugOverlay::Line(trace.startpos, trace.endpos, 255, 255, 255, true, 10.0f);
@@ -314,7 +315,7 @@ bool CSimulatedBullet::SimulateBullet(void)
 	triggerInfo.ScaleDamageForce(bulletinfo.m_flDamageForceScale);
 	triggerInfo.SetAmmoType(bulletinfo.m_iAmmoType);
 	BulletManager()->SendTraceAttackToTriggers(triggerInfo, trace.startpos, trace.endpos, m_vecDirShooting);
-#endif
+//#endif
 
 	if (trace.fraction == 1.0f)
 	{
@@ -409,7 +410,7 @@ bool CSimulatedBullet::StartSolid(trace_t &ptr)
 		return false;
 	}
 	default:
-	{
+	{	
 		float flPenetrationDistance = VectorLength(AbsEntry - AbsExit);
 
 		m_flBulletSpeed -= flPenetrationDistance * m_flEntryDensity / sv_bullet_speed_modifier.GetFloat();
@@ -453,11 +454,11 @@ bool CSimulatedBullet::EndSolid(trace_t &ptr)
 {
 	m_vecEntryPosition = ptr.endpos;
 
-#ifndef CLIENT_DLL
+//#ifndef 0 //CLIENT_DLL
 	int soundEntChannel = (bulletinfo.m_nFlags&FIRE_BULLETS_TEMPORARY_DANGER_SOUND) ? SOUNDENT_CHANNEL_BULLET_IMPACT : SOUNDENT_CHANNEL_UNSPECIFIED;
 
 	CSoundEnt::InsertSound(SOUND_BULLET_IMPACT, m_vecEntryPosition, 200, 0.5, p_eInfictor, soundEntChannel);
-#endif
+//#endif
 
 	if (FStrEq(ptr.surface.name, "tools/toolsblockbullets"))
 	{
@@ -494,22 +495,19 @@ bool CSimulatedBullet::EndSolid(trace_t &ptr)
 		DesiredDistance = 5.0f; // 5 units in hammer
 		break;
 	case CHAR_TEX_COMPUTER:
-		DesiredDistance = 5.0f; // 5 units in hammer
-		break;
-	case CHAR_TEX_GLASS:
-		DesiredDistance = 8.0f; // maximum 8 units in hammer.
+		DesiredDistance = 16.0f; // 5 units in hammer
 		break;
 	case CHAR_TEX_VENT:
 		DesiredDistance = 4.0f; // 4 units in hammer and no more(!)
 		break;
 	case CHAR_TEX_METAL:
-		DesiredDistance = 1.0f; // 1 units in hammer. We cannot penetrate a really 'fat' metal wall. Corners are good.
+		DesiredDistance = 2.75f; // 1 units in hammer. We cannot penetrate a really 'fat' metal wall. Corners are good.
 		break;
 	case CHAR_TEX_PLASTIC:
 		DesiredDistance = 16.0f; // 16 units in hammer: Plastic can more
 		break;
 	case CHAR_TEX_ANTLION:
-		DesiredDistance = 1.1001f; // 1.5 units in hammer
+		DesiredDistance = 1.0f; // 1.5 units in hammer
 		break;
 	case CHAR_TEX_BLOODYFLESH:
 		DesiredDistance = 1.0f; // Don't penetrate multiple times.
@@ -519,6 +517,23 @@ bool CSimulatedBullet::EndSolid(trace_t &ptr)
 		break;
 	case CHAR_TEX_DIRT:
 		DesiredDistance = 6.0f; // 6 units in hammer: >4 cm of plaster can be penetrated
+		break;
+	case CHAR_TEX_GLASS:
+
+		if (ptr.m_pEnt->ClassMatches("func_breakable"))
+		{
+			// Query the func_breakable for whether it wants to allow for bullet penetration
+			if (ptr.m_pEnt->HasSpawnFlags(SF_BREAK_NO_BULLET_PENETRATION) == false)
+			{
+				DesiredDistance = 4.0f; // maximum 4 units in hammer.
+			}
+			else
+			{
+				DesiredDistance = 0.25f; // maximum half a centimeter.
+			}
+		}
+
+//		DesiredDistance = 0.5f; // maximum half a centimeter.
 		break;
 	}
 
@@ -576,6 +591,9 @@ bool CSimulatedBullet::EndSolid(trace_t &ptr)
 			bool bMustDoRico = (GetAmmoDef()->Flags(GetAmmoTypeIndex()) != AMMO_DARK_ENERGY &&
 				fldot > flRicoDotAngle && GetBulletSpeedRatio() > MIN_RICO_SPEED_PERC); // We can't do richochet when bullet has lowest speed
 
+			if ( GetAmmoDef()->Flags(GetAmmoTypeIndex()) & AMMO_DARK_ENERGY )
+				bMustDoRico = false;
+
 			if (sv_bullet_unrealricochet.GetBool() && p_eInfictor->IsPlayer()) //Cheat is only for player,yet =)
 				bMustDoRico = true;
 
@@ -584,8 +602,9 @@ bool CSimulatedBullet::EndSolid(trace_t &ptr)
 				if (!sv_bullet_unrealricochet.GetBool())
 				{
 					{
-						m_flBulletSpeed -= m_flBulletSpeed * (-fldot) * 0.1 * m_flBulletMass * random->RandomFloat(1.00, 0.85);	// More mass = better ricochets
-						m_flBulletMass -= m_flBulletMass * (-fldot) / 2;
+						m_flBulletSpeed *= (1.0f / -fldot) * (m_flBulletMass * random->RandomFloat(0.005, 0.1));	// More mass = better ricochets
+						m_flBulletMass *= m_flBulletMass / (-fldot);
+//						m_flBulletSpeed *= (1.0f / -fldot) * m_flBulletMass * random->RandomFloat(0.00625, 0.125);
 					}
 				}
 				else
@@ -657,8 +676,8 @@ bool CSimulatedBullet::EndSolid(trace_t &ptr)
 
 	m_flBulletSpeed -= flPenetrationDistance * m_flEntryDensity / sv_bullet_speed_modifier.GetFloat();
 
-	if (GetAmmoDef()->Flags(GetAmmoTypeIndex()) & AMMO_DARK_ENERGY ||
-		BulletManager()->BulletStopSpeed() == ONE_HIT_MODE)
+	if ( GetAmmoDef()->Flags(GetAmmoTypeIndex()) & AMMO_DARK_ENERGY ||
+		BulletManager()->BulletStopSpeed() == ONE_HIT_MODE )
 	{
 		return false;
 	}
@@ -735,12 +754,12 @@ void CSimulatedBullet::EntityImpact(trace_t &ptr)
 
 		//To make it more reallistic
 		float fldot = m_vecDirShooting.Dot(ptr.plane.normal);
-		//We affecting damage by angle. If we has lower angle of reflection, doing lower damage.
+		//We affecting damage by angle. If we have lower angle of reflection, doing lower damage.
 
 		flActualDamage *= Square(GetBulletSpeedRatio()) * GetBulletMassRatio() * -fldot; //And also affect damage by speed and weight modifications 
 		flActualForce *= GetBulletSpeedRatio() * GetBulletMassRatio() * -fldot;
 
-		if (flActualDamage > flMaxDamage || flActualForce > flMaxForce)
+		if (flActualDamage > flMaxDamage && flActualForce > flMaxForce)
 		{
 			flActualDamage = flMaxDamage;
 			flActualForce = flMaxForce;
@@ -772,11 +791,11 @@ void CSimulatedBullet::EntityImpact(trace_t &ptr)
 //==================================================
 // Purpose:	Simulates all bullets every centisecond
 //==================================================
-#ifndef CLIENT_DLL
+//#ifndef 0 //CLIENT_DLL
 void CBulletManager::Think(void)
-#else
-void CBulletManager::ClientThink(void)
-#endif
+//#else
+//void CBulletManager::ClientThink(void)
+//#endif
 {
 	unsigned short iNext = 0;
 	for (unsigned short i = g_Bullets.Head(); i != g_Bullets.InvalidIndex(); i = iNext)
@@ -787,11 +806,11 @@ void CBulletManager::ClientThink(void)
 	}
 	if (g_Bullets.Head() != g_Bullets.InvalidIndex())
 	{
-#ifdef CLIENT_DLL
+/*#ifdef 0 //CLIENT_DLL
 		SetNextClientThink(gpGlobals->curtime + 0.01f);
-#else
+#else*/
 		SetNextThink(gpGlobals->curtime + 0.01f);
-#endif
+//#endif
 	}
 }
 
@@ -804,12 +823,12 @@ void CBulletManager::UpdateBulletStopSpeed(void)
 	m_iBulletStopSpeed = sv_bullet_stop_speed.GetInt();
 }
 
-#ifndef CLIENT_DLL
+//#ifndef CLIENT_DLL
 void CBulletManager::SendTraceAttackToTriggers(const CTakeDamageInfo &info, const Vector& start, const Vector& end, const Vector& dir)
 {
 	TraceAttackToTriggers(info, start, end, dir);
 }
-#endif
+//#endif
 
 
 //==================================================
@@ -825,13 +844,13 @@ int CBulletManager::AddBullet(CSimulatedBullet *pBullet)
 		return -1;
 	}
 	unsigned short index = g_Bullets.AddToTail(pBullet);
-#ifdef CLIENT_DLL
+/*#ifdef 0//CLIENT_DLL
 	DevMsg("Client Bullet Created (%i)\n", index);
 	if (g_Bullets.Count() == 1)
 	{
 		SetNextClientThink(gpGlobals->curtime + 0.01f);
 	}
-#else
+#else*/
 	DevMsg("Bullet Created (%i) LagCompensation %f\n", index, pBullet->bulletinfo.m_flLatency);
 	if (pBullet->bulletinfo.m_flLatency != 0.0f)
 		pBullet->SimulateBullet(); //Pre-simulation
@@ -840,7 +859,7 @@ int CBulletManager::AddBullet(CSimulatedBullet *pBullet)
 	{
 		SetNextThink(gpGlobals->curtime + 0.01f);
 	}
-#endif
+//#endif
 	return index;
 }
 

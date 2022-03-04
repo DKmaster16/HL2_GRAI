@@ -72,6 +72,8 @@ bool IsInCommentaryMode(void);
 #define ALYX_MIN_ENEMY_HEALTH_TO_CROUCH			20
 #define ALYX_CROUCH_DELAY						5			// Time after crouching before Alyx will crouch again
 
+ConVar sk_alyx_episodic_health("sk_alyx_episodic_health", "100");
+
 //-----------------------------------------------------------------------------
 // Interactions
 //-----------------------------------------------------------------------------
@@ -330,11 +332,12 @@ void CNPC_Alyx::Spawn()
 	{
 		SetupAlyxWithoutParent();
 		CreateEmpTool();
+		CapabilitiesRemove(bits_CAP_MOVE_JUMP);
 	}
 
 	AddEFlags(EFL_NO_DISSOLVE | EFL_NO_MEGAPHYSCANNON_RAGDOLL | EFL_NO_PHYSCANNON_INTERACTION);
 
-	m_iHealth = 100;
+	m_iHealth = sk_alyx_episodic_health.GetFloat();;
 	m_bloodColor = DONT_BLEED;
 
 	NPCInit();

@@ -1712,7 +1712,7 @@ void CNPC_CombineGunship::FireCannonRound( void )
 	if ( IsTargettingMissile() )
 	{
 		// Fire a fake shot
-		FireBullets( 1, vecMuzzle, vecToEnemy, VECTOR_CONE_5DEGREES, 8192, m_iAmmoType, 1 );
+		FireBullets(1, vecMuzzle, vecToEnemy, VECTOR_CONE_5DEGREES, MAX_COORD_RANGE, m_iAmmoType, 1);
 
 		CBaseEntity *pMissile = GetEnemy();
 
@@ -1742,18 +1742,22 @@ void CNPC_CombineGunship::FireCannonRound( void )
 		m_iBurstSize--;
 
 		// Fire directly at the target
-		FireBulletsInfo_t info( 1, vecMuzzle, vecToEnemy, vec3_origin, MAX_COORD_RANGE, m_iAmmoType );
+		FireBulletsInfo_t info(1, vecMuzzle, vecToEnemy, vec3_origin, MAX_COORD_RANGE, m_iAmmoType);
 		info.m_iTracerFreq = 1;
+		info.m_nFlags = AMMO_DARK_ENERGY;
 		CAmmoDef *pAmmoDef = GetAmmoDef();
-		info.m_iPlayerDamage = pAmmoDef->PlrDamage( m_iAmmoType );
 
 		// If we've already hit the player a few times, do less damage. This ensures we don't hit the
 		// player multiple max damage hits during a single burst.
-		extern ConVar sk_npc_dmg_gunship_to_plr;
+//		extern ConVar sk_npc_dmg_gunship_to_plr;
 
 		if (m_iBurstHits >= sk_gunship_max_dmg_hits_per_burst.GetFloat())
 		{
-			info.m_iPlayerDamage = sk_npc_dmg_gunship_to_plr.GetFloat() * sk_gunship_past_max_damage_scale.GetFloat();
+			info.m_iPlayerDamage = pAmmoDef->PlrDamage(m_iAmmoType) * sk_gunship_past_max_damage_scale.GetFloat();
+		}
+		else
+		{
+			info.m_iPlayerDamage = pAmmoDef->PlrDamage(m_iAmmoType);
 		}
 
 		FireBullets( info );

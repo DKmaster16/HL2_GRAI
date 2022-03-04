@@ -18,7 +18,9 @@
 #include "mapentities_shared.h"
 #include "debugoverlay_shared.h"
 #include "coordsize.h"
+#ifdef GAME_DLL
 #include "bullet_manager.h"
+#endif
 #include "vphysics/performance.h"
 
 #ifdef CLIENT_DLL
@@ -1733,7 +1735,7 @@ void CBaseEntity::FireBullets(const FireBulletsInfo_t &info)
 	}
 
 	// the default attacker is ourselves
-	CBaseEntity *pAttacker = info.m_pAttacker ? info.m_pAttacker : this;
+//	CBaseEntity *pAttacker = info.m_pAttacker ? info.m_pAttacker : this;
 
 	// Make sure we don't have a dangling damage target from a recursive call
 	if (g_MultiDamage.GetTarget() != NULL)
@@ -1821,24 +1823,25 @@ void CBaseEntity::FireBullets(const FireBulletsInfo_t &info)
 		}
 
 		Vector vecSrc(info.m_vecSrc);
-		bool bTraceHull = 1;
-
+#ifdef GAME_DLL
+		bool bTraceHull = 0;
+		CBaseEntity *pAttacker = info.m_pAttacker ? info.m_pAttacker : this;
 		CSimulatedBullet *pBullet = new CSimulatedBullet(info, vecDir, pAttacker, info.m_pAdditionalIgnoreEnt, bTraceHull
-#ifndef CLIENT_DLL
-			, this
-#endif
+//#ifndef CLIENT_DLL
+//			, this
+//#endif
 			);
 		BulletManager()->AddBullet(pBullet);
-
+#endif
 		vecEnd = info.m_vecSrc + vecDir * info.m_flDistance;
 
 
-		if (IsPlayer() && info.m_iShots > 1 && iShot % 2)
-		{
-			// Half of the shotgun pellets are hulls that make it easier to hit targets with the shotgun.
-			AI_TraceHull(info.m_vecSrc, vecEnd, Vector(-3, -3, -3), Vector(3, 3, 3), MASK_SHOT, &traceFilter, &tr);
-		}
-		else
+//		if (IsPlayer() && info.m_iShots > 1 && iShot % 2)
+//		{
+//			// Half of the shotgun pellets are hulls that make it easier to hit targets with the shotgun.
+//			AI_TraceHull(info.m_vecSrc, vecEnd, Vector(-3, -3, -3), Vector(3, 3, 3), MASK_SHOT, &traceFilter, &tr);
+//		}
+//		else
 		{
 			AI_TraceLine(info.m_vecSrc, vecEnd, MASK_SHOT, &traceFilter, &tr);
 		}
@@ -1862,12 +1865,12 @@ void CBaseEntity::FireBullets(const FireBulletsInfo_t &info)
 
 		// Now hit all triggers along the ray that respond to shots...
 		// Clip the ray to the first collided solid returned from traceline
-		CTakeDamageInfo triggerInfo(pAttacker, pAttacker, 0, nDamageType);
+/*		CTakeDamageInfo triggerInfo(pAttacker, pAttacker, 0, nDamageType);
 		triggerInfo.SetAmmoType(info.m_iAmmoType);
 #ifdef GAME_DLL
 		TraceAttackToTriggers(triggerInfo, tr.startpos, tr.endpos, vecDir);
 #endif
-		Vector vecTracerDest = tr.endpos;
+*/		Vector vecTracerDest = tr.endpos;
 
 //		if ((info.m_iTracerFreq != 0) && (tracerCount++ % info.m_iTracerFreq) == 0)
 		{

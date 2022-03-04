@@ -1108,9 +1108,10 @@ void CNPC_PlayerCompanion::StartTask( const Task_t *pTask )
 
 	case TASK_PC_GET_PATH_OFF_COMPANION:
 		{
-			Assert( ( GetGroundEntity() && ( GetGroundEntity()->IsPlayer() || ( GetGroundEntity()->IsNPC() && IRelationType( GetGroundEntity() ) == D_LI ) ) ) );
+			Assert( ( GetGroundEntity() && ( GetGroundEntity()->IsPlayer() || 
+			( GetGroundEntity()->IsNPC() && IRelationType( GetGroundEntity() ) == D_LI ) ) ) );
 			GetNavigator()->SetAllowBigStep( GetGroundEntity() );
-			ChainStartTask( TASK_MOVE_AWAY_PATH, 48 );
+			ChainStartTask( TASK_MOVE_AWAY_PATH, 72 );
 			
 			/*
 			trace_t tr;
@@ -1167,7 +1168,7 @@ void CNPC_PlayerCompanion::RunTask( const Task_t *pTask )
 				{
 					GetNavigator()->SetAllowBigStep( UTIL_GetLocalPlayer() );
 				}
-				ChainRunTask( TASK_MOVE_AWAY_PATH, 48 );
+				ChainRunTask( TASK_MOVE_AWAY_PATH, 72 );
 			}
 			break;
 
@@ -2380,13 +2381,12 @@ WeaponProficiency_t CNPC_PlayerCompanion::CalcWeaponProficiency( CBaseCombatWeap
 	{
 		return WEAPON_PROFICIENCY_PERFECT;		// 4-6 shotgun, 1 Barney, 0.5 Alyx
 	}
-	else if (FClassnameIs(pWeapon, "weapon_ar2"))
+/*	else if (FClassnameIs(pWeapon, "weapon_ar2"))
 	{
 		return WEAPON_PROFICIENCY_GOOD;			// 2.5/7.5 AR2
 	}
 		return WEAPON_PROFICIENCY_VERY_GOOD;	// 3/6 SMG1
-
-	/*
+*/
 	float chance = random->RandomInt(0, 100);
 
 	if (chance < 50)		// 50% chance to be an average Joe
@@ -2405,7 +2405,7 @@ WeaponProficiency_t CNPC_PlayerCompanion::CalcWeaponProficiency( CBaseCombatWeap
 	{
 		return WEAPON_PROFICIENCY_GOOD; // AR2 = 4, SMG1 = 6
 	}
-*/
+
 }
 
 //-----------------------------------------------------------------------------

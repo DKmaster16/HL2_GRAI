@@ -579,7 +579,7 @@ int CAI_TacticalServices::FindLosNode(const Vector &vThreatPos, const Vector &vT
 
 					// Additional check to not accidentally rush the player.
 					Vector vecDist = nodeOrigin - vecFlankRefPos;
-					if (vecDist.Length() < 252)	// 7 Yards
+					if (vecDist.Length() < 252)	// 7 Yards = 6 m
 					{
 						skip = true;
 					}

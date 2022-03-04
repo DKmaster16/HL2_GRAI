@@ -25,8 +25,8 @@
 #define	PISTOL_FASTEST_REFIRE_TIME		0.14f	// Cycling rate!
 #define	PISTOL_FASTEST_DRY_REFIRE_TIME	0.2f
 
-#define	PISTOL_ACCURACY_SHOT_PENALTY_TIME		0.28f	// Applied amount of time each shot adds to the time we must recover from
-#define	PISTOL_ACCURACY_MAXIMUM_PENALTY_TIME	1.5f	// Maximum penalty to deal out
+#define	PISTOL_ACCURACY_SHOT_PENALTY_TIME		0.25f	// Applied amount of time each shot adds to the time we must recover from
+#define	PISTOL_ACCURACY_MAXIMUM_PENALTY_TIME	1.0f	// Maximum penalty to deal out
 
 ConVar	pistol_use_new_accuracy( "pistol_use_new_accuracy", "1" );
 
@@ -92,7 +92,7 @@ public:
 			
 		static Vector plrCone;		// Normal accuracy lerps from perfect to poor
 		static Vector plrRunCone = VECTOR_CONE_5DEGREES;	// Player sprint accuracy is always poor
-		static Vector plrAccurateCone = VECTOR_CONE_05DEGREES;	// Zoom or duck accuracy is always perfect 
+		static Vector plrAccurateCone = VECTOR_CONE_025DEGREES;	// Zoom or duck accuracy is always perfect 
 
 		if ( pistol_use_new_accuracy.GetBool() )
 		{
@@ -103,17 +103,17 @@ public:
 											1.0f ); 
 
 			// We lerp from very accurate to inaccurate over time
-			VectorLerp( VECTOR_CONE_05DEGREES, VECTOR_CONE_5DEGREES, ramp, plrCone );
+			VectorLerp( VECTOR_CONE_025DEGREES, VECTOR_CONE_4DEGREES, ramp, plrCone );
 		}
 		else
 		{
 			plrCone = VECTOR_CONE_2DEGREES;
 		}
 		CBasePlayer *pPlayer = ToBasePlayer(GetOwnerEntity());
-		if (pPlayer->m_nButtons & IN_SPEED)
-			return plrRunCone;
 		if (pPlayer->m_nButtons & IN_DUCK)
 			return plrAccurateCone;
+		if (pPlayer->m_nButtons & IN_SPEED)
+			return plrRunCone;
 		if (pPlayer->m_nButtons & IN_ZOOM)
 			return plrAccurateCone;
 		else
@@ -548,10 +548,10 @@ const WeaponProficiencyInfo_t *CWeaponPistol::GetProficiencyValues()
 	static WeaponProficiencyInfo_t proficiencyTable[] =
 	{
 		{ 7.0, 1.0 },	//poor 14/35
-		{ 3.0, 0.75 },	//average 6/15
-		{ 2.25, 0.75 },	//good	4.5/11.25
-		{ 1.5, 0.75 },	//very good	3/7.5
-		{ 1.0, 1.0 },	//perfect 4/7
+		{ 3.0, 0.6 },	//average 6/15
+		{ 2.0, 0.6 },	//good	4/10
+		{ 1.0, 0.6 },	//very good	2/5
+		{ 1.0, 1.0 },	//perfect 2/5
 	};
 
 	COMPILE_TIME_ASSERT(ARRAYSIZE(proficiencyTable) == WEAPON_PROFICIENCY_PERFECT + 1);

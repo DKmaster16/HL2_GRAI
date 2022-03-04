@@ -2655,9 +2655,9 @@ float CAI_Navigator::GetStepDownMultiplier()
 	if ( m_hBigStepGroundEnt )
 	{
 		if ( !m_hBigStepGroundEnt->IsPlayer() )
-			return 2.6;
+			return 3.6;	//2.6
 		else
-			return 10.0;
+			return 5.0;
 	}
 	return 1.0;
 }

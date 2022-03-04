@@ -10,15 +10,15 @@
 #define BUTTER_MODE -1
 #define ONE_HIT_MODE -2
 
-#ifdef CLIENT_DLL//-----------------------
+/*#ifdef CLIENT_DLL//-----------------------
 class C_BulletManager;
 extern C_BulletManager *g_pBulletManager;
 #define CBulletManager C_BulletManager
 #define CSimulatedBullet C_SimulatedBullet
-#else//-----------------------------------
+#else//-----------------------------------*/
 class CBulletManager;
 extern CBulletManager *g_pBulletManager;
-#endif//----------------------------------
+//#endif//----------------------------------
 
 inline CBulletManager *BulletManager()
 {
@@ -32,9 +32,9 @@ public:
 	CSimulatedBullet();
 	CSimulatedBullet(FireBulletsInfo_t info, Vector newdir, CBaseEntity *pInfictor, CBaseEntity *pAdditionalIgnoreEnt,
 		bool bTraceHull
-#ifndef CLIENT_DLL
-		, CBaseEntity *pCaller
-#endif
+//#ifndef CLIENT_DLL
+//		, CBaseEntity *pCaller
+//#endif
 		);
 	~CSimulatedBullet();
 
@@ -77,14 +77,19 @@ public:
 	{
 		return bulletinfo.m_iAmmoType;
 	}
+
+//	inline bool GetHitGlass(void)
+//	{
+//		return bHitGlass;
+//	}
 private:
 	bool m_bTraceHull;	//Trace hull?
 	bool m_bWasInWater;
 
 	CTraceFilterSimpleList *m_pIgnoreList; //already hit
-#ifndef CLIENT_DLL
-	CUtlVector<CBaseEntity *> m_CompensationConsiderations; //Couldn't resist
-#endif
+//#ifndef CLIENT_DLL
+//	CUtlVector<CBaseEntity *> m_CompensationConsiderations; //Couldn't resist
+//#endif
 
 	EHANDLE m_hCaller;
 	EHANDLE	m_hLastHit;		//Last hit
@@ -98,8 +103,10 @@ private:
 	float m_flInitialBulletMass;
 	float m_flInitialBulletDiameter;
 	float m_flRayLength;
-
+//	float flCumulativeDamage = 0.0f;
 	float DesiredDistance; //Sets when doing penetration test
+
+//	bool bHitGlass = false;
 
 	bool m_bPenetrated;
 
@@ -135,12 +142,12 @@ public:
 	}
 	int AddBullet(CSimulatedBullet *pBullet);
 	//	int AddDarkEnergyBullet(CDarkEnergyBullet *pDarkEnergyBullet);
-#ifdef CLIENT_DLL
-	void ClientThink(void);
-#else
+//#ifdef CLIENT_DLL
+//	void ClientThink(void);
+//#else
 	void Think(void);
 	void SendTraceAttackToTriggers(const CTakeDamageInfo &info, const Vector& start, const Vector& end, const Vector& dir);
-#endif
+//#endif
 
 	void RemoveBullet(int index);	//Removes bullet.
 	void UpdateBulletStopSpeed(void);	//Updates bullet speed

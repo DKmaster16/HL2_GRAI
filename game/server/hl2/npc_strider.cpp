@@ -3833,18 +3833,21 @@ void CNPC_Strider::ShootMinigun( const Vector *pTarget, float aimError, const Ve
 		
 		Vector vecShootDir = *pTarget - muzzlePos;
 		VectorNormalize( vecShootDir );
+		
+		FireBulletsInfo_t info(1, muzzlePos, vecShootDir, vecSpread, MAX_COORD_RANGE, m_miniGunDirectAmmo);
+		info.m_iTracerFreq = 1;
+		info.m_nFlags = AMMO_DARK_ENERGY;
 
 		if( m_bMinigunUseDirectFire )
 		{
-			// exactly on target w/tracer
-			FireBullets( 1, muzzlePos, vecShootDir, vecSpread, 8192, m_miniGunDirectAmmo, 1 );
+			info.m_iAmmoType = m_miniGunDirectAmmo;
 		}
 		else
 		{
-			// exactly on target w/tracer
-			FireBullets( 1, muzzlePos, vecShootDir, vecSpread, 8192, m_miniGunAmmo, 1 );
+			info.m_iAmmoType = m_miniGunAmmo;
 		}
 
+		FireBullets(info);
 		//g_pEffects->MuzzleFlash( muzzlePos, muzzleAng, random->RandomFloat( 2.0f, 4.0f ) , MUZZLEFLASH_TYPE_STRIDER );
 		DoMuzzleFlash();
 
@@ -5381,7 +5384,7 @@ void CStriderMinigun::Think( IStriderMinigunHost *pHost, float dt )
 
 			if ( GetTarget() )
 			{
-				pHost->ShootMinigun( &vecTarget, GetAimError(), vec3_origin );
+				pHost->ShootMinigun( &vecTarget, GetAimError(), VECTOR_CONE_PRECALCULATED );
 
 				if( flFactor <= 0.5 && !m_bWarnedAI )
 				{

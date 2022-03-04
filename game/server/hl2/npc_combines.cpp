@@ -373,11 +373,11 @@ void CNPC_CombineS::Event_Killed( const CTakeDamageInfo &info )
 			if ( HasSpawnFlags( SF_COMBINE_NO_AR2DROP ) == false )
 #endif
 			{
-				CBaseEntity *pItem = DropItem( "item_ammo_ar2_altfire", WorldSpaceCenter()+RandomVector(-4,4), RandomAngle(0,360) );
-
-				if ( pItem )
+				CBaseEntity *pAltfire = DropItem( "item_ammo_ar2_altfire", WorldSpaceCenter()+RandomVector(-4,4), RandomAngle(0,360) );
+				CBaseEntity *pBattery = DropItem( "item_battery", WorldSpaceCenter() + RandomVector(-4, 4), RandomAngle(0, 360) );
+				if ( pAltfire || pBattery )
 				{
-					IPhysicsObject *pObj = pItem->VPhysicsGetObject();
+					IPhysicsObject *pObj = pAltfire->VPhysicsGetObject();
 
 					if ( pObj )
 					{
@@ -390,21 +390,22 @@ void CNPC_CombineS::Event_Killed( const CTakeDamageInfo &info )
 
 					if( info.GetDamageType() & DMG_DISSOLVE )
 					{
-						CBaseAnimating *pAnimating = dynamic_cast<CBaseAnimating*>(pItem);
+						CBaseAnimating *pAAnimating = dynamic_cast<CBaseAnimating*>(pAltfire);
+						CBaseAnimating *pBAnimating = dynamic_cast<CBaseAnimating*>(pBattery);
 
-						if( pAnimating )
+						if( pAAnimating )
 						{
-							pAnimating->Dissolve( NULL, gpGlobals->curtime, false, ENTITY_DISSOLVE_NORMAL );
+							pAAnimating->Dissolve( NULL, gpGlobals->curtime, false, ENTITY_DISSOLVE_NORMAL );
+							pBAnimating->Dissolve( NULL, gpGlobals->curtime, false, ENTITY_DISSOLVE_NORMAL );
 						}
 					}
 					else
 					{
-						WeaponManager_AddManaged( pItem );
+						WeaponManager_AddManaged(pAltfire);
+						WeaponManager_AddManaged(pBattery);
 					}
 				}
 			}
-			// Attempt to drop a grenade
-			DropItem("item_battery", WorldSpaceCenter() + RandomVector(-4, 4), RandomAngle(0, 360));
 		}
 
 		CHalfLife2 *pHL2GameRules = static_cast<CHalfLife2 *>(g_pGameRules);

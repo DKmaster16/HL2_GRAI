@@ -186,7 +186,10 @@ ConVar	sk_npc_chest( "sk_npc_chest","2" );		// was 1
 ConVar	sk_npc_stomach( "sk_npc_stomach","2" );	// was 1
 ConVar	sk_npc_arm( "sk_npc_arm","1" );
 ConVar	sk_npc_leg( "sk_npc_leg","1" );
-ConVar	sk_npc_point_blank_scale("sk_npc_point_blank_scale", "1.5");
+ConVar	sk_npc_pointblank_scale("sk_npc_pointblank_scale", "1.5");
+ConVar	sk_npc_pointblank_dist("sk_npc_pointblank_dist", "64");
+ConVar	sk_buckshot_accumulative_scale_max("sk_buckshot_accumulative_scale_max", "5");
+ConVar	sk_buckshot_accumulative_scale_step("sk_buckshot_accumulative_scale_step", "0.5");
 ConVar	showhitlocation( "showhitlocation", "0" );
 
 // Squad debugging
@@ -194,7 +197,7 @@ ConVar  ai_debug_squads( "ai_debug_squads", "0" );
 ConVar  ai_debug_loners( "ai_debug_loners", "0" );
 
 // Shoot trajectory
-ConVar	ai_lead_time( "ai_lead_time","-0.05" );	//0.0
+ConVar	ai_lead_time( "ai_lead_time","0.05" );	//0.0
 ConVar	ai_shot_stats( "ai_shot_stats", "0" );
 ConVar	ai_shot_stats_term( "ai_shot_stats_term", "1000" );
 ConVar	ai_shot_bias( "ai_shot_bias", "1.0" );
@@ -1139,6 +1142,26 @@ void CAI_BaseNPC::TraceAttack( const CTakeDamageInfo &info, const Vector &vecDir
 
 	bool bDebug = showhitlocation.GetBool();
 
+	if (info.GetDamageType() & DMG_BUCKSHOT && sk_buckshot_accumulative_scale_step.GetFloat() > 0
+		&& (gpGlobals->curtime - m_flLastDamageTime) < 0.02f)
+	{
+		// Update
+		subInfo.SetDamage(info.GetDamage() + (info.GetDamage() * sk_buckshot_accumulative_scale_step.GetFloat() * m_iAccumulatedShots));
+//		subInfo.SetMaxDamage(MAX(subInfo.GetDamage(), (info.GetDamage() * sk_buckshot_accumulative_scale_step.GetFloat())));
+//		subInfo.SetDamageForce(subInfo.GetDamageForce() + (info.GetDamageForce() * sk_buckshot_accumulative_scale_step.GetFloat()));
+		if (subInfo.GetDamage() >= info.GetDamage() * sk_buckshot_accumulative_scale_max.GetFloat())
+		{
+			subInfo.SetDamage(info.GetDamage() * sk_buckshot_accumulative_scale_max.GetFloat());
+		}
+		// Count how many pellets hit us.
+		m_iAccumulatedShots++;
+	}
+	else
+	{
+		m_flLastDamageTime = gpGlobals->curtime;
+		m_iAccumulatedShots = 1;
+	}
+
 	switch ( ptr->hitgroup )
 	{
 	case HITGROUP_GENERIC:
@@ -1213,6 +1236,7 @@ void CAI_BaseNPC::TraceAttack( const CTakeDamageInfo &info, const Vector &vecDir
 		}
 	}
 */
+
 	if (info.GetDamageType() & DMG_BULLET)
 	{
 		float flDist = FLT_MAX;
@@ -1222,9 +1246,9 @@ void CAI_BaseNPC::TraceAttack( const CTakeDamageInfo &info, const Vector &vecDir
 			flDist = (GetAbsOrigin() - info.GetAttacker()->GetAbsOrigin()).Length();
 		}
 
-		if ( flDist < 96 )
+		if (flDist < sk_npc_pointblank_dist.GetFloat())
 		{
-			subInfo.ScaleDamage(sk_npc_point_blank_scale.GetFloat());
+			subInfo.ScaleDamage(sk_npc_pointblank_scale.GetFloat());
 		}
 	}
 
@@ -9614,11 +9638,6 @@ Vector CAI_BaseNPC::GetActualShootPosition( const Vector &shootOrigin )
 #endif
 
 	// lead for some fraction of a second.
-	if (Classify() == CLASS_PLAYER_ALLY_VITAL)
-	{
-		return vecTargetPosition;
-	}
-	else
 	{
 		return (vecTargetPosition + (GetEnemy()->GetSmoothedVelocity() * ai_lead_time.GetFloat()));
 	}
@@ -10677,6 +10696,7 @@ BEGIN_DATADESC( CAI_BaseNPC )
 	DEFINE_FIELD( m_iszSceneCustomMoveSeq,	FIELD_STRING ),
 	// 							m_pEnemies					Saved specially in ai_saverestore.cpp
 	DEFINE_FIELD( m_afMemory,					FIELD_INTEGER ),
+	DEFINE_FIELD( m_iAccumulatedShots,			FIELD_INTEGER ),
   	DEFINE_FIELD( m_hEnemyOccluder,			FIELD_EHANDLE ),
   	DEFINE_FIELD( m_flSumDamage,				FIELD_FLOAT ),
   	DEFINE_FIELD( m_flLastDamageTime,			FIELD_TIME ),

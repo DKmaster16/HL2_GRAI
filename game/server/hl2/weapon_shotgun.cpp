@@ -46,7 +46,7 @@ public:
 
 	virtual const Vector& GetBulletSpread( void )
 	{
-		static Vector AllyCone = VECTOR_CONE_4DEGREES;
+		static Vector AllyCone = VECTOR_CONE_5DEGREES;
 		static Vector cone = VECTOR_CONE_6DEGREES;
 
 		if( GetOwner() && (GetOwner()->Classify() == CLASS_PLAYER_ALLY) )	// _VITAL
@@ -193,7 +193,7 @@ void CWeaponShotgun::FireNPCPrimaryAttack( CBaseCombatCharacter *pOperator, bool
 	if (!npc->IsMoving() && FClassnameIs(GetOwner(), "npc_combine_s"))
 	{
 		// Shotgunner stands still while shooting, that means he has to do a pump animation after each shot, so we let him fire double barreled shot.
-		pOperator->FireBullets(sk_plr_num_shotgun_pellets.GetInt() * 2, vecShootOrigin, vecShootDir, GetBulletSpread()*1.5f, MAX_TRACE_LENGTH, m_iPrimaryAmmoType, 0);
+		pOperator->FireBullets(sk_plr_num_shotgun_pellets.GetInt() * 2, vecShootOrigin, vecShootDir, GetBulletSpread()*1.6f, MAX_TRACE_LENGTH, m_iPrimaryAmmoType, 0);
 		WeaponSound(WPN_DOUBLE);
 		m_iClip1 = m_iClip1 - 2;
 		WeaponSound(SPECIAL1);
@@ -202,7 +202,7 @@ void CWeaponShotgun::FireNPCPrimaryAttack( CBaseCombatCharacter *pOperator, bool
 	{
 		// Shotgunner is moving and shooting, do semi auto shooting due to not having to pump.
 		pOperator->FireBullets(sk_plr_num_shotgun_pellets.GetInt() - 1, vecShootOrigin, vecShootDir, GetBulletSpread(), MAX_TRACE_LENGTH, m_iPrimaryAmmoType, 0, -1, -1, 0, NULL, true, true);
-		pOperator->FireBullets(1, vecShootOrigin, vecShootDir, GetBulletSpread() * 1.5f, MAX_TRACE_LENGTH, m_iPrimaryAmmoType, 0);
+		pOperator->FireBullets(1, vecShootOrigin, vecShootDir, GetBulletSpread() * 1.6f, MAX_TRACE_LENGTH, m_iPrimaryAmmoType, 0);
 		WeaponSound(SINGLE_NPC);
 		m_iClip1 = m_iClip1 - 1;
 	}
@@ -538,7 +538,7 @@ void CWeaponShotgun::PrimaryAttack( void )
 	
 	// Fire the bullets, and force the first shot to be perfectly accuracy
 	pPlayer->FireBullets( sk_plr_num_shotgun_pellets.GetInt() - 1, vecSrc, vecAiming, GetBulletSpread(), MAX_TRACE_LENGTH, m_iPrimaryAmmoType, 0, -1, -1, 0, NULL, true, true );
-	pPlayer->FireBullets( 1, vecSrc, vecAiming, GetBulletSpread() * 1.5f, MAX_TRACE_LENGTH, m_iPrimaryAmmoType, 0);
+	pPlayer->FireBullets( 1, vecSrc, vecAiming, GetBulletSpread() * 1.6f, MAX_TRACE_LENGTH, m_iPrimaryAmmoType, 0);
 	
 	pPlayer->ViewPunch( QAngle( random->RandomFloat( -3, -2 ), random->RandomFloat( -3, 3 ), 0 ) );	// (-2, -1) (-2, 2)
 
@@ -596,7 +596,7 @@ void CWeaponShotgun::SecondaryAttack( void )
 	Vector vecAiming = pPlayer->GetAutoaimVector( AUTOAIM_SCALE_DEFAULT );	
 
 	// Bullet spread 50% larger than normal (final result = 9 Degrees for the player, still a bit better than vanilla)
-	pPlayer->FireBullets(sk_plr_num_shotgun_pellets.GetInt() *2, vecSrc, vecAiming, GetBulletSpread() * 1.5f, MAX_TRACE_LENGTH, m_iPrimaryAmmoType, 0, -1, -1, 0, NULL, false, false);
+	pPlayer->FireBullets(sk_plr_num_shotgun_pellets.GetInt() *2, vecSrc, vecAiming, GetBulletSpread() * 1.6f, MAX_TRACE_LENGTH, m_iPrimaryAmmoType, 0, -1, -1, 0, NULL, false, false);
 	pPlayer->ViewPunch( QAngle(random->RandomFloat( -6, 6 ),0,0) );
 
 	pPlayer->SetMuzzleFlashTime( gpGlobals->curtime + 1.0 );
