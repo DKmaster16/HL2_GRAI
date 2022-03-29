@@ -1050,7 +1050,7 @@ void CNPC_FloorTurret::SearchThink( void )
 	//If we've found a target, spin up the barrel and start to attack
 	if ( GetEnemy() != NULL )
 	{
-		if ( GetEnemy()->IsPlayer() && !g_pGameRules->IsSkillLevel(SKILL_HARD) )
+		if ( GetEnemy()->IsPlayer() && (!g_pGameRules->IsSkillLevel(SKILL_HARD) && !g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL)) )
 		{
 			m_flShotTime  = gpGlobals->curtime + 0.6f;
 		}

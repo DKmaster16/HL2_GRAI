@@ -1543,7 +1543,7 @@ bool CNPC_AttackHelicopter::IsDeadlyShooting()
 	if (m_bDeadlyShooting)
 		return true;
 
-	if (g_pGameRules->IsSkillLevel(SKILL_HARD))
+	if (g_pGameRules->IsSkillLevel(SKILL_HARD) || g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL))
 		return true;
 
 	if ((m_nAttackMode == ATTACK_MODE_BULLRUSH_VEHICLE) && IsInSecondaryMode(BULLRUSH_MODE_SHOOT_IDLE_PLAYER))
@@ -2749,7 +2749,8 @@ bool CNPC_AttackHelicopter::IsBombDropFair(const Vector &vecBombStartPos, const 
 		return true;
 
 	// Skip out if we're right above or behind the player.. that's unfair
-	if (GetEnemy() && GetEnemy()->IsPlayer() && !g_pGameRules->IsSkillLevel(SKILL_HARD))
+	if (GetEnemy() && GetEnemy()->IsPlayer() && (!g_pGameRules->IsSkillLevel(SKILL_HARD) 
+		&& !g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL)))
 	{
 		// How much time will it take to fall?
 		// dx = 0.5 * a * t^2
@@ -3532,17 +3533,17 @@ int CNPC_AttackHelicopter::OnTakeDamage(const CTakeDamageInfo &info)
 		CTakeDamageInfo fudgedInfo = info;
 
 		float damage;
-		if (g_pGameRules->IsSkillLevel(SKILL_EASY))
-		{
-			damage = GetMaxHealth() / sk_helicopter_num_bombs1.GetFloat();
-		}
-		else if (g_pGameRules->IsSkillLevel(SKILL_HARD))
+		if (g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL))
 		{
 			damage = GetMaxHealth() / sk_helicopter_num_bombs3.GetFloat();
 		}
-		else // Medium, or unspecified
+		else if (g_pGameRules->IsSkillLevel(SKILL_HARD))
 		{
 			damage = GetMaxHealth() / sk_helicopter_num_bombs2.GetFloat();
+		}
+		else // Medium, or unspecified
+		{
+			damage = GetMaxHealth() / sk_helicopter_num_bombs1.GetFloat();
 		}
 		damage = ceilf(damage);
 		fudgedInfo.SetDamage(damage);

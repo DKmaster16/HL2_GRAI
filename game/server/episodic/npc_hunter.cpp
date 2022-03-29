@@ -3438,17 +3438,10 @@ void CNPC_Hunter::StartTask( const Task_t *pTask )
 
 				// Decide how many shots to fire.
 				int nShots = hunter_flechette_volley_size.GetInt();
-				if ( g_pGameRules->IsSkillLevel( SKILL_HARD ) )
-				{
-					nShots++;
-				}
 
 				// Decide when to fire the first shot.
 				float initialDelay = hunter_first_flechette_delay.GetFloat();
-				if (g_pGameRules->IsSkillLevel(SKILL_HARD))
-				{
-					initialDelay *= 0.6;
-				}
+
 				if ( bIsBuster )
 				{
 					initialDelay *= 0.5;
@@ -3492,7 +3485,7 @@ void CNPC_Hunter::StartTask( const Task_t *pTask )
 		{
 			SetLastAttackTime( gpGlobals->curtime );
 			
-			if ( GetEnemy() && GetEnemy()->IsPlayer() && !( g_pGameRules->IsSkillLevel( SKILL_HARD ) ))
+			if ( GetEnemy() && GetEnemy()->IsPlayer() && !( g_pGameRules->IsSkillLevel( SKILL_DIABOLICAL ) ))
 			{
 				ResetIdealActivity( ( Activity )ACT_HUNTER_MELEE_ATTACK1_VS_PLAYER );	// Normal attack
 			}
@@ -3732,7 +3725,7 @@ void CNPC_Hunter::RunTask( const Task_t *pTask )
 				if ( IsActivityFinished() )
 				{
 					m_flNextChargeTime = gpGlobals->curtime + hunter_charge_min_delay.GetFloat() + random->RandomFloat( 0, 2.5 ) + random->RandomFloat( 0, 2.5 );
-					float delayMultiplier = ( g_pGameRules->IsSkillLevel( SKILL_HARD ) ) ? 0.75 : 1.0;	// charge time depends on difficulty
+					float delayMultiplier = ( g_pGameRules->IsSkillLevel( SKILL_HARD ) || g_pGameRules->IsSkillLevel( SKILL_DIABOLICAL )) ? 0.75 : 1.0;	// charge time depends on difficulty
 					float groupDelay = gpGlobals->curtime +  ( 2.0  + random->RandomFloat( 0, 2 ) ) * delayMultiplier;
 					for ( int i = 0; i < g_Hunters.Count(); i++ )
 					{
@@ -5118,7 +5111,7 @@ CBaseEntity *CNPC_Hunter::MeleeAttack( float flDist, int iDamage, QAngle &qaView
 			color32 red = { 128, 0, 0, 128 };
 			UTIL_ScreenFade( pPlayer, red, 1.0f, 0.1f, FFADE_IN );
 
-			/*if ( UTIL_ShouldShowBlood( pPlayer->BloodColor() ) )
+			if ( UTIL_ShouldShowBlood( pPlayer->BloodColor() ) )
 			{
 				// Spray some of the player's blood on the hunter.			
 				trace_t tr;
@@ -5144,7 +5137,7 @@ CBaseEntity *CNPC_Hunter::MeleeAttack( float flDist, int iDamage, QAngle &qaView
 					Msg( "Hit %s!!!\n", tr.m_pEnt->GetDebugName() );
 					UTIL_DecalTrace( &tr, "Blood" );
 				}
-			}*/
+			}
 		}
 		else if ( !pPlayer )
 		{
@@ -5163,7 +5156,7 @@ CBaseEntity *CNPC_Hunter::MeleeAttack( float flDist, int iDamage, QAngle &qaView
 							CBreakableProp *pBreak = dynamic_cast<CBreakableProp*>(pHurt);
 							if ( pBreak )
 							{
-								CTakeDamageInfo info( this, this, 20, DMG_SLASH );
+								CTakeDamageInfo info( this, this, 80, DMG_SLASH );
 								pBreak->Break( this, info );
 							}
 						}
@@ -6001,7 +5994,7 @@ int CNPC_Hunter::CountRangedAttackers()
 //-----------------------------------------------------------------------------
 void CNPC_Hunter::DelayRangedAttackers( float minDelay, float maxDelay, bool bForced )
 {
-	float delayMultiplier = ( g_pGameRules->IsSkillLevel( SKILL_HARD ) ) ? 0.75 : 1.0;	// range attacks are delayed on easy
+	float delayMultiplier = ( g_pGameRules->IsSkillLevel( SKILL_EASY ) ) ? 1.5 : 1.0;	// range attacks are delayed on easy
 	if ( !m_bEnableSquadShootDelay && !bForced )
 	{
 		m_flNextRangeAttack2Time = gpGlobals->curtime + random->RandomFloat( minDelay, maxDelay ) * delayMultiplier;

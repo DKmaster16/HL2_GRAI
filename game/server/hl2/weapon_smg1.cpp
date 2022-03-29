@@ -55,13 +55,13 @@ public:
 	virtual const Vector& GetBulletSpread(void)
 	{
 		// Define "spread" parameters based on the "owner" and what they are doing
-		static Vector plrSingleCone = VECTOR_CONE_05DEGREES;	// Single Fire
-		static Vector plrAccurateCone = VECTOR_CONE_3DEGREES;	// Zooming or ducking
-		static Vector plrCone = VECTOR_CONE_4DEGREES;		// Standing, moving around, the default
+		static Vector plrSingleCone = VECTOR_CONE_1DEGREES;	// Single Fire
+		static Vector plrAccurateCone = VECTOR_CONE_4DEGREES;	// Zooming or ducking
+		static Vector plrCone = VECTOR_CONE_5DEGREES;		// Standing, moving around, the default
 		static Vector plrRunCone = VECTOR_CONE_7DEGREES;	// Player sprint accuracy
 		static Vector plrJumpCone = VECTOR_CONE_15DEGREES;	// Player jump/midair accuracy
 		static Vector npcCone = VECTOR_CONE_2DEGREES;		// NPC cone when standing still
-		static Vector npcMoveCone = VECTOR_CONE_4DEGREES;	// NPC cone when moving
+		static Vector npcMoveCone = VECTOR_CONE_3DEGREES;	// NPC cone when moving
 		static Vector npcConeMidAir = VECTOR_CONE_4DEGREES;	// NPC cone when rappeling
 
 		if (GetOwner() && GetOwner()->IsNPC())
@@ -348,7 +348,7 @@ void CWeaponSMG1::Operator_HandleAnimEvent( animevent_t *pEvent, CBaseCombatChar
 
 		pGrenade->SetDamage(sk_npc_dmg_smg1_grenade.GetFloat());
 
-		if (g_pGameRules->IsSkillLevel(SKILL_HARD))
+		if (g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL))
 		{
 			m_flNextGrenadeCheck = gpGlobals->curtime + RandomFloat(2, 3);
 		}
@@ -644,10 +644,10 @@ const WeaponProficiencyInfo_t *CWeaponSMG1::GetProficiencyValues()
 {
 	static WeaponProficiencyInfo_t proficiencyTable[] =
 	{
-		{ 4.15,		1.00	},	//poor	8.3/16.6
-		{ 3.50,		0.85	},	//average 7/14
-		{ 2.50,		0.85	},	//good 5/10
-		{ 1.50,		0.85	},	//very good	3/6
+		{ 5.00,		0.85	},	//poor	10/15
+		{ 4.00,		0.85	},	//average 8/12
+		{ 3.00,		0.85	},	//good 6/9
+		{ 2.00,		0.85	},	//very good	4/6
 		{ 1.00,		1.00	},	//perfect 2/4
 	};
 

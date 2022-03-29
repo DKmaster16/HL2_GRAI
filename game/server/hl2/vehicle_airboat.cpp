@@ -826,7 +826,7 @@ void CPropAirboat::TraceAttack( const CTakeDamageInfo &inputInfo, const Vector &
 	{
 		if ( inputInfo.GetDamageType() & DMG_BULLET )
 		{
-			info.ScaleDamage( 0.0001 );
+			info.SetDamage( 0 );
 		}
 	}
 

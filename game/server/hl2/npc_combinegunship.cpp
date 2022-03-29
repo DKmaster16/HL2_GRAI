@@ -1622,13 +1622,22 @@ bool CNPC_CombineGunship::FireGun( void )
 		Vector vecMuzzle, vecEnemyTarget;
 
 		GetAttachment( "muzzle", vecMuzzle, &vecAimDir, NULL, NULL );
+
+#if 1
 		vecEnemyTarget = GetEnemyTarget();
-
 		// Aim with the muzzle's attachment point.
-		VectorSubtract( vecEnemyTarget, vecMuzzle, vecToEnemy );
+		VectorSubtract(vecEnemyTarget, vecMuzzle, vecToEnemy);
+		VectorNormalize(vecToEnemy);
+#else
+		if (!GetEnemy())
+			vecEnemyTarget = GetShootEnemyDir(vecMuzzle);
 
-		VectorNormalize( vecToEnemy );
-		VectorNormalize( vecAimDir );
+		// Lead our target	!NOTE: Is done elsewhere
+		vecEnemyTarget = GetActualShootPosition(vecMuzzle);
+
+		vecToEnemy = vecEnemyTarget - vecMuzzle;
+		VectorNormalize(vecToEnemy);
+#endif
 
 		if ( DotProduct( vecToEnemy, vecAimDir ) > 0.9 )
 		{
@@ -1648,20 +1657,26 @@ bool CNPC_CombineGunship::FireGun( void )
 //------------------------------------------------------------------------------
 void CNPC_CombineGunship::FireCannonRound( void )
 {
-	Vector vecPenetrate;
-	trace_t tr;
-
 	Vector vecToEnemy, vecEnemyTarget;
 	Vector vecMuzzle;
 	Vector vecAimDir;
 
 	GetAttachment( "muzzle", vecMuzzle, &vecAimDir );
+#if 1
 	vecEnemyTarget = GetEnemyTarget();
-	
 	// Aim with the muzzle's attachment point.
-	VectorSubtract( vecEnemyTarget, vecMuzzle, vecToEnemy );
-	VectorNormalize( vecToEnemy );
+	VectorSubtract(vecEnemyTarget, vecMuzzle, vecToEnemy);
+	VectorNormalize(vecToEnemy);
+#else
+	if (!GetEnemy())
+		vecEnemyTarget = GetShootEnemyDir(vecMuzzle);
 
+	// Lead our target	!NOTE: Is done elsewhere
+	vecEnemyTarget = GetActualShootPosition(vecMuzzle);
+
+	vecToEnemy = vecEnemyTarget - vecMuzzle;
+	VectorNormalize(vecToEnemy);
+#endif
 	// If the gun is wildly off target, stop firing!
 	// FIXME  - this should use a vector pointing 
 	// to the enemy's location PLUS the stitching 
@@ -1711,7 +1726,6 @@ void CNPC_CombineGunship::FireCannonRound( void )
 	// Make sure we hit missiles
 	if ( IsTargettingMissile() )
 	{
-		// Fire a fake shot
 		FireBullets(1, vecMuzzle, vecToEnemy, VECTOR_CONE_5DEGREES, MAX_COORD_RANGE, m_iAmmoType, 1);
 
 		CBaseEntity *pMissile = GetEnemy();
@@ -1740,18 +1754,16 @@ void CNPC_CombineGunship::FireCannonRound( void )
 	else
 	{
 		m_iBurstSize--;
-
 		// Fire directly at the target
-		FireBulletsInfo_t info(1, vecMuzzle, vecToEnemy, vec3_origin, MAX_COORD_RANGE, m_iAmmoType);
+		FireBulletsInfo_t info(1, vecMuzzle, vecToEnemy, VECTOR_CONE_05DEGREES, MAX_COORD_RANGE, m_iAmmoType);
 		info.m_iTracerFreq = 1;
-		info.m_nFlags = AMMO_DARK_ENERGY;
+//		info.m_nFlags = AMMO_DARK_ENERGY;
 		CAmmoDef *pAmmoDef = GetAmmoDef();
 
-		// If we've already hit the player a few times, do less damage. This ensures we don't hit the
-		// player multiple max damage hits during a single burst.
+		// If we've already hit the player a few times, do less damage.
 //		extern ConVar sk_npc_dmg_gunship_to_plr;
 
-		if (m_iBurstHits >= sk_gunship_max_dmg_hits_per_burst.GetFloat())
+		if (m_iBurstHits >= sk_gunship_max_dmg_hits_per_burst.GetInt())
 		{
 			info.m_iPlayerDamage = pAmmoDef->PlrDamage(m_iAmmoType) * sk_gunship_past_max_damage_scale.GetFloat();
 		}
@@ -2633,7 +2645,9 @@ void CNPC_CombineGunship::UpdateEnemyTarget( void )
 	
 	if ( GetEnemy() != NULL )
 	{
+
 		CBaseCombatCharacter *pCCEnemy = GetEnemy()->MyCombatCharacterPointer();
+
 		if ( pCCEnemy != NULL && pCCEnemy->IsInAVehicle() )
 		{
 			// Update against a driving target
@@ -2641,7 +2655,11 @@ void CNPC_CombineGunship::UpdateEnemyTarget( void )
 		}
 		else 
 		{
-			enemyPos = GetEnemy()->EyePosition();
+			// Lead our target
+			enemyPos = GetActualShootPosition(vGunPosition);
+
+//			enemyPos = vecEnemyTarget - vGunPosition;
+//			enemyPos = GetEnemy()->EyePosition();
 		}
 		bTargettingPlayer = GetEnemy()->IsPlayer();
 	}
@@ -2689,7 +2707,7 @@ void CNPC_CombineGunship::UpdateEnemyTarget( void )
 	chaseAngles[PITCH]	= 0.0f;
 	chaseAngles[ROLL]	= 0.0f;
 
-	bool bMaxHits = (m_iBurstHits >= sk_gunship_max_hits_per_burst.GetFloat() || (GetEnemy() && !GetEnemy()->IsAlive()));
+	bool bMaxHits = (m_iBurstHits >= sk_gunship_max_hits_per_burst.GetInt() || (GetEnemy() && !GetEnemy()->IsAlive()));
 
 	if ( bMaxHits )
 	{
@@ -2722,7 +2740,6 @@ void CNPC_CombineGunship::UpdateEnemyTarget( void )
 	}
 	else
 	{
-		// Otherwise always continue to hit an NPC when close enough
 		m_vecAttackPosition = enemyPos;
 	}
 }
@@ -2969,11 +2986,7 @@ int	CNPC_CombineGunship::OnTakeDamage_Alive( const CTakeDamageInfo &inputInfo )
 		// Take a percentage of our health away
 		// Adjust health for damage
 		int iHealthIncrements = sk_gunship_health_increments.GetInt();
-		if ( g_pGameRules->IsSkillLevel( SKILL_EASY ) )
-		{
-			iHealthIncrements = ceil( iHealthIncrements * 0.75 );
-		}
-		else if ( g_pGameRules->IsSkillLevel( SKILL_HARD ) )
+		if ( g_pGameRules->IsSkillLevel( SKILL_DIABOLICAL ) )
 		{
 			iHealthIncrements = floor( iHealthIncrements * 1.5 );
 		}

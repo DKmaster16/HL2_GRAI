@@ -13,7 +13,13 @@
 #include "effect_dispatch_data.h"
 #include "tier0/vprof.h"
 #include "decals.h"
+/*
+#include "fx_impact.h"
+#include "IEffects.h"
+#include "beam_flags.h"
+*/
 #include "func_break.h"
+
 CBulletManager *g_pBulletManager;
 CUtlLinkedList<CSimulatedBullet*> g_Bullets;
 
@@ -120,12 +126,8 @@ CSimulatedBullet::CSimulatedBullet()
 //==================================================
 // Purpose:	Constructor
 //==================================================
-CSimulatedBullet::CSimulatedBullet(FireBulletsInfo_t info, Vector newdir, CBaseEntity *pInfictor, CBaseEntity *pAdditionalIgnoreEnt,
-	bool bTraceHull
-//#ifndef CLIENT_DLL
-//	, CBaseEntity *pCaller
-//#endif
-	)
+CSimulatedBullet::CSimulatedBullet(FireBulletsInfo_t info, Vector newdir, CBaseEntity *pInfictor, 
+	CBaseEntity *pAdditionalIgnoreEnt, bool bTraceHull	, CBaseEntity *pCaller)
 {
 	// Input validation
 //	Assert(pInfictor);
@@ -162,15 +164,13 @@ CSimulatedBullet::CSimulatedBullet(FireBulletsInfo_t info, Vector newdir, CBaseE
 
 	// Basic information about the bullet (pInfictor->IsNPC() && sv_bullet_speed_forced.GetInt() > 0) 
 	m_flInitialBulletSpeed = m_flBulletSpeed = GetAmmoDef()->GetAmmoOfIndex(bulletinfo.m_iAmmoType)->bulletSpeed;
-	m_flBulletSpeed = m_flInitialBulletSpeed + RandomFloat(-50, 50);
+	m_flBulletSpeed = m_flInitialBulletSpeed + RandomFloat(-25, 25);
 	m_flInitialBulletMass = m_flBulletMass = GetAmmoDef()->GetAmmoOfIndex(bulletinfo.m_iAmmoType)->bulletMass;
 	m_flBulletDiameter = GetAmmoDef()->GetAmmoOfIndex(bulletinfo.m_iAmmoType)->bulletDiameter;
 	m_vecDirShooting = newdir;
 	m_vecOrigin = bulletinfo.m_vecSrc;
 	m_bTraceHull = bTraceHull;
-//#ifndef CLIENT_DLL
-//	m_hCaller = pCaller;
-//#endif
+	m_hCaller = pCaller;	
 	m_flEntryDensity = 0.0f;
 	m_vecTraceRay = m_vecOrigin + m_vecDirShooting * m_flBulletSpeed;
 	m_flRayLength = m_flInitialBulletSpeed;
@@ -194,18 +194,16 @@ bool CSimulatedBullet::SimulateBullet(void)
 
 	if (!p_eInfictor)
 	{
-//		p_eInfictor = bulletinfo.m_pAttacker;
+		p_eInfictor = bulletinfo.m_pAttacker;
 
 		if (!p_eInfictor)
 			return false;
 	}
-/*#ifndef CLIENT_DLL
 	if (!m_hCaller)
 	{
 		return false;
 	}
-#endif
-*/
+
 	if (!IsFinite(m_flBulletSpeed))
 		return false;		 //prevent a weird crash
 
@@ -275,7 +273,7 @@ bool CSimulatedBullet::SimulateBullet(void)
 	bulletSpeedCheck = false;
 	//	int iAttachment = p_eInfictor->GetTracerAttachment();
 	trace_t tr;
-
+//	UTIL_SetSize(this, Vector(-1, -1, -1), Vector(1, 1, 1));
 	if (m_bTraceHull)
 		UTIL_TraceHull(m_vecOrigin, m_vecTraceRay, Vector(-m_flBulletDiameter, -m_flBulletDiameter, -m_flBulletDiameter),
 		Vector(m_flBulletDiameter, m_flBulletDiameter, m_flBulletDiameter), MASK_SHOT, m_pIgnoreList, &trace);
@@ -501,7 +499,7 @@ bool CSimulatedBullet::EndSolid(trace_t &ptr)
 		DesiredDistance = 4.0f; // 4 units in hammer and no more(!)
 		break;
 	case CHAR_TEX_METAL:
-		DesiredDistance = 2.75f; // 1 units in hammer. We cannot penetrate a really 'fat' metal wall. Corners are good.
+		DesiredDistance = 1.0f; // 1 units in hammer. We cannot penetrate a really 'fat' metal wall. Corners are good.
 		break;
 	case CHAR_TEX_PLASTIC:
 		DesiredDistance = 16.0f; // 16 units in hammer: Plastic can more
@@ -670,7 +668,70 @@ bool CSimulatedBullet::EndSolid(trace_t &ptr)
 	//Cancel making dust underwater:
 	if (!m_bWasInWater)
 	{
-		UTIL_ImpactTrace(&ptr, GetDamageType());
+		if (bulletinfo.m_iAmmoType == GetAmmoDef()->Index("AR2"))
+		{
+			CEffectData data;
+
+			data.m_vOrigin = ptr.endpos + (ptr.plane.normal * 1.0f);
+			data.m_vNormal = ptr.plane.normal;
+
+			DispatchEffect("AR2Impact", data);
+			UTIL_ImpactTrace(&ptr, GetDamageType());
+		}
+		else if (bulletinfo.m_iAmmoType == GetAmmoDef()->Index("AirboatGun"))
+		{
+			UTIL_ImpactTrace(&ptr, GetDamageType(), "AirboatGunImpact");
+		}
+		else if (bulletinfo.m_iAmmoType == GetAmmoDef()->Index("HelicopterGun"))
+		{
+			UTIL_ImpactTrace(&ptr, GetDamageType(), "HelicopterImpact");
+		}
+		else if (bulletinfo.m_iAmmoType == GetAmmoDef()->Index("CombineCannon"))
+		{
+			CSoundEnt::InsertSound(SOUND_DANGER | SOUND_CONTEXT_REACT_TO_SOURCE, ptr.endpos, 120.0f, 0.3f, p_eInfictor, soundEntChannel);
+			UTIL_ImpactTrace(&ptr, GetDamageType(), "ImpactGunship");
+		}
+		else if (bulletinfo.m_iAmmoType == GetAmmoDef()->Index("StriderMinigun") || bulletinfo.m_iAmmoType == GetAmmoDef()->Index("StriderMinigunDirect"))
+		{
+			CSoundEnt::InsertSound(SOUND_DANGER | SOUND_CONTEXT_REACT_TO_SOURCE, ptr.endpos, 120.0f, 0.3f, p_eInfictor, soundEntChannel);
+			UTIL_ImpactTrace(&ptr, GetDamageType(), "ImpactStrider");	//ImpactStrider
+/*
+			int s_iImpactEffectTexture = -1;
+
+			s_iImpactEffectTexture = modelinfo->GetModelIndex("sprites/physbeam.vmt");
+			// Add a halo
+			CBroadcastRecipientFilter filter;
+			te->BeamRingPoint(filter, 0.0,
+				ptr.endpos,							//origin
+				0,									//start radius
+				64,									//end radius
+				s_iImpactEffectTexture,				//texture
+				0,									//halo index
+				0,									//start frame
+				0,									//framerate
+				0.2,								//life
+				10,									//width
+				0,									//spread
+				0,									//amplitude
+				255,								//r
+				255,								//g
+				255,								//b
+				50,									//a
+				0,									//speed
+				FBEAM_FADEOUT
+				);
+
+			g_pEffects->EnergySplash(ptr.endpos, ptr.plane.normal);
+*/
+		}
+		else if (bulletinfo.m_iAmmoType == GetAmmoDef()->Index("GaussEnergy"))
+		{
+			UTIL_ImpactTrace(&ptr, GetDamageType(), "ImpactGauss");
+		}
+		else
+		{
+			UTIL_ImpactTrace(&ptr, GetDamageType());
+		}
 	}
 #endif
 

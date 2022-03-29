@@ -33,7 +33,7 @@ ConVar sk_combine_always_flinch("sk_combine_always_flinch", "0");
 ConVar  sk_combine_s_head_357("sk_combine_s_head_357", "5");
 ConVar  sk_combine_s_head("sk_combine_s_head", "2");
 ConVar  sk_combine_s_body("sk_combine_s_body", "1");
-ConVar  sk_combine_s_hard_damage_scale("sk_combine_s_hard_damage_scale", "0.8");
+ConVar  sk_combine_s_diabolical_damage_scale("sk_combine_s_diabolical_damage_scale", "0.8");
 
 ConVar	sk_combine_s_health( "sk_combine_s_health","0");
 ConVar	sk_combine_s_kick( "sk_combine_s_kick","0");
@@ -48,7 +48,7 @@ ConVar sk_combine_elite_kick("sk_combine_elite_kick", "0");
 ConVar combine_guard_spawn_health( "combine_guard_spawn_health", "1" );
 
 extern ConVar sk_npc_dmg_buckshot;
-extern ConVar sk_plr_num_shotgun_pellets;
+extern ConVar sk_buckshot_accumulative_scale_max;
 
 //Whether or not the combine should spawn health on death
 ConVar	combine_spawn_health( "combine_spawn_health", "1" );
@@ -250,9 +250,9 @@ float CNPC_CombineS::GetHitgroupDamageMultiplier(int iHitGroup, const CTakeDamag
 
 			if (flDist <= 96.0f)
 			{
-				if (g_pGameRules->IsSkillLevel(SKILL_HARD))
+				if (g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL))
 				{
-					return (sk_combine_s_head_357.GetFloat() * sk_combine_s_hard_damage_scale.GetFloat());
+					return (sk_combine_s_head_357.GetFloat() * sk_combine_s_diabolical_damage_scale.GetFloat());
 				}
 				else
 				{
@@ -260,9 +260,9 @@ float CNPC_CombineS::GetHitgroupDamageMultiplier(int iHitGroup, const CTakeDamag
 				}
 			}
 		}
-		if (g_pGameRules->IsSkillLevel(SKILL_HARD))
+		if (g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL))
 		{
-			return (sk_combine_s_head.GetFloat() * sk_combine_s_hard_damage_scale.GetFloat());
+			return (sk_combine_s_head.GetFloat() * sk_combine_s_diabolical_damage_scale.GetFloat());
 		}
 		else
 		{
@@ -271,9 +271,9 @@ float CNPC_CombineS::GetHitgroupDamageMultiplier(int iHitGroup, const CTakeDamag
 	}
 
 	default:
-		if (g_pGameRules->IsSkillLevel(SKILL_HARD))
+		if (g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL))
 		{
-			return (sk_combine_s_body.GetFloat() * sk_combine_s_hard_damage_scale.GetFloat());
+			return (sk_combine_s_body.GetFloat() * sk_combine_s_diabolical_damage_scale.GetFloat());
 		}
 		else
 		{
@@ -470,7 +470,7 @@ bool CNPC_CombineS::IsHeavyDamage( const CTakeDamageInfo &info )
 	// Shotgun blasts where at least half the pellets hit me are heavy damage
 	if ( info.GetDamageType() & DMG_BUCKSHOT )
 	{
-		int iHalfMax = sk_npc_dmg_buckshot.GetFloat() * sk_plr_num_shotgun_pellets.GetInt() * 0.5;
+		int iHalfMax = sk_npc_dmg_buckshot.GetFloat() * sk_buckshot_accumulative_scale_max.GetFloat() * 0.5;
 		if ( info.GetDamage() >= iHalfMax )
 			return true;
 	}

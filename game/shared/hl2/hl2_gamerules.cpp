@@ -74,30 +74,30 @@ ConVar  physcannon_mega_enabled( "physcannon_mega_enabled", "0", FCVAR_CHEAT | F
 ConVar	sv_robust_explosions( "sv_robust_explosions","1", FCVAR_REPLICATED );
 
 // Damage scale for damage inflicted by the player on each skill level.
+ConVar	sk_dmg_inflict_scale0( "sk_dmg_inflict_scale0", "1.40", FCVAR_REPLICATED );
 ConVar	sk_dmg_inflict_scale1( "sk_dmg_inflict_scale1", "1.40", FCVAR_REPLICATED );
 ConVar	sk_dmg_inflict_scale2( "sk_dmg_inflict_scale2", "1.00", FCVAR_REPLICATED );
 ConVar	sk_dmg_inflict_scale3( "sk_dmg_inflict_scale3", "1.00", FCVAR_REPLICATED );
 
 // Damage scale for damage taken by the player on each skill level.
-ConVar	sk_dmg_take_scale1( "sk_dmg_take_scale1", "0.25", FCVAR_REPLICATED );
-ConVar	sk_dmg_take_scale2( "sk_dmg_take_scale2", "0.50", FCVAR_REPLICATED );
-#ifdef HL2_EPISODIC
-	ConVar	sk_dmg_take_scale3( "sk_dmg_take_scale3", "1.0", FCVAR_REPLICATED );
-#else
-	ConVar	sk_dmg_take_scale3( "sk_dmg_take_scale3", "1.0", FCVAR_REPLICATED );
-#endif//HL2_EPISODIC
+ConVar	sk_dmg_take_scale0("sk_dmg_take_scale0", "0.5", FCVAR_REPLICATED);
+ConVar	sk_dmg_take_scale1( "sk_dmg_take_scale1", "1.0", FCVAR_REPLICATED );
+ConVar	sk_dmg_take_scale2( "sk_dmg_take_scale2", "1.5", FCVAR_REPLICATED );
+ConVar	sk_dmg_take_scale3( "sk_dmg_take_scale3", "2.0", FCVAR_REPLICATED );
 
 ConVar	sk_allow_autoaim( "sk_allow_autoaim", "0", FCVAR_REPLICATED | FCVAR_ARCHIVE_XBOX );
 
 // Autoaim scale
+ConVar	sk_autoaim_scale0( "sk_autoaim_scale0", "1.0", FCVAR_REPLICATED );
 ConVar	sk_autoaim_scale1( "sk_autoaim_scale1", "1.0", FCVAR_REPLICATED );
 ConVar	sk_autoaim_scale2( "sk_autoaim_scale2", "1.0", FCVAR_REPLICATED );
 //ConVar	sk_autoaim_scale3( "sk_autoaim_scale3", "0.0", FCVAR_REPLICATED ); NOT CURRENTLY OFFERED ON SKILL 3
 
 // Quantity scale for ammo received by the player.
-ConVar	sk_ammo_qty_scale1 ( "sk_ammo_qty_scale1", "2.00", FCVAR_REPLICATED );
+ConVar	sk_ammo_qty_scale0 ( "sk_ammo_qty_scale0", "2.00", FCVAR_REPLICATED );
+ConVar	sk_ammo_qty_scale1 ( "sk_ammo_qty_scale1", "1.00", FCVAR_REPLICATED );
 ConVar	sk_ammo_qty_scale2 ( "sk_ammo_qty_scale2", "1.00", FCVAR_REPLICATED );
-ConVar	sk_ammo_qty_scale3 ( "sk_ammo_qty_scale3", "0.25", FCVAR_REPLICATED );
+ConVar	sk_ammo_qty_scale3 ( "sk_ammo_qty_scale3", "1.00", FCVAR_REPLICATED );
 
 ConVar	sk_plr_health_drop_time		( "sk_plr_health_drop_time", "10", FCVAR_REPLICATED );
 ConVar	sk_plr_grenade_drop_time	( "sk_plr_grenade_drop_time", "10", FCVAR_REPLICATED );
@@ -1634,15 +1634,18 @@ void CHalfLife2::AdjustPlayerDamageTaken( CTakeDamageInfo *pInfo )
 	switch( GetSkillLevel() )
 	{
 	case SKILL_EASY:
-		pInfo->ScaleDamage( sk_dmg_take_scale1.GetFloat() );
+		pInfo->ScaleDamage( sk_dmg_take_scale0.GetFloat() );
 		break;
 
 	case SKILL_MEDIUM:
-		pInfo->ScaleDamage( sk_dmg_take_scale2.GetFloat() );
+		pInfo->ScaleDamage( sk_dmg_take_scale1.GetFloat() );
 		break;
 
 	case SKILL_HARD:
-		pInfo->ScaleDamage( sk_dmg_take_scale3.GetFloat() );
+		pInfo->ScaleDamage( sk_dmg_take_scale2.GetFloat() );
+		break;
+	case SKILL_DIABOLICAL:
+		pInfo->ScaleDamage(sk_dmg_take_scale3.GetFloat());
 		break;
 	}
 }
@@ -1654,14 +1657,18 @@ float CHalfLife2::AdjustPlayerDamageInflicted( float damage )
 	switch( GetSkillLevel() ) 
 	{
 	case SKILL_EASY:
-		return damage * sk_dmg_inflict_scale1.GetFloat();
+		return damage * sk_dmg_inflict_scale0.GetFloat();
 		break;
 
 	case SKILL_MEDIUM:
-		return damage * sk_dmg_inflict_scale2.GetFloat();
+		return damage * sk_dmg_inflict_scale1.GetFloat();
 		break;
 
 	case SKILL_HARD:
+		return damage * sk_dmg_inflict_scale2.GetFloat();
+		break;
+
+	case SKILL_DIABOLICAL:
 		return damage * sk_dmg_inflict_scale3.GetFloat();
 		break;
 
@@ -1737,12 +1744,15 @@ float CHalfLife2::GetAmmoQuantityScale( int iAmmoIndex )
 	switch( GetSkillLevel() )
 	{
 	case SKILL_EASY:
-		return sk_ammo_qty_scale1.GetFloat();
+		return sk_ammo_qty_scale0.GetFloat();
 
 	case SKILL_MEDIUM:
-		return sk_ammo_qty_scale2.GetFloat();
+		return sk_ammo_qty_scale1.GetFloat();
 
 	case SKILL_HARD:
+		return sk_ammo_qty_scale2.GetFloat();
+
+	case SKILL_DIABOLICAL:
 		return sk_ammo_qty_scale3.GetFloat();
 
 	default:
@@ -1824,7 +1834,7 @@ CAmmoDef *GetAmmoDef()
 	{
 		bInitted = true;
 
-		def.AddAmmoType("AR2",				DMG_BULLET,					TRACER_LINE_AND_WHIZ,	"sk_plr_dmg_ar2",			"sk_npc_dmg_ar2",			"sk_max_ar2",			BULLET_SPEED(750),	BULLET_MASS(520), BULLET_DIAMETER(1), BULLET_IMPULSE(520, 750), AMMO_DARK_ENERGY);
+		def.AddAmmoType("AR2",				DMG_BULLET,					TRACER_LINE_AND_WHIZ,	"sk_plr_dmg_ar2",			"sk_npc_dmg_ar2",			"sk_max_ar2",			BULLET_SPEED(750),	BULLET_MASS(520), BULLET_DIAMETER(3), BULLET_IMPULSE(520, 750), AMMO_DARK_ENERGY);
 		def.AddAmmoType("AlyxGun",			DMG_BULLET,					TRACER_LINE,			"sk_plr_dmg_alyxgun",		"sk_npc_dmg_alyxgun",		"sk_max_alyxgun",		BULLET_SPEED(1200),	BULLET_MASS(180), BULLET_DIAMETER(.45), BULLET_IMPULSE(180, 1200), 0);
 		def.AddAmmoType("Pistol",			DMG_BULLET,					TRACER_LINE_AND_WHIZ,	"sk_plr_dmg_pistol",		"sk_npc_dmg_pistol",		"sk_max_pistol",		BULLET_SPEED(1325),	BULLET_MASS(124), BULLET_DIAMETER(.355), BULLET_IMPULSE(124, 1320), 0);
 		def.AddAmmoType("SMG1",				DMG_BULLET,					TRACER_LINE_AND_WHIZ,	"sk_plr_dmg_smg1",			"sk_npc_dmg_smg1",			"sk_max_smg1",			BULLET_SPEED(2380),	BULLET_MASS(26), BULLET_DIAMETER(.18), BULLET_IMPULSE(26, 2380), 0);
@@ -1840,12 +1850,12 @@ CAmmoDef *GetAmmoDef()
 		def.AddAmmoType("Thumper",			DMG_SONIC,					TRACER_NONE,			10, 10, 2, 0, 0, 0, 0, 0 );
 		def.AddAmmoType("Gravity",			DMG_CLUB,					TRACER_NONE,			0,	0, 8, 0, 0, 0, 0, 0 );
 		def.AddAmmoType("Battery",			DMG_CLUB,					TRACER_NONE,			NULL, NULL, NULL, 0, 0, 0, 0, 0 );
-		def.AddAmmoType("GaussEnergy",		DMG_SHOCK,					TRACER_NONE,			"sk_jeep_gauss_damage",		"sk_jeep_gauss_damage", "sk_max_gauss_round",		BULLET_SPEED(6500),	BULLET_MASS(650), BULLET_DIAMETER(1), BULLET_IMPULSE(650, 8000), 0 ); // hit like a 10kg weight at 400 in/s
-		def.AddAmmoType("CombineCannon",	DMG_BULLET,					TRACER_LINE,			"sk_npc_dmg_gunship_to_plr", "sk_npc_dmg_gunship", NULL, BULLET_SPEED(750),	BULLET_MASS(5200), BULLET_DIAMETER(1), 0.5 * 750 * 12, AMMO_DARK_ENERGY ); // hit like a 0.5kg weight at 750 ft/s
-		def.AddAmmoType("AirboatGun",		DMG_AIRBOAT,				TRACER_LINE,			"sk_plr_dmg_airboat",		"sk_npc_dmg_airboat",		NULL,			BULLET_SPEED(750), BULLET_MASS(150),	BULLET_DIAMETER(1), BULLET_IMPULSE(2080, 750), AMMO_DARK_ENERGY );
-		def.AddAmmoType("StriderMinigun",	DMG_BULLET,					TRACER_LINE,			"sk_npc_dmg_strider_to_plr", "sk_npc_dmg_strider", "sk_npc_dmg_strider", BULLET_SPEED(750), BULLET_MASS(5200),	BULLET_DIAMETER(1), 1.0 * 750 * 12, AMMO_FORCE_DROP_IF_CARRIED | AMMO_DARK_ENERGY ); // hit like a 1.0kg weight at 750 ft/s
-		def.AddAmmoType("StriderMinigunDirect", DMG_BULLET,				TRACER_LINE,			"sk_npc_dmg_strider_to_plr_direct", "sk_npc_dmg_strider_direct", "sk_npc_dmg_strider_direct", BULLET_SPEED(750),  BULLET_MASS(5200), BULLET_DIAMETER(1), 0.25 * 750 * 12, AMMO_FORCE_DROP_IF_CARRIED | AMMO_DARK_ENERGY ); // hit like a 0.2kg weight at 750 ft/s
-		def.AddAmmoType("HelicopterGun",	DMG_BULLET,					TRACER_LINE_AND_WHIZ,	"sk_npc_dmg_helicopter_to_plr", "sk_npc_dmg_helicopter",	"sk_max_smg1",	BULLET_SPEED(750), BULLET_MASS(150),	BULLET_DIAMETER(1), BULLET_IMPULSE(2080, 750), AMMO_FORCE_DROP_IF_CARRIED | AMMO_INTERPRET_PLRDAMAGE_AS_DAMAGE_TO_PLAYER | AMMO_DARK_ENERGY);
+		def.AddAmmoType("GaussEnergy",		DMG_SHOCK,					TRACER_NONE,			"sk_jeep_gauss_damage",		"sk_jeep_gauss_damage", "sk_max_gauss_round",		BULLET_SPEED(6500),	BULLET_MASS(650), BULLET_DIAMETER(3), BULLET_IMPULSE(650, 8000), 0 ); // hit like a 10kg weight at 400 in/s
+		def.AddAmmoType("CombineCannon",	DMG_BULLET,					TRACER_LINE,			"sk_npc_dmg_gunship_to_plr", "sk_npc_dmg_gunship", NULL, BULLET_SPEED(750),	BULLET_MASS(5200), BULLET_DIAMETER(10), 2.0 * 750 * 12, AMMO_FORCE_DROP_IF_CARRIED | AMMO_TRACE_HULL | AMMO_DARK_ENERGY ); // hit like a 2.0kg weight at 750 ft/s
+		def.AddAmmoType("AirboatGun",		DMG_AIRBOAT,				TRACER_LINE,			"sk_plr_dmg_airboat",		"sk_npc_dmg_airboat",		NULL,			BULLET_SPEED(750), BULLET_MASS(150),	BULLET_DIAMETER(6), BULLET_IMPULSE(2080, 750),  AMMO_DARK_ENERGY );
+		def.AddAmmoType("StriderMinigun",	DMG_BULLET,					TRACER_LINE,			"sk_npc_dmg_strider_to_plr", "sk_npc_dmg_strider", "sk_npc_dmg_strider", BULLET_SPEED(750), BULLET_MASS(5200),	BULLET_DIAMETER(15), 1.0 * 750 * 12, AMMO_FORCE_DROP_IF_CARRIED | AMMO_TRACE_HULL | AMMO_DARK_ENERGY ); // hit like a 1.0kg weight at 750 ft/s
+		def.AddAmmoType("StriderMinigunDirect", DMG_BULLET,				TRACER_LINE,			"sk_npc_dmg_strider_to_plr_direct", "sk_npc_dmg_strider_direct", "sk_npc_dmg_strider_direct", BULLET_SPEED(750),  BULLET_MASS(5200), BULLET_DIAMETER(6), 0.25 * 750 * 12, AMMO_FORCE_DROP_IF_CARRIED | AMMO_TRACE_HULL | AMMO_DARK_ENERGY ); // hit like a 0.2kg weight at 750 ft/s
+		def.AddAmmoType("HelicopterGun",	DMG_BULLET,					TRACER_LINE_AND_WHIZ,	"sk_npc_dmg_helicopter_to_plr", "sk_npc_dmg_helicopter",	"sk_max_smg1",	BULLET_SPEED(750), BULLET_MASS(150),	BULLET_DIAMETER(1), BULLET_IMPULSE(2080, 750), AMMO_FORCE_DROP_IF_CARRIED | AMMO_TRACE_HULL | AMMO_INTERPRET_PLRDAMAGE_AS_DAMAGE_TO_PLAYER | AMMO_DARK_ENERGY);
 		def.AddAmmoType("AR2AltFire",		DMG_DISSOLVE,				TRACER_NONE,			0, 0, "sk_max_ar2_altfire", 0, 0, 0, 0, 0 );
 		def.AddAmmoType("Grenade",			DMG_BURN,					TRACER_NONE,			"sk_plr_dmg_grenade",		"sk_npc_dmg_grenade",		"sk_max_grenade",	0, 0, 0, 0, 0 );
 #ifdef HL2_EPISODIC

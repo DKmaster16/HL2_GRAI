@@ -27,7 +27,7 @@ void BasicGameStatsRecord_t::SaveToBuffer( CUtlBuffer &buf )
 	buf.PutInt( m_nCommentary );
 	buf.PutInt( m_nHDR );
 	buf.PutInt( m_nCaptions );
-	for ( int i = 0; i < 3; ++i )
+	for ( int i = 0; i < 4; ++i )
 	{
 		buf.PutInt( m_nSkill[ i ] );
 	}
@@ -69,7 +69,7 @@ bool BasicGameStatsRecord_t::ParseFromBuffer( CUtlBuffer &buf, int iBufferStatsV
 		bret = false;
 	}
 
-	for ( int i = 0; i < 3; ++i )
+	for ( int i = 0; i < 4; ++i )
 	{
 		m_nSkill[ i ] = buf.GetInt();
 		if ( m_nSkill[ i ] < 0 || m_nSkill[ i ]  > 100000 )

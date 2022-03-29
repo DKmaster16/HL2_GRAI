@@ -1116,7 +1116,7 @@ void CNPC_Alyx::DoMobbedCombatAI(void)
 	// Alyx's gun can never run out of ammo. Allow Alyx to ignore LOW AMMO warnings
 	// if she's in a close quarters fight with several enemies. She'll attempt to reload
 	// as soon as her combat situation is less pressing.
-	if (HasCondition(COND_MOBBED_BY_ENEMIES) && !g_pGameRules->IsSkillLevel(SKILL_HARD))	// Unless DIABOLICAL
+	if (HasCondition(COND_MOBBED_BY_ENEMIES) && !g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL))	// Unless DIABOLICAL
 	{
 		ClearCondition(COND_LOW_PRIMARY_AMMO);
 	}

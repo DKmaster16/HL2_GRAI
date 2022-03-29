@@ -184,7 +184,7 @@ void CHLMachineGun::DoMachineGunKick( CBasePlayer *pPlayer, float dampEasy, floa
 		vecScratch.z *= -1;
 
 	//If we're in easy, dampen the effect a bit
-	if ( g_pGameRules->IsSkillLevel( SKILL_EASY ) )
+	if ( g_pGameRules->IsSkillLevel( SKILL_EASY ) || g_pGameRules->IsSkillLevel( SKILL_MEDIUM ) )
 	{
 		for ( int i = 0; i < 3; i++ )
 		{

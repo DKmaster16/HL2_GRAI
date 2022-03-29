@@ -59,7 +59,7 @@ public:
 		static Vector plrRunCone = VECTOR_CONE_2DEGREES;	// Player sprint accuracy
 		static Vector plrJumpCone = VECTOR_CONE_2DEGREES;	// Player jump/midair accuracy
 		static Vector npcCone = VECTOR_CONE_1DEGREES;		// NPC accuracy
-		static Vector npcMoveCone = VECTOR_CONE_3DEGREES;		// NPC move accuracy
+		static Vector npcMoveCone = VECTOR_CONE_2DEGREES;		// NPC move accuracy
 
 		if (GetOwner() && GetOwner()->IsNPC())
 		{
@@ -329,10 +329,10 @@ const WeaponProficiencyInfo_t *CWeapon357::GetProficiencyValues()
 {
 	static WeaponProficiencyInfo_t proficiencyTable[] =
 	{
-		{ 9.00, 0.75 },	//poor	9/27
-		{ 3.00, 0.35 },	//average 3/9
-		{ 2.00, 0.35 },	//good 2/6
-		{ 1.00, 0.35 },	//very good	1/3
+		{ 8.00, 1.00 },	//poor	8/16
+		{ 5.00, 1.00 },	//average 5/10
+		{ 3.50, 1.00 },	//good 3.5/7
+		{ 2.00, 1.00 },	//very good	2/4
 		{ 1.00, 1.00 },	//perfect 1/3
 	};
 

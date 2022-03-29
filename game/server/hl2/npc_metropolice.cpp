@@ -638,7 +638,7 @@ void CNPC_MetroPolice::Spawn(void)
 		AddSpawnFlags(SF_NPC_GAG);
 	}
 
-	if (m_bSimpleCops)	// && !g_pGameRules->IsSkillLevel(SKILL_HARD)
+	if (m_bSimpleCops)
 	{
 		m_iHealth = sk_metropolice_simple_health.GetFloat();
 	}
@@ -683,7 +683,7 @@ void CNPC_MetroPolice::Spawn(void)
 			CBaseCombatWeapon *pWeapon = Weapon_Create("weapon_shotgun");
 			Weapon_Equip(pWeapon);
 		}
-		else if (random->RandomInt(0, 3) == 0)	// 1/4 of all cops have .357 Magnum
+		else if (random->RandomInt(0, 2) == 0)	// 1/3 of all cops have .357 Magnum
 		{
 			CBaseCombatWeapon *pWeapon = Weapon_Create("weapon_357");
 			Weapon_Equip(pWeapon);
@@ -692,10 +692,6 @@ void CNPC_MetroPolice::Spawn(void)
 		if (hl2_episodic.GetBool())
 		{
 			m_iManhacks = 2;
-		}
-		else
-		{
-			m_iManhacks = 1;
 		}
 	}
 
@@ -1207,7 +1203,7 @@ const float MAX_MIN_PISTOL_REST_INTERVAL = 1.25;	// The maximum time in a minimu
 
 // Range for rest period maximums
 const float MIN_MAX_PISTOL_REST_INTERVAL = 0.3;	// The minimum max rest time between bursts (He's very close)
-const float MAX_MAX_PISTOL_REST_INTERVAL = 3.0;	// The Maximum time in a maximum rest time (He's very far)
+const float MAX_MAX_PISTOL_REST_INTERVAL = 2.0;	// The Maximum time in a maximum rest time (He's very far)
 
 // Range for burst minimums
 const int 	MIN_MIN_PISTOL_BURST = 1;	// Bare minimum number of shots in a burst (he's very far)
@@ -1255,11 +1251,8 @@ void CNPC_MetroPolice::OnUpdateShotRegulator()
 	}
 	else if (Weapon_OwnsThisType("weapon_357"))
 	{
-		if (m_nBurstMode == BURST_NOT_ACTIVE)
-		{
-			GetShotRegulator()->SetBurstShotCountRange(GetActiveWeapon()->GetMinBurst(), GetActiveWeapon()->GetMaxBurst());
-			GetShotRegulator()->SetRestInterval(0.6, 1.2);
-		}
+		GetShotRegulator()->SetBurstShotCountRange(GetActiveWeapon()->GetMinBurst(), GetActiveWeapon()->GetMaxBurst());
+		GetShotRegulator()->SetRestInterval(0.6, 1.2);
 	}
 	else if (Weapon_OwnsThisType("weapon_smg1"))
 	{
@@ -1276,11 +1269,8 @@ void CNPC_MetroPolice::OnUpdateShotRegulator()
 	}
 	else if (Weapon_OwnsThisType("weapon_shotgun"))
 	{
-		if (m_nBurstMode == BURST_NOT_ACTIVE)
-		{
-			GetShotRegulator()->SetBurstInterval(0.5, 1.0);
-			GetShotRegulator()->SetRestInterval(0.5, 1.0);
-		}
+		GetShotRegulator()->SetBurstInterval(0.5, 1.0);
+		GetShotRegulator()->SetRestInterval(0.5, 1.0);
 	}
 }
 
@@ -3449,7 +3439,7 @@ int CNPC_MetroPolice::SelectCombatSchedule()
 			{
 				// Stop chasing the player now that we've taken a swing at them
 				m_flChasePlayerTime = 0;
-				if (g_pGameRules->IsSkillLevel(SKILL_HARD))
+				if ((g_pGameRules->IsSkillLevel(SKILL_HARD) || g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL)))
 				{
 					m_BatonSwingTimer.Set(0.4, 0.7);
 				}
@@ -3990,7 +3980,7 @@ void CNPC_MetroPolice::TraceAttack(const CTakeDamageInfo &info, const Vector &ve
 
 float CNPC_MetroPolice::GetHitgroupDamageMultiplier(int iHitGroup, const CTakeDamageInfo &info)
 {
-extern ConVar sk_npc_arm;
+//extern ConVar sk_npc_arm;
 	switch (iHitGroup)
 	{
 	case HITGROUP_CHEST:
@@ -4006,10 +3996,10 @@ extern ConVar sk_npc_arm;
 
 			if (flDist > 252.0f)
 			{
-				return sk_npc_arm.GetFloat();
+				return 1.0f;
 			}
 		}
-		if (info.GetAmmoType() == GetAmmoDef()->Index("Pistol"))
+		if (info.GetAmmoType() == GetAmmoDef()->Index("Pistol") || info.GetAmmoType() == GetAmmoDef()->Index("AR2"))
 		{
 			return 1.0f;
 		}
@@ -5064,7 +5054,7 @@ int CNPC_MetroPolice::OnTakeDamage_Alive(const CTakeDamageInfo &inputInfo)
 
 	//#if 0
 	// Take triple damage from a hit in idle/alert states
-	if (m_NPCState == NPC_STATE_IDLE || m_NPCState == NPC_STATE_ALERT)
+	if (m_NPCState == NPC_STATE_IDLE)
 	{
 		info.ScaleDamage(3.0);
 	}
@@ -5169,48 +5159,48 @@ WeaponProficiency_t CNPC_MetroPolice::CalcWeaponProficiency(CBaseCombatWeapon *p
 			return WEAPON_PROFICIENCY_POOR;	// 20 Poor accuracy for this map, looks silly if gordon can take so many bullets before dying!
 		}
 		else
-			if (g_pGameRules->IsSkillLevel(SKILL_HARD))	// better accuracy on hard
+			if (g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL))	// better accuracy on hard
 			{
 				return WEAPON_PROFICIENCY_VERY_GOOD;			//4/7
 			}
 			else
-				if (g_pGameRules->IsSkillLevel(SKILL_EASY))	// worse accuracy on easy
+				if (g_pGameRules->IsSkillLevel(SKILL_HARD))	// worse accuracy on easy
 				{
-					return WEAPON_PROFICIENCY_AVERAGE;		//7/12.25
+					return WEAPON_PROFICIENCY_GOOD;		//7/12.25
 				}
 				else
 				{
-					return WEAPON_PROFICIENCY_GOOD;	//5.6/9.8
+					return WEAPON_PROFICIENCY_AVERAGE;	//5.6/9.8
 				}
 	}
 	if (FClassnameIs(pWeapon, "weapon_smg1"))
 	{
-		if (g_pGameRules->IsSkillLevel(SKILL_HARD))
+		if (g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL))
 		{
 			return WEAPON_PROFICIENCY_GOOD;		//5/8
 		}
-		else if (g_pGameRules->IsSkillLevel(SKILL_EASY))
+		else if (g_pGameRules->IsSkillLevel(SKILL_HARD))
 		{
-			return WEAPON_PROFICIENCY_POOR;		//6.25/10
+			return WEAPON_PROFICIENCY_AVERAGE;		//6.25/10
 		}
 		else
 		{
-			return WEAPON_PROFICIENCY_AVERAGE;	//5.5/8.8
+			return WEAPON_PROFICIENCY_POOR;	//5.5/8.8
 		}
 	}
 	if (FClassnameIs(pWeapon, "weapon_shotgun"))
 	{
-		if (g_pGameRules->IsSkillLevel(SKILL_HARD))
+		if (g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL))
 		{
 			return WEAPON_PROFICIENCY_GOOD;		//5/8
 		}
-		else if (g_pGameRules->IsSkillLevel(SKILL_EASY))
+		else if (g_pGameRules->IsSkillLevel(SKILL_HARD))
 		{
-			return WEAPON_PROFICIENCY_POOR;		//6.25/10
+			return WEAPON_PROFICIENCY_AVERAGE;		//6.25/10
 		}
 		else
 		{
-			return WEAPON_PROFICIENCY_AVERAGE;	//5.5/8.8
+			return WEAPON_PROFICIENCY_POOR;	//5.5/8.8
 		}
 	}
 	return BaseClass::CalcWeaponProficiency(pWeapon);
@@ -5271,17 +5261,17 @@ void CNPC_MetroPolice::GatherConditions(void)
 		{
 			if (m_BatonSwingTimer.Expired())
 			{
-				if (g_pGameRules->IsSkillLevel(SKILL_HARD))
+				if (g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL))
 				{
 					m_BatonSwingTimer.Set(0.4, 0.7);
 				}
-				else if (g_pGameRules->IsSkillLevel(SKILL_EASY))
+				else if (g_pGameRules->IsSkillLevel(SKILL_HARD))
 				{
-					m_BatonSwingTimer.Set(1.0, 1.75);
+					m_BatonSwingTimer.Set(0.6, 1.05);
 				}
 				else
 				{
-					m_BatonSwingTimer.Set(0.6, 1.05);
+					m_BatonSwingTimer.Set(1.0, 1.75);
 				}
 
 				Activity activity = TranslateActivity(ACT_MELEE_ATTACK_SWING_GESTURE);

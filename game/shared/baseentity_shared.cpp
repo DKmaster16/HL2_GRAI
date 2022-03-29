@@ -63,6 +63,7 @@ ConVar hl2_episodic( "hl2_episodic", "0", FCVAR_REPLICATED );
 
 #ifdef GAME_DLL
 	ConVar ent_debugkeys( "ent_debugkeys", "" );
+//	ConVar bullet_trace_hull("bullet_trace_hull", "1");
 	extern bool ParseKeyvalue( void *pObject, typedescription_t *pFields, int iNumFields, const char *szKeyName, const char *szValue );
 	extern bool ExtractKeyvalue( void *pObject, typedescription_t *pFields, int iNumFields, const char *szKeyName, char *szValue, int iMaxLen );
 #endif
@@ -1595,105 +1596,7 @@ public:
 #else
 typedef CTraceFilterSimpleList CBulletsTraceFilter;
 #endif
-#if 0
-void CBaseEntity::FireBullets(const FireBulletsInfo_t &info)
-{
-
-	// Make sure given a valid bullet type
-	if (info.m_iAmmoType == -1)
-	{
-		DevMsg("ERROR: Undefined ammo type!\n");
-		return;
-	}
-	CAmmoDef*	pAmmoDef = GetAmmoDef();
-	int			nDamageType = pAmmoDef->DamageType(info.m_iAmmoType);
-	int			nAmmoFlags = pAmmoDef->Flags(info.m_iAmmoType);
-
-
-	int iPlayerDamage = info.m_iPlayerDamage;
-	if (iPlayerDamage == 0)
-	{
-		if (nAmmoFlags & AMMO_INTERPRET_PLRDAMAGE_AS_DAMAGE_TO_PLAYER)
-		{
-			iPlayerDamage = pAmmoDef->PlrDamage(info.m_iAmmoType);
-		}
-	}
-
-	// the default attacker is ourselves
-	CBaseEntity *pAttacker = info.m_pAttacker ? info.m_pAttacker : this;
-
-	// Make sure we don't have a dangling damage target from a recursive call
-	if (g_MultiDamage.GetTarget() != NULL)
-	{
-		ApplyMultiDamage();
-	}
-
-	ClearMultiDamage();
-	g_MultiDamage.SetDamageType(nDamageType | DMG_NEVERGIB);
-
-
-	// Prediction is only usable on players
-	int iSeed = 0;
-	if (IsPlayer())
-	{
-		iSeed = CBaseEntity::GetPredictionRandomSeed() & 255;
-	}
-
-
-	//-----------------------------------------------------
-	// Set up our shot manipulator.
-	//-----------------------------------------------------
-	CShotManipulator Manipulator(info.m_vecDirShooting);
-
-	for (int iShot = 0; iShot < info.m_iShots; iShot++)
-	{
-		Vector vecDir;
-
-		// Prediction is only usable on players
-		if (IsPlayer())
-		{
-			RandomSeed(iSeed);	// init random system with this seed
-		}
-
-		// If we're firing multiple shots, and the first shot has to be bang on target, ignore spread
-		if (iShot == 0 && info.m_iShots > 1 && (info.m_nFlags & FIRE_BULLETS_FIRST_SHOT_ACCURATE))
-		{
-			vecDir = Manipulator.GetShotDirection();
-		}
-		else
-		{
-
-			// Don't run the biasing code for the player at the moment.
-			vecDir = Manipulator.ApplySpread(info.m_vecSpread);
-		}
-
-		Vector vecSrc(info.m_vecSrc);
-		bool bTraceHull = (IsPlayer() && info.m_iShots > 1 && iShot % 2);
-#if 0
-		if (nAmmoFlags & AMMO_DARK_ENERGY)
-		{
-			CDarkEnergyBullet	*pDarkEnergyBullet;
-			Vector BulletOrigin = pAttacker->GetAbsOrigin();
-			pDarkEnergyBullet = (CDarkEnergyBullet *)Create("DarkEnergyBullet", BulletOrigin, GetLocalAngles(), pAttacker);
-			CDarkEnergyBullet *pDarkEnergyBullet = new CDarkEnergyBullet(info, vecDir, pAttacker);
-			DoImpactEffect(tr, nDamageType);
-		}
-		else
-#endif		
-			CSimulatedBullet *pBullet = new CSimulatedBullet(info, vecDir, pAttacker, info.m_pAdditionalIgnoreEnt, bTraceHull
-#ifndef CLIENT_DLL
-				, this
-#endif
-				);
-
-			BulletManager()->AddBullet(pBullet);
-		
-		iSeed++;
-	}
-	ApplyMultiDamage();
-}
-#endif
-#if 1
+extern ConVar sk_plr_num_shotgun_pellets;
 void CBaseEntity::FireBullets(const FireBulletsInfo_t &info)
 {
 	static int	tracerCount;
@@ -1713,7 +1616,7 @@ void CBaseEntity::FireBullets(const FireBulletsInfo_t &info)
 		{
 			if (rumbleEffect == RUMBLE_SHOTGUN_SINGLE)
 			{
-				if (info.m_iShots == 12)
+				if (info.m_iShots == sk_plr_num_shotgun_pellets.GetInt() * 2)
 				{
 					// Upgrade to double barrel rumble effect
 					rumbleEffect = RUMBLE_SHOTGUN_DOUBLE;
@@ -1733,10 +1636,10 @@ void CBaseEntity::FireBullets(const FireBulletsInfo_t &info)
 			iPlayerDamage = pAmmoDef->PlrDamage(info.m_iAmmoType);
 		}
 	}
-
 	// the default attacker is ourselves
-//	CBaseEntity *pAttacker = info.m_pAttacker ? info.m_pAttacker : this;
-
+#ifdef GAME_DLL
+	CBaseEntity *pAttacker = info.m_pAttacker ? info.m_pAttacker : this;
+#endif
 	// Make sure we don't have a dangling damage target from a recursive call
 	if (g_MultiDamage.GetTarget() != NULL)
 	{
@@ -1823,29 +1726,36 @@ void CBaseEntity::FireBullets(const FireBulletsInfo_t &info)
 		}
 
 		Vector vecSrc(info.m_vecSrc);
-#ifdef GAME_DLL
+
 		bool bTraceHull = 0;
-		CBaseEntity *pAttacker = info.m_pAttacker ? info.m_pAttacker : this;
-		CSimulatedBullet *pBullet = new CSimulatedBullet(info, vecDir, pAttacker, info.m_pAdditionalIgnoreEnt, bTraceHull
-//#ifndef CLIENT_DLL
-//			, this
-//#endif
-			);
+		if (nAmmoFlags  & AMMO_TRACE_HULL)
+			bTraceHull = 1;
+/*
+		if (nAmmoFlags & AMMO_DARK_ENERGY)
+		{
+			DoImpactEffect(tr, nDamageType);
+			float flActualDamage = info.m_flDamage;
+			if (flActualDamage == 0.0){
+				flActualDamage = g_pGameRules->GetAmmoDamage(pAttacker, tr.m_pEnt, info.m_iAmmoType);}
+
+			DoImpactEffect(tr, nDamageType);
+			// Now hit all triggers along the ray that respond to shots...
+			// Clip the ray to the first collided solid returned from traceline
+			CTakeDamageInfo triggerInfo(pAttacker, pAttacker, flActualDamage, nDamageType);
+			CalculateBulletDamageForce(&triggerInfo, info.m_iAmmoType, vecDir, tr.endpos);
+			triggerInfo.ScaleDamageForce(info.m_flDamageForceScale);
+			triggerInfo.SetAmmoType(info.m_iAmmoType);
+#ifdef GAME_DLL
+			TraceAttackToTriggers(triggerInfo, tr.startpos, tr.endpos, vecDir);
+#endif
+		}*/
+#ifdef GAME_DLL
+		CSimulatedBullet *pBullet = new CSimulatedBullet(info, vecDir, pAttacker, info.m_pAdditionalIgnoreEnt, bTraceHull, this);
 		BulletManager()->AddBullet(pBullet);
 #endif
 		vecEnd = info.m_vecSrc + vecDir * info.m_flDistance;
 
-
-//		if (IsPlayer() && info.m_iShots > 1 && iShot % 2)
-//		{
-//			// Half of the shotgun pellets are hulls that make it easier to hit targets with the shotgun.
-//			AI_TraceHull(info.m_vecSrc, vecEnd, Vector(-3, -3, -3), Vector(3, 3, 3), MASK_SHOT, &traceFilter, &tr);
-//		}
-//		else
-		{
-			AI_TraceLine(info.m_vecSrc, vecEnd, MASK_SHOT, &traceFilter, &tr);
-		}
-
+		AI_TraceLine(info.m_vecSrc, vecEnd, MASK_SHOT, &traceFilter, &tr);
 		// Tracker 70354/63250:  ywb 8/2/07
 		// Fixes bug where trace from turret with attachment point outside of Vcollide
 		//  starts solid so doesn't hit anything else in the world and the final coord 
@@ -1863,14 +1773,8 @@ void CBaseEntity::FireBullets(const FireBulletsInfo_t &info)
 			NDebugOverlay::Line(info.m_vecSrc, vecEnd, 255, 255, 255, false, .1);
 #endif
 
-		// Now hit all triggers along the ray that respond to shots...
-		// Clip the ray to the first collided solid returned from traceline
-/*		CTakeDamageInfo triggerInfo(pAttacker, pAttacker, 0, nDamageType);
-		triggerInfo.SetAmmoType(info.m_iAmmoType);
-#ifdef GAME_DLL
-		TraceAttackToTriggers(triggerInfo, tr.startpos, tr.endpos, vecDir);
-#endif
-*/		Vector vecTracerDest = tr.endpos;
+//		DoImpactEffect(tr, nDamageType);
+		Vector vecTracerDest = tr.endpos;
 
 //		if ((info.m_iTracerFreq != 0) && (tracerCount++ % info.m_iTracerFreq) == 0)
 		{
@@ -1889,8 +1793,10 @@ void CBaseEntity::FireBullets(const FireBulletsInfo_t &info)
 //		}
 		iSeed++;
 	}
-}
+#ifdef GAME_DLL
+	ApplyMultiDamage();
 #endif
+}
 #if 0
 void CBaseEntity::FireBullets( const FireBulletsInfo_t &info )
 {

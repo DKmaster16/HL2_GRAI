@@ -232,7 +232,7 @@ enum CastVote
 
 #define MAX_PLACE_NAME_LENGTH		18
 
-#define MAX_FOV						90
+#define MAX_FOV						110
 
 //===================================================================================================================
 // Team Defines
@@ -259,10 +259,10 @@ enum CastVote
 // -----------------------------------------
 // Skill Level
 // -----------------------------------------
-#define SKILL_EASY			1
-#define SKILL_MEDIUM		2
-#define SKILL_HARD			3
-//#define SKILL_DIABOLIC	4
+#define SKILL_EASY			0
+#define SKILL_MEDIUM		1
+#define SKILL_HARD			2
+#define SKILL_DIABOLICAL	3
 
 // Weapon flags
 // -----------------------------------------

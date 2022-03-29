@@ -197,7 +197,8 @@ ConVar  ai_debug_squads( "ai_debug_squads", "0" );
 ConVar  ai_debug_loners( "ai_debug_loners", "0" );
 
 // Shoot trajectory
-ConVar	ai_lead_time( "ai_lead_time","0.05" );	//0.0
+ConVar	ai_lead_time_added( "ai_lead_time_added","0.02" );	//0.0
+ConVar	ai_lead_targets( "ai_lead_targets","1" );
 ConVar	ai_shot_stats( "ai_shot_stats", "0" );
 ConVar	ai_shot_stats_term( "ai_shot_stats_term", "1000" );
 ConVar	ai_shot_bias( "ai_shot_bias", "1.0" );
@@ -9606,40 +9607,71 @@ void CAI_BaseNPC::CollectShotStats( const Vector &vecShootOrigin, const Vector &
 // Purpose: Return the actual position the NPC wants to fire at when it's trying
 //			to hit it's current enemy.
 //-----------------------------------------------------------------------------
-Vector CAI_BaseNPC::GetActualShootPosition( const Vector &shootOrigin )
+Vector CAI_BaseNPC::GetActualShootPosition(const Vector &shootOrigin)
 {
 	// Project the target's location into the future.
 	Vector vecEnemyLKP = GetEnemyLKP();
-	Vector vecEnemyOffset = GetEnemy()->BodyTarget( shootOrigin ) - GetEnemy()->GetAbsOrigin();
+	Vector vecEnemyOffset = GetEnemy()->BodyTarget(shootOrigin) - GetEnemy()->GetAbsOrigin();
 	Vector vecTargetPosition = vecEnemyOffset + vecEnemyLKP;
+	// project target's velocity over that time. 
+	Vector vecVelocity = vec3_origin;
 
-#ifdef PORTAL
-	// Check if it's also visible through portals
-	CProp_Portal *pPortal = FInViewConeThroughPortal( vecEnemyLKP );
-	if ( pPortal )
+	float targetTime;
+	float targetDist;
+	if (ai_lead_targets.GetBool() == 1)
 	{
-		// Get the target's position through portals
-		Vector vecEnemyOffsetTransformed;
-		Vector vecEnemyLKPTransformed;
-		UTIL_Portal_VectorTransform( pPortal->m_hLinkedPortal->MatrixThisToLinked(), vecEnemyOffset, vecEnemyOffsetTransformed );
-		UTIL_Portal_PointTransform( pPortal->m_hLinkedPortal->MatrixThisToLinked(), vecEnemyLKP, vecEnemyLKPTransformed );
-		Vector vecTargetPositionTransformed = vecEnemyOffsetTransformed + vecEnemyLKPTransformed;
+		// Get bullet time to target
+		targetDist = (vecTargetPosition - GetAbsOrigin()).Length();
+		targetTime = targetDist / 9000;	// 9000 is the velocity of energy bullets
 
-		// Get the distance to the target with and without portals
-		float fDistanceToEnemyThroughPortalSqr = GetAbsOrigin().DistToSqr( vecTargetPositionTransformed );
-		float fDistanceToEnemySqr = GetAbsOrigin().DistToSqr( vecTargetPosition );
-
-		if ( fDistanceToEnemyThroughPortalSqr < fDistanceToEnemySqr || !FInViewCone( vecEnemyLKP ) || !FVisible( vecEnemyLKP ) )
+		if (GetEnemy()->IsPlayer() || GetEnemy()->Classify() == CLASS_MISSILE)
 		{
-			// We're better off shooting through the portals
-			vecTargetPosition = vecTargetPositionTransformed;
-		}
-	}
-#endif
+			// This target is a client, who has an actual velocity.
+			vecVelocity = GetEnemy()->GetSmoothedVelocity();
 
-	// lead for some fraction of a second.
+			// Slow the vertical velocity down a lot, or the sniper will
+			// lead a jumping player by firing several feet above his head.
+			// THIS may affect the sniper hitting a player that's ascending/descending
+			// ladders. If so, we'll have to check for the player's ladder flag.
+			if (GetEnemy()->GetFlags() & FL_CLIENT)
+			{
+				vecVelocity.z *= 0.25;
+			}
+		}
+		else
+		{
+			if (GetEnemy()->MyNPCPointer() && GetEnemy()->MyNPCPointer()->GetNavType() == NAV_FLY)
+			{
+				// Take a flying monster's velocity directly.
+				vecVelocity = GetEnemy()->GetAbsVelocity();
+			}
+			else
+			{
+				// Have to build a velocity vector using the character's current groundspeed.
+				CBaseAnimating *pAnimating;
+
+				pAnimating = (CBaseAnimating *)GetEnemy();
+
+				Assert(pAnimating != NULL);
+
+				QAngle vecAngle;
+				vecAngle.y = pAnimating->GetSequenceMoveYaw(pAnimating->GetSequence());
+				vecAngle.x = 0;
+				vecAngle.z = 0;
+
+				vecAngle.y += GetEnemy()->GetLocalAngles().y;
+
+				AngleVectors(vecAngle, &vecVelocity);
+
+				vecVelocity = vecVelocity * pAnimating->m_flGroundSpeed;
+			}
+		}
+
+		return (vecTargetPosition + (vecVelocity * (targetTime + ai_lead_time_added.GetFloat())));
+	}
+	else
 	{
-		return (vecTargetPosition + (GetEnemy()->GetSmoothedVelocity() * ai_lead_time.GetFloat()));
+		return vecTargetPosition;
 	}
 }
 

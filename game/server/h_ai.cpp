@@ -98,7 +98,7 @@ Vector VecCheckToss( CBaseEntity *pEntity, ITraceFilter *pFilter, Vector vecSpot
 	{
 		// toss a little bit to the left or right, not right down on the enemy's bean (head). 
 		vecSpot2 += right * ( random->RandomFloat(-8,8) + random->RandomFloat(-16,16) );
-		vecSpot2 += forward * ( random->RandomFloat(32,64) + random->RandomFloat(32,64) );	// toss a bit forward to compensate for imperfect midpoint
+		vecSpot2 += forward * ( random->RandomFloat(-8,8) + random->RandomFloat(-16,16) );	// toss a bit futher to compensate for imperfect midpoint
 	}
 
 	// calculate the midpoint and apex of the 'triangle'
@@ -180,6 +180,14 @@ Vector VecCheckToss( CBaseEntity *pEntity, ITraceFilter *pFilter, Vector vecSpot
 			return vec3_origin;
 	}
 
+	if (vecMins && vecMaxs)
+	{
+		// Check to ensure the entity's hull can travel the second half of the grenade throw
+		UTIL_TraceHull(vecSpot2, vecApex, *vecMins, *vecMaxs, (MASK_SOLID&(~CONTENTS_GRATE)), pFilter, &tr);
+		if (tr.fraction < 1.0)
+			return vec3_origin;
+	}
+
 	return vecTossVel;
 }
 
@@ -229,7 +237,7 @@ Vector VecCheckThrow ( CBaseEntity *pEdict, const Vector &vecSpot1, Vector vecSp
 
 	
 	trace_t tr;
-	UTIL_TraceLine(vecSpot1, vecApex, MASK_SOLID, pEdict, COLLISION_GROUP_NONE, &tr);
+	UTIL_TraceLine(vecSpot1, vecApex, (MASK_SOLID_BRUSHONLY&(~CONTENTS_GRATE)), pEdict, COLLISION_GROUP_NONE, &tr);
 	if (tr.fraction != 1.0)
 	{
 		// fail!
@@ -239,7 +247,7 @@ Vector VecCheckThrow ( CBaseEntity *pEdict, const Vector &vecSpot1, Vector vecSp
 
 	//NDebugOverlay::Line( vecSpot1, vecApex, 0, 255, 0, true, 5.0 );
 
-	UTIL_TraceLine(vecSpot2, vecApex, MASK_SOLID_BRUSHONLY, pEdict, COLLISION_GROUP_NONE, &tr);
+	UTIL_TraceLine(vecSpot2, vecApex, (MASK_SOLID_BRUSHONLY&(~CONTENTS_GRATE)), pEdict, COLLISION_GROUP_NONE, &tr);
 	if (tr.fraction != 1.0)
 	{
 		// fail!
@@ -252,8 +260,19 @@ Vector VecCheckThrow ( CBaseEntity *pEdict, const Vector &vecSpot1, Vector vecSp
 	if ( vecMins && vecMaxs )
 	{
 		// Check to ensure the entity's hull can travel the first half of the grenade throw
-		UTIL_TraceHull( vecSpot1, vecApex, *vecMins, *vecMaxs, MASK_SOLID, pEdict, COLLISION_GROUP_NONE, &tr);		
+		UTIL_TraceHull( vecSpot1, vecApex, *vecMins, *vecMaxs, (MASK_SOLID_BRUSHONLY&(~CONTENTS_GRATE)), pEdict, COLLISION_GROUP_NONE, &tr);		
 		if ( tr.fraction < 1.0 )
+		{
+			//NDebugOverlay::SweptBox( vecSpot1, tr.endpos, *vecMins, *vecMaxs, vec3_angle, 255, 0, 0, 64, 5.0 );
+			return vec3_origin;
+		}
+	}
+
+	if (vecMins && vecMaxs)
+	{
+		// Check to ensure the entity's hull can travel the second half of the grenade throw
+		UTIL_TraceHull(vecSpot2, vecApex, *vecMins, *vecMaxs, (MASK_SOLID_BRUSHONLY&(~CONTENTS_GRATE)), pEdict, COLLISION_GROUP_NONE, &tr);
+		if (tr.fraction < 1.0)
 		{
 			//NDebugOverlay::SweptBox( vecSpot1, tr.endpos, *vecMins, *vecMaxs, vec3_angle, 255, 0, 0, 64, 5.0 );
 			return vec3_origin;

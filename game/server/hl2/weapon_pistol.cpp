@@ -77,7 +77,7 @@ public:
 	{		
 		// Handle NPCs first
 		static Vector npcCone = VECTOR_CONE_2DEGREES;		// NPC cone when standing still
-		static Vector npcMoveCone = VECTOR_CONE_5DEGREES;	// NPC cone when moving
+		static Vector npcMoveCone = VECTOR_CONE_3DEGREES;	// NPC cone when moving
 		if (GetOwner() && GetOwner()->IsNPC())
 		{
 			if (GetOwner()->IsMoving())
@@ -258,7 +258,7 @@ void CWeaponPistol::Operator_HandleAnimEvent( animevent_t *pEvent, CBaseCombatCh
 
 			CSoundEnt::InsertSound( SOUND_COMBAT|SOUND_CONTEXT_GUNFIRE, pOperator->GetAbsOrigin(), SOUNDENT_VOLUME_PISTOL, 0.2, pOperator, SOUNDENT_CHANNEL_WEAPON, pOperator->GetEnemy() );
 
-			WeaponSound( SINGLE_NPC );
+			WeaponSound( SINGLE );
 			pOperator->FireBullets( 1, vecShootOrigin, vecShootDir, VECTOR_CONE_PRECALCULATED, MAX_TRACE_LENGTH, m_iPrimaryAmmoType, 1 );
 			pOperator->DoMuzzleFlash();
 			m_iClip1 = m_iClip1 - 1;
@@ -547,10 +547,10 @@ const WeaponProficiencyInfo_t *CWeaponPistol::GetProficiencyValues()
 {
 	static WeaponProficiencyInfo_t proficiencyTable[] =
 	{
-		{ 7.0, 1.0 },	//poor 14/35
-		{ 3.0, 0.6 },	//average 6/15
-		{ 2.0, 0.6 },	//good	4/10
-		{ 1.0, 0.6 },	//very good	2/5
+		{ 7.0, 1.0 },	//poor 14/28
+		{ 4.0, 1.0 },	//average 8/12
+		{ 3.0, 1.0 },	//good	6/9
+		{ 2.0, 1.0 },	//very good	4/6
 		{ 1.0, 1.0 },	//perfect 2/5
 	};
 

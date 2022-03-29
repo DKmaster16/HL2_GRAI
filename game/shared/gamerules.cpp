@@ -278,16 +278,21 @@ void CGameRules::RefreshSkillData ( bool forceUpdate )
 
 	if (g_pGameRules->IsSkillLevel(SKILL_EASY))
 	{
-		Q_snprintf(szExec, sizeof(szExec), "exec skill_1.cfg\n");
+		Q_snprintf(szExec, sizeof(szExec), "exec skill_0.cfg\n");
 	}
 	else if (g_pGameRules->IsSkillLevel(SKILL_MEDIUM))
 	{
-		Q_snprintf(szExec, sizeof(szExec), "exec skill_2.cfg\n");
+		Q_snprintf(szExec, sizeof(szExec), "exec skill_1.cfg\n");
 	}
 	else if (g_pGameRules->IsSkillLevel(SKILL_HARD))
 	{
+		Q_snprintf(szExec, sizeof(szExec), "exec skill_2.cfg\n");
+	}
+	else if (g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL))
+	{
 		Q_snprintf(szExec, sizeof(szExec), "exec skill_3.cfg\n");
 	}
+
 
 	engine->ServerCommand( szExec );
 	engine->ServerExecute();
@@ -874,7 +879,7 @@ void CGameRules::ClientSettingsChanged( CBasePlayer *pPlayer )
 	if ( pszFov )
 	{
 		int iFov = atoi(pszFov);
-		iFov = clamp( iFov, 75, 90 );
+		iFov = clamp( iFov, 75, 110 );
 		pPlayer->SetDefaultFOV( iFov );
 	}
 

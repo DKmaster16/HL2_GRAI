@@ -759,7 +759,7 @@ bool CNPC_BaseZombie::ShouldBecomeTorso( const CTakeDamageInfo &info, float flDa
 
 	if( m_bLegShot && info.GetDamageType() & DMG_BUCKSHOT )
 	{
-		if( flDamageThreshold >= 0.4 )
+		if( flDamageThreshold >= 0.1 )
 		{
 			return true;
 		}
@@ -927,7 +927,7 @@ int CNPC_BaseZombie::OnTakeDamage_Alive( const CTakeDamageInfo &inputInfo )
 
 		case RELEASE_RAGDOLL_BULLET:
 			// Since there is no more bullet exaggeration don't touch bullet force.
-			ReleaseHeadcrab(EyePosition(), inputInfo.GetDamageForce(), true, false, true);
+			ReleaseHeadcrab(EyePosition(), inputInfo.GetDamageForce()  * 3.5, true, false, true);
 			break;
 
 		case RELEASE_RAGDOLL_SLICED_OFF:
@@ -1268,13 +1268,13 @@ void CNPC_BaseZombie::Ignite( float flFlameLifetime, bool bNPCOnly, float flSize
 #endif // HL2_EPISODIC
 
 	// Set the zombie up to burn to death in about ten seconds.
-	if (!g_pGameRules->IsSkillLevel(SKILL_HARD))
+	if (!g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL))
 	{
 		SetHealth(MIN(m_iHealth, FLAME_DIRECT_DAMAGE_PER_SEC * (ZOMBIE_BURN_TIME + random->RandomFloat(-ZOMBIE_BURN_TIME_NOISE, ZOMBIE_BURN_TIME_NOISE))));
 	}
 	else
 	{
-		SetHealth(MIN(m_iHealth, FLAME_DIRECT_DAMAGE_PER_SEC * (ZOMBIE_BURN_TIME * 1.2f + random->RandomFloat(-ZOMBIE_BURN_TIME_NOISE * 3.0f, ZOMBIE_BURN_TIME_NOISE * 3.0f))));
+		SetHealth(MIN(m_iHealth, FLAME_DIRECT_DAMAGE_PER_SEC * (ZOMBIE_BURN_TIME * 1.25f + random->RandomFloat(-ZOMBIE_BURN_TIME_NOISE * 1.25f, ZOMBIE_BURN_TIME_NOISE * 1.25f))));
 	}
 	// FIXME: use overlays when they come online
 	//AddOverlay( ACT_ZOM_WALK_ON_FIRE, false );

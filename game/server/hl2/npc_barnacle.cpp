@@ -37,6 +37,7 @@
 
 float GetCurrentGravity( void );
 ConVar	sk_barnacle_health( "sk_barnacle_health","0");
+ConVar	sk_barnacle_bite_dmg("sk_barnacle_bite_dmg", "15");
 
 static ConVar npc_barnacle_swallow( "npc_barnacle_swallow", "0", 0, "Use prototype swallow code." );
 
@@ -80,7 +81,7 @@ LINK_ENTITY_TO_CLASS( npc_barnacle, CNPC_Barnacle );
 #define BARNACLE_TONGUE_TIP_MASS						100
 #define BARNACLE_TONGUE_MAX_LIFT_MASS					70
 
-#define BARNACLE_BITE_DAMAGE_TO_PLAYER					15
+#define BARNACLE_BITE_DAMAGE_TO_PLAYER					sk_barnacle_bite_dmg.GetFloat()
 #define BARNACLE_DEAD_TONGUE_ALTITUDE					164
 #define BARNACLE_MIN_DEAD_TONGUE_CLEARANCE				78
 
@@ -488,7 +489,7 @@ void CNPC_Barnacle::BarnacleThink ( void )
 			else
 			{
 				// Finished digesting
-#if HL2_EPISODIC
+//#if HL2_EPISODIC
 				// have to save this off because LostPrey() resets it (and if we take damage before hitting that,
 				// then the dead thing will go flying)
 				bool poisoned = m_bSwallowingPoison;
@@ -500,10 +501,10 @@ void CNPC_Barnacle::BarnacleThink ( void )
 				{	// hurt me
 					TakeDamage( CTakeDamageInfo( this, this, m_iHealth, DMG_ACID ) );
 				}
-#else
-				LostPrey( true ); // Remove all evidence
-				m_flDigestFinish = 0;
-#endif
+//#else
+//				LostPrey( true ); // Remove all evidence
+//				m_flDigestFinish = 0;
+//#endif
 			}
 		}
 	}
@@ -533,7 +534,7 @@ void CNPC_Barnacle::BarnacleThink ( void )
 			else
 			{
 				// Finished digesting
-#if HL2_EPISODIC
+//#if HL2_EPISODIC
 				// have to save this off because LostPrey() resets it (and if we take damage before hitting that,
 				// then the dead thing will go flying)
 				bool poisoned = m_bSwallowingPoison;
@@ -545,10 +546,10 @@ void CNPC_Barnacle::BarnacleThink ( void )
 				{	// hurt me
 					TakeDamage( CTakeDamageInfo( this, this, m_iHealth, DMG_ACID ) );
 				}
-#else
-				LostPrey( true ); // Remove all evidence
-				m_flDigestFinish = 0;
-#endif
+//#else
+//			LostPrey( true ); // Remove all evidence
+//			m_flDigestFinish = 0;
+//#endif
 			}
 		}
 	}
@@ -1640,10 +1641,10 @@ void CNPC_Barnacle::BitePrey( void )
 	}
 
 	
-#if HL2_EPISODIC
+//#if HL2_EPISODIC
 	m_bSwallowingPoison = IsPoisonous(pVictim);
 	unsigned int enemyClass = GetEnemy()->Classify();
-#endif
+//#endif
 	// DMG_CRUSH because we don't wan't to impart physics forces
 
 	pVictim->TakeDamage( CTakeDamageInfo( this, this, nDamage, iDamageType | DMG_CRUSH ) );
@@ -1651,7 +1652,7 @@ void CNPC_Barnacle::BitePrey( void )
 	m_cGibs = 3;
 
 	// In episodic, bite the zombie's headcrab off & drop the body
-#ifdef HL2_EPISODIC
+//#ifdef HL2_EPISODIC
 
 	if ( enemyClass == CLASS_ZOMBIE )
 	{
@@ -1699,7 +1700,7 @@ void CNPC_Barnacle::BitePrey( void )
 		return;
 	}
 
-#endif
+//#endif
 
 	// Players are never swallowed, nor is anything we don't have a ragdoll for
 	if ( !m_hRagdoll || pVictim->IsPlayer() )
@@ -1808,15 +1809,15 @@ void CNPC_Barnacle::SwallowPrey( void )
 		m_bSwallowingPrey = false;
 		m_hTongueTip->SetAbsVelocity( vec3_origin );
 
-#if HL2_EPISODIC
+//#if HL2_EPISODIC
 		// digest poisonous things for just a moment before being killed by them (it looks wierd if it's instant)
 		// Parentheses were probably intended around the ?: part of the expression, but putting them there now
 		// would change the behavior which is undesirable, so parentheses were placed around the '+' to suppress
 		// compiler warnings.
 		m_flDigestFinish = ( gpGlobals->curtime + m_bSwallowingPoison ) ? 0.48f : 10.0f;
-#else
-		m_flDigestFinish = gpGlobals->curtime + 10.0;
-#endif
+//#else
+//		m_flDigestFinish = gpGlobals->curtime + 10.0;
+//#endif
 	}
 
 	if ( npc_barnacle_swallow.GetBool() )
@@ -1917,9 +1918,9 @@ void CNPC_Barnacle::LostPrey( bool bRemoveRagdoll )
 	RemoveRagdoll( bRemoveRagdoll );
 	m_bLiftingPrey = false;
 	m_bSwallowingPrey = false;
-#if HL2_EPISODIC
+//#if HL2_EPISODIC
 	m_bSwallowingPoison = false;
-#endif
+//#endif
 	SetEnemy( NULL );
 
 
@@ -2195,7 +2196,7 @@ void CNPC_Barnacle::WaitTillDead ( void )
 	}
 }
 
-#if HL2_EPISODIC
+//#if HL2_EPISODIC
 //=========================================================
 // Some creatures are poisonous to barnacles, and the barnacle
 // will die after consuming them. This determines if a given 
@@ -2212,12 +2213,12 @@ bool CNPC_Barnacle::IsPoisonous( CBaseEntity *pVictim )
 
 	if ( FClassnameIs(pVictim,"npc_headcrab_black") )
 		return true;
-
+#if HL2_EPISODIC
 	if ( FClassnameIs(pVictim,"npc_antlion") &&
 		 static_cast<CNPC_Antlion *>(pVictim)->IsWorker()
 		)
 		return true;
-	
+#endif
 	return false;
 }
 
@@ -2288,7 +2289,7 @@ const impactdamagetable_t &CNPC_Barnacle::GetPhysicsImpactDamageTable( void )
 	return gBarnacleImpactDamageTable;
 }
 
-#endif
+//#endif
 
 
 //=========================================================

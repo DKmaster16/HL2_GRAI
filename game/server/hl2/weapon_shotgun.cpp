@@ -262,13 +262,13 @@ float CWeaponShotgun::GetMinRestTime()
 {
 	if (GetOwner() && GetOwner()->Classify() == CLASS_COMBINE && FClassnameIs(GetOwner(), "npc_combine_s"))	// hl2_episodic.GetBool() && 
 	{
-		if (g_pGameRules->IsSkillLevel(SKILL_HARD))
+		if (g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL))
 		{
 			return 0.17f;
 		}
 		else
 		{
-			return 0.4f;
+			return 0.3f;
 		}
 	}
 	else
@@ -285,7 +285,7 @@ float CWeaponShotgun::GetMaxRestTime()
 {
 	if (GetOwner() && GetOwner()->Classify() == CLASS_COMBINE && FClassnameIs(GetOwner(), "npc_combine_s"))	//hl2_episodic.GetBool() &&
 	{
-		if (g_pGameRules->IsSkillLevel(SKILL_HARD))
+		if (g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL))
 		{
 			return 0.34f;
 		}
@@ -309,7 +309,7 @@ float CWeaponShotgun::GetMaxRestTime()
 //-----------------------------------------------------------------------------
 float CWeaponShotgun::GetFireRate()
 {
-	if (g_pGameRules->IsSkillLevel(SKILL_HARD))
+	if (g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL))
 	{
 
 		if (GetOwner() && GetOwner()->Classify() == CLASS_COMBINE && FClassnameIs(GetOwner(), "npc_combine_s"))	//hl2_episodic.GetBool() &&
@@ -409,8 +409,8 @@ bool CWeaponShotgun::Reload( void )
 	SendWeaponAnim( ACT_VM_RELOAD );
 
 	pOwner->m_flNextAttack = gpGlobals->curtime;
-	m_flNextPrimaryAttack = gpGlobals->curtime + SequenceDuration() - 0.04;	// Reload a bit faster
-	m_flNextSecondaryAttack = gpGlobals->curtime + SequenceDuration() - 0.04;
+	m_flNextPrimaryAttack = gpGlobals->curtime + SequenceDuration();	// Reload a bit faster
+	m_flNextSecondaryAttack = gpGlobals->curtime + SequenceDuration();
 	return true;
 }
 
@@ -435,8 +435,8 @@ void CWeaponShotgun::FinishReload( void )
 	SendWeaponAnim( ACT_SHOTGUN_RELOAD_FINISH );
 
 	pOwner->m_flNextAttack = gpGlobals->curtime;
-	m_flNextPrimaryAttack = gpGlobals->curtime + SequenceDuration() - 0.04;	// Finish a bit faster
-	m_flNextSecondaryAttack = gpGlobals->curtime + SequenceDuration() - 0.04;
+	m_flNextPrimaryAttack = gpGlobals->curtime + SequenceDuration() - 0.02;	// Finish a bit faster
+	m_flNextSecondaryAttack = gpGlobals->curtime + SequenceDuration() - 0.02;
 }
 
 //-----------------------------------------------------------------------------
@@ -526,8 +526,8 @@ void CWeaponShotgun::PrimaryAttack( void )
 	pPlayer->SetAnimation( PLAYER_ATTACK1 );
 
 	// Don't fire again until fire animation has completed
-	m_flNextPrimaryAttack = gpGlobals->curtime + 0.16f;	// 353 RPM
-	m_flNextSecondaryAttack = gpGlobals->curtime + 0.16f;
+	m_flNextPrimaryAttack = gpGlobals->curtime + 0.125f;	// 375 RPM
+	m_flNextSecondaryAttack = gpGlobals->curtime + 0.125f;
 //	m_flSoonestPrimaryAttack = gpGlobals->curtime + SequenceDuration();	// approx. 0.28f 214 RPM
 	m_iClip1 -= 1;
 
@@ -587,8 +587,8 @@ void CWeaponShotgun::SecondaryAttack( void )
 	pPlayer->SetAnimation( PLAYER_ATTACK1 );
 
 	// Don't fire again until fire animation has completed
-	m_flNextPrimaryAttack = gpGlobals->curtime + 0.16f;
-	m_flNextSecondaryAttack = gpGlobals->curtime + 0.16f;
+	m_flNextPrimaryAttack = gpGlobals->curtime + SequenceDuration() - 0.1;
+	m_flNextSecondaryAttack = gpGlobals->curtime + SequenceDuration() - 0.1;
 //	m_flSoonestPrimaryAttack = gpGlobals->curtime + SequenceDuration();
 	m_iClip1 -= 2;	// Shotgun uses same clip for primary and secondary attacks
 
@@ -643,6 +643,7 @@ void CWeaponShotgun::ItemPostFrame( void )
 		else if ((pOwner->m_nButtons & IN_ATTACK2) && (m_iClip1 >= 2))
 		{
 			m_bInReload = false;
+			if (!m_bNeedPump)
 			m_bDelayedFire2 = true;
 		}
 //		else if ((pOwner->m_nButtons & IN_RELOAD) && (m_flNextPrimaryAttack > gpGlobals->curtime))
@@ -657,17 +658,20 @@ void CWeaponShotgun::ItemPostFrame( void )
 				FinishReload();
 				return;
 			}
-			// If clip not full reload again
+			// If clip is not full and player holds reload button, reload again.
 			if (m_iClip1 < GetMaxClip1())
 			{
 				// Chamber a round
 				if ((m_bNeedPump) && (m_iClip1 == GetMaxClip1() - 1))
 				{
-					Pump();
+					FinishReload();
 					return;
 				}
+				else
+				{
 					Reload();
 					return;
+				}
 			}
 			// Clip full, stop reloading
 			else
@@ -689,7 +693,7 @@ void CWeaponShotgun::ItemPostFrame( void )
 		return;
 	}
 	
-	if (((pOwner->m_nButtons & IN_ATTACK2) | (pOwner->m_nButtons & IN_ATTACK)) && (m_flNextPrimaryAttack > gpGlobals->curtime))
+	if (((pOwner->m_nButtons & IN_ATTACK2) | (pOwner->m_nButtons & IN_ATTACK)) && (m_flNextSecondaryAttack > gpGlobals->curtime))
 	{
 		m_flNextPrimaryAttack = gpGlobals->curtime + 1.0f;
 	}
@@ -895,10 +899,10 @@ const WeaponProficiencyInfo_t *CWeaponShotgun::GetProficiencyValues()
 {
 	static WeaponProficiencyInfo_t proficiencyTable[] =
 	{
-		{ 1.00, 0.36 },	//poor	16.666
-		{ 1.00, 0.45 },	//average 13.333
+		{ 1.00, 0.30 },	//poor	20
+		{ 1.00, 0.40 },	//average 15
 		{ 1.00, 0.50 },	//good 12
-		{ 1.00, 0.60 },	//very good	10
+		{ 1.00, 0.75 },	//very good	8
 		{ 1.00, 1.00 },	//perfect 6
 	};
 
@@ -906,23 +910,3 @@ const WeaponProficiencyInfo_t *CWeaponShotgun::GetProficiencyValues()
 
 	return proficiencyTable;
 }
-
-//==================================================
-// Purpose: 
-//==================================================
-/*
-void CWeaponShotgun::WeaponIdle( void )
-{
-	//Only the player fires this way so we can cast
-	CBasePlayer *pPlayer = GetOwner()
-
-	if ( pPlayer == NULL )
-		return;
-
-	//If we're on a target, play the new anim
-	if ( pPlayer->IsOnTarget() )
-	{
-		SendWeaponAnim( ACT_VM_IDLE_ACTIVE );
-	}
-}
-*/

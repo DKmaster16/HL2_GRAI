@@ -546,10 +546,10 @@ const WeaponProficiencyInfo_t *CWeaponAR2::GetProficiencyValues()
 {
 	static WeaponProficiencyInfo_t proficiencyTable[] =
 	{
-		{ 3.50,		0.75	},	//poor 3.5/7
-		{ 2.50,		0.75	},	//average 2.5/5
-		{ 1.50,		0.75	},	//good 1.5/3
-		{ 1.00,		0.75	},	//very good 1/2
+		{ 6.00,		0.75	},	//poor 6/12
+		{ 4.50,		0.75	},	//average 4.5/9
+		{ 3.00,		0.75	},	//good 3/6
+		{ 2.00,		0.75	},	//very good 2/4
 		{ 1.00,		1.00	},	//perfect 1/2
 	};
 

@@ -41,12 +41,14 @@ int g_fCombineQuestion;				// true if an idle grunt asked a question. Cleared wh
 ConVar ai_combine_max_jump_rise("ai_combine_max_jump_rise", "64");
 ConVar ai_combine_max_jump_distance("ai_combine_max_jump_distance", "250");
 ConVar ai_combine_max_jump_drop("ai_combine_max_jump_drop", "192");
+ConVar sk_combine_grenade_throw_speed("sk_combine_grenade_throw_speed", "800");
+ConVar sk_combine_grenade_gravity_scale("sk_combine_grenade_gravity_scale", "1.0");
 
 #define COMBINE_SKIN_DEFAULT		0
 #define COMBINE_SKIN_SHOTGUNNER		1
 
 
-#define COMBINE_GRENADE_THROW_SPEED 650	// OLD: 650
+#define COMBINE_GRENADE_THROW_SPEED sk_combine_grenade_throw_speed.GetFloat()	// OLD: 650
 #define COMBINE_GRENADE_TIMER		3.5
 #define COMBINE_GRENADE_FLUSH_TIME	30.0		// Don't try to flush an enemy who has been out of sight for longer than this.
 #define COMBINE_GRENADE_FLUSH_DIST	512.0	// Don't try to flush an enemy who has moved farther than this distance from the last place I saw him.
@@ -2107,7 +2109,8 @@ int CNPC_Combine::SelectSchedule( void )
 	if ( m_NPCState != NPC_STATE_SCRIPT)
 	{
 		// If we're hit by bugbait, thrash around
-		if (HasCondition(COND_COMBINE_HIT_BY_BUGBAIT) && !g_pGameRules->IsSkillLevel(SKILL_HARD))
+		if (HasCondition(COND_COMBINE_HIT_BY_BUGBAIT) && (!g_pGameRules->IsSkillLevel(SKILL_HARD)
+			&& !g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL)))
 		{
 			// Don't do this if we're mounting a func_tank
 			if ( m_FuncTankBehavior.IsMounted() == true )
@@ -2329,7 +2332,8 @@ int CNPC_Combine::SelectFailSchedule( int failedSchedule, int failedTask, AI_Tas
 //-----------------------------------------------------------------------------
 bool CNPC_Combine::ShouldChargePlayer()
 {
-	return GetEnemy() && GetEnemy()->IsPlayer() && PlayerHasMegaPhysCannon() && !IsLimitingHintGroups() && !g_pGameRules->IsSkillLevel(SKILL_HARD);
+	return GetEnemy() && GetEnemy()->IsPlayer() && PlayerHasMegaPhysCannon() && !IsLimitingHintGroups() 
+		&& (!g_pGameRules->IsSkillLevel(SKILL_HARD) && !g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL));
 }
 
 
@@ -2607,7 +2611,8 @@ int CNPC_Combine::TranslateSchedule(int scheduleType)
 		if (m_pSquad)
 		{
 			// Have to explicitly check innate range attack condition as may have weapon with range attack 2
-			if (g_pGameRules->IsSkillLevel(SKILL_HARD) &&
+			if ((g_pGameRules->IsSkillLevel(SKILL_HARD)
+				|| g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL)) &&
 				HasCondition(COND_CAN_RANGE_ATTACK2) &&
 				OccupyStrategySlot(SQUAD_SLOT_GRENADE1))
 			{
@@ -2750,7 +2755,7 @@ int CNPC_Combine::TranslateSchedule(int scheduleType)
 		// stand up, just in case
 		// Stand();
 		// DesireStand();
-		if (g_pGameRules->IsSkillLevel(SKILL_HARD))
+		if (g_pGameRules->IsSkillLevel(SKILL_HARD) || g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL))
 		{
 			if (CanGrenadeEnemy() && OccupyStrategySlot(SQUAD_SLOT_GRENADE1))
 			{
@@ -2941,10 +2946,10 @@ void CNPC_Combine::HandleAnimEvent( animevent_t *pEvent )
 				fakeEvent.event = EVENT_WEAPON_AR2_ALTFIRE;
 				GetActiveWeapon()->Operator_HandleAnimEvent( &fakeEvent, this );
 
-				// Stop other squad members from combine balling for a while.
-
-				if (g_pGameRules->IsSkillLevel(SKILL_HARD))
-					DelaySquadAltFireAttack(5.0f);	//hard
+				// Stop other squad members from combine balling for a while.	
+				if (g_pGameRules->IsSkillLevel(SKILL_HARD)
+					|| g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL))
+					DelaySquadAltFireAttack(5.0f);	//hard and diabolical
 				else
 					DelaySquadAltFireAttack(10.0f);	//normal and easy
 
@@ -3024,12 +3029,10 @@ void CNPC_Combine::HandleAnimEvent( animevent_t *pEvent )
 					m_iNumGrenades--;
 				}
 
-				if (g_pGameRules->IsSkillLevel(SKILL_HARD))
+				if (g_pGameRules->IsSkillLevel(SKILL_HARD) || g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL))
 					m_flNextGrenadeCheck = gpGlobals->curtime + 2;// wait two seconds on hard skill level
-				else if (g_pGameRules->IsSkillLevel(SKILL_EASY))
-					m_flNextGrenadeCheck = gpGlobals->curtime + 6;// wait six seconds before even looking again to see if a grenade can be thrown.
 				else
-					m_flNextGrenadeCheck = gpGlobals->curtime + 4;// wait four 
+					m_flNextGrenadeCheck = gpGlobals->curtime + 6;// wait four seconds before even looking again to see if a grenade can be thrown.
 			}
 			handledEvent = true;
 			break;
@@ -3479,7 +3482,8 @@ bool CNPC_Combine::CheckCanThrowGrenade( const Vector &vecTarget )
 	Vector vecMaxs = Vector(4,4,4);
 	if( FInViewCone( vecTarget ) && CBaseEntity::FVisible( vecTarget ) )
 	{
-		vecToss = VecCheckThrow( this, EyePosition(), vecTarget, COMBINE_GRENADE_THROW_SPEED, 1.0, &vecMins, &vecMaxs );
+		vecToss = VecCheckThrow( this, EyePosition(), vecTarget, COMBINE_GRENADE_THROW_SPEED, 
+			sk_combine_grenade_gravity_scale.GetFloat(), &vecMins, &vecMaxs );
 	}
 	else
 	{
@@ -3491,7 +3495,8 @@ bool CNPC_Combine::CheckCanThrowGrenade( const Vector &vecTarget )
 			return false;
 		}
 
-		vecToss = VecCheckToss( this, EyePosition(), vecTarget, -1, 1.0, true, &vecMins, &vecMaxs );
+		vecToss = VecCheckToss( this, EyePosition(), vecTarget, -1, 
+			sk_combine_grenade_gravity_scale.GetFloat(), true, &vecMins, &vecMaxs );
 	}
 
 	if ( vecToss != vec3_origin )
@@ -3515,6 +3520,9 @@ bool CNPC_Combine::CheckCanThrowGrenade( const Vector &vecTarget )
 bool CNPC_Combine::CanAltFireEnemy( bool bUseFreeKnowledge )
 {
 	if (!IsElite() && !IsGuard() && FClassnameIs(GetActiveWeapon(), "weapon_ar2"))
+		return false;
+	
+	if (g_pGameRules->IsSkillLevel(SKILL_EASY) && IsGuard())
 		return false;
 
 	if (HasShotgun())
@@ -3551,7 +3559,7 @@ bool CNPC_Combine::CanAltFireEnemy( bool bUseFreeKnowledge )
 	// Determine what point we're shooting at
 	if( bUseFreeKnowledge )
 	{
-		vecTarget = GetEnemies()->LastKnownPosition(pEnemy) + (pEnemy->GetViewOffset()*0.75);// approximates the chest
+		vecTarget = GetEnemies()->LastKnownPosition( pEnemy ) + (pEnemy->GetViewOffset()*0.75);// approximates the chest
 	}
 	else
 	{
@@ -3572,13 +3580,13 @@ bool CNPC_Combine::CanAltFireEnemy( bool bUseFreeKnowledge )
 	}
 
 	// Trace a hull about the size of the combine ball.
-	UTIL_TraceHull( vShootPosition, vecTarget, mins, maxs, MASK_SHOT, this, COLLISION_GROUP_NONE, &tr );
+	UTIL_TraceHull( vShootPosition, vecTarget, mins, maxs, (MASK_SOLID_BRUSHONLY&(~CONTENTS_GRATE)), this, COLLISION_GROUP_NONE, &tr );
 
 	float flLength = (vShootPosition - vecTarget).Length();
 
 	flLength *= tr.fraction;
-	//If the ball can travel 90% of the distance to the player then let the NPC shoot it. 
-	if (tr.fraction >= 0.90 && (!tr.m_pEnt || !tr.m_pEnt->IsWorld()))	// (!tr.m_pEnt || !tr.m_pEnt->IsWorld()) && Thanks to Mapbase //&& flLength > 128.0f
+	//If the ball can travel 100% of the distance to the player then let the NPC shoot it. 
+	if (tr.fraction >= 1.0 && (!tr.m_pEnt || !tr.m_pEnt->IsWorld()))	// (!tr.m_pEnt || !tr.m_pEnt->IsWorld()) && Thanks to Mapbase //&& flLength > 128.0f
 	{
 		// Target is valid
 		m_vecAltFireTarget = vecTarget;
@@ -3618,7 +3626,7 @@ bool CNPC_Combine::CanAltFireEnemy( bool bUseFreeKnowledge )
 //-----------------------------------------------------------------------------
 bool CNPC_Combine::CanGrenadeEnemy( bool bUseFreeKnowledge )
 {
-	if( IsElite() )
+	if( IsElite() && g_pGameRules->IsSkillLevel(SKILL_EASY) )
 		return false;
 
 	CBaseEntity *pEnemy = GetEnemy();
@@ -3634,12 +3642,12 @@ bool CNPC_Combine::CanGrenadeEnemy( bool bUseFreeKnowledge )
 		if( bUseFreeKnowledge )
 		{
 			// throw to where we think they are.
-			return CanThrowGrenade( GetEnemies()->LastKnownPosition( pEnemy ) );
+			return CanThrowGrenade( GetEnemies()->LastKnownPosition( pEnemy ) + ( pEnemy->GetViewOffset() * 0.75 ) );
 		}
 		else
 		{
 			// hafta throw to where we last saw them.
-			return CanThrowGrenade( GetEnemies()->LastSeenPosition( pEnemy ) );
+			return CanThrowGrenade( GetEnemies()->LastSeenPosition( pEnemy ) + ( pEnemy->GetViewOffset() * 0.75 ) );
 		}
 	}
 
@@ -3903,32 +3911,32 @@ WeaponProficiency_t CNPC_Combine::CalcWeaponProficiency(CBaseCombatWeapon *pWeap
 {
 	if (IsElite())
 	{
-		if (g_pGameRules->IsSkillLevel(SKILL_HARD))
+		if (g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL))
 		{
-			return WEAPON_PROFICIENCY_VERY_GOOD;	// 2/6
+			return WEAPON_PROFICIENCY_VERY_GOOD;	// 2/4
 		}
-		else if (g_pGameRules->IsSkillLevel(SKILL_EASY))
+		else if (g_pGameRules->IsSkillLevel(SKILL_HARD))
 		{
-			return WEAPON_PROFICIENCY_AVERAGE;		// 3/9
+			return WEAPON_PROFICIENCY_GOOD;		// 4.5/9
 		}
 		else
 		{
-			return WEAPON_PROFICIENCY_GOOD;			// 2.4/7.2
+			return WEAPON_PROFICIENCY_AVERAGE;			// 3/6
 		}
 	}
 	else if (FClassnameIs(pWeapon, "weapon_ar2"))
 	{
-		if (g_pGameRules->IsSkillLevel(SKILL_EASY))
+		if (g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL))
 		{
-			return WEAPON_PROFICIENCY_POOR;		// 4/12
+			return WEAPON_PROFICIENCY_GOOD;		// 6/12
 		}
-		else if (g_pGameRules->IsSkillLevel(SKILL_MEDIUM))
+		else if (g_pGameRules->IsSkillLevel(SKILL_HARD))
 		{
-			return WEAPON_PROFICIENCY_AVERAGE;		// 3/9
+			return WEAPON_PROFICIENCY_AVERAGE;		// 4.5/9
 		}
 		else
 		{
-			return WEAPON_PROFICIENCY_GOOD;	// 2.4/7.2
+			return WEAPON_PROFICIENCY_POOR;	// 3/6
 		}
 	}
 	else if (FClassnameIs(pWeapon, "weapon_shotgun"))
@@ -3937,32 +3945,32 @@ WeaponProficiency_t CNPC_Combine::CalcWeaponProficiency(CBaseCombatWeapon *pWeap
 		{
 			m_nSkin = COMBINE_SKIN_SHOTGUNNER;
 		}
-		if (g_pGameRules->IsSkillLevel(SKILL_HARD))
+		if (g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL))
 		{
 			return WEAPON_PROFICIENCY_VERY_GOOD;
 		}
-		else if (g_pGameRules->IsSkillLevel(SKILL_EASY))
+		else if (g_pGameRules->IsSkillLevel(SKILL_HARD))
 		{
-			return WEAPON_PROFICIENCY_AVERAGE;
+			return WEAPON_PROFICIENCY_GOOD;
 		}
 		else
 		{
-			return WEAPON_PROFICIENCY_GOOD;	
+			return WEAPON_PROFICIENCY_AVERAGE;	
 		}
 	}
 	else if (FClassnameIs(pWeapon, "weapon_smg1"))
 	{
-		if (g_pGameRules->IsSkillLevel(SKILL_HARD))
+		if (g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL))
 		{
-			return WEAPON_PROFICIENCY_VERY_GOOD;	// 2/6
+			return WEAPON_PROFICIENCY_VERY_GOOD;	// 4/8
 		}
-		else if (g_pGameRules->IsSkillLevel(SKILL_EASY))
+		else if (g_pGameRules->IsSkillLevel(SKILL_HARD))
 		{
-			return WEAPON_PROFICIENCY_AVERAGE;			// 8.25/13.2
+			return WEAPON_PROFICIENCY_GOOD;			// 8/16
 		}
 		else
 		{
-			return WEAPON_PROFICIENCY_GOOD;			// 6.25/10
+			return WEAPON_PROFICIENCY_AVERAGE;			// 6/12
 		}
 	}
 

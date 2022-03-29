@@ -86,7 +86,7 @@ public:
 	int			m_nCommentary;
 	int			m_nHDR;
 	int			m_nCaptions;
-	int			m_nSkill[ 3 ];
+	int			m_nSkill[ 4 ];	// was 3
 	bool		m_bSteam;
 	bool		m_bCyberCafe;
 	int			m_nDeaths;

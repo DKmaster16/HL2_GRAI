@@ -2564,14 +2564,8 @@ int CNPC_Strider::MeleeAttack1Conditions( float flDot, float flDist )
 		return COND_NONE;
 
 	// No more stabbing players... unless?
-	if ( pEnemy->IsPlayer() )	
-	{
-		if (HasSpawnFlags(SF_CAN_STOMP_PLAYER) || g_pGameRules->IsSkillLevel(SKILL_HARD)) // Always stomp on hard
-		{
-			return SCHED_MELEE_ATTACK1;
-		}
-	}
-	else
+	if (pEnemy->IsPlayer() && HasSpawnFlags(SF_CAN_STOMP_PLAYER) && 
+		(!g_pGameRules->IsSkillLevel(SKILL_HARD) && !g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL))) // Always stomp on hard	
 	{
 		return COND_NONE;
 	}
@@ -2815,7 +2809,7 @@ void CNPC_Strider::DoImpactEffect( trace_t &tr, int nDamageType )
 		if( UTIL_PointContents( vecReTrace ) == CONTENTS_EMPTY )
 		{
 			AI_TraceLine( vecReTrace, vecReTrace - vecDir * 24, MASK_SHOT, NULL, COLLISION_GROUP_NONE, &retrace );
-
+			CSoundEnt::InsertSound(SOUND_DANGER | SOUND_CONTEXT_REACT_TO_SOURCE, tr.endpos, 120.0f, 0.3f, this);
 			BaseClass::DoImpactEffect( retrace, nDamageType );
 		}
 	}
@@ -3124,17 +3118,17 @@ int CNPC_Strider::OnTakeDamage_Alive( const CTakeDamageInfo &info )
 
 			if( bPlayer )
 			{
-				if( g_pGameRules->IsSkillLevel(SKILL_EASY) )
-				{
-					damage = GetMaxHealth() / sk_strider_num_missiles1.GetFloat();
-				}
-				else if( g_pGameRules->IsSkillLevel(SKILL_HARD) )
+				if( g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL) )
 				{
 					damage = GetMaxHealth() / sk_strider_num_missiles3.GetFloat();
 				}
-				else // Medium, or unspecified
+				else if( g_pGameRules->IsSkillLevel(SKILL_HARD) )
 				{
 					damage = GetMaxHealth() / sk_strider_num_missiles2.GetFloat();
+				}
+				else 
+				{
+					damage = GetMaxHealth() / sk_strider_num_missiles1.GetFloat();
 				}
 			}
 
@@ -3834,7 +3828,9 @@ void CNPC_Strider::ShootMinigun( const Vector *pTarget, float aimError, const Ve
 		Vector vecShootDir = *pTarget - muzzlePos;
 		VectorNormalize( vecShootDir );
 		
-		FireBulletsInfo_t info(1, muzzlePos, vecShootDir, vecSpread, MAX_COORD_RANGE, m_miniGunDirectAmmo);
+		Vector vecShootDirFinal = GetActualShootPosition(vecShootDir);
+
+		FireBulletsInfo_t info(1, muzzlePos, vecShootDirFinal, vecSpread, MAX_COORD_RANGE, m_miniGunDirectAmmo);
 		info.m_iTracerFreq = 1;
 		info.m_nFlags = AMMO_DARK_ENERGY;
 
@@ -3900,20 +3896,8 @@ float CNPC_Strider::GetMinigunRateOfFire()
 {
 	if (IsUsingAggressiveBehavior() && m_bMinigunUseDirectFire)
 	{
-		if (g_pGameRules->IsSkillLevel(SKILL_EASY) && m_iHealth <= (GetMaxHealth() / sk_strider_num_missiles1.GetFloat())
-			|| g_pGameRules->IsSkillLevel(SKILL_HARD) && m_iHealth <= (GetMaxHealth() / sk_strider_num_missiles3.GetFloat())
-			|| g_pGameRules->IsSkillLevel(SKILL_MEDIUM) && m_iHealth <= (GetMaxHealth() / sk_strider_num_missiles2.GetFloat()))
-		{
-			return STRIDER_EP1_RATE_OF_FIRE * 0.5f;
-		}
 		return STRIDER_EP1_RATE_OF_FIRE;
 	}
-		if (g_pGameRules->IsSkillLevel(SKILL_EASY) && m_iHealth <= (GetMaxHealth() / sk_strider_num_missiles1.GetFloat())
-			|| g_pGameRules->IsSkillLevel(SKILL_HARD) && m_iHealth <= (GetMaxHealth() / sk_strider_num_missiles3.GetFloat())
-			|| g_pGameRules->IsSkillLevel(SKILL_MEDIUM) && m_iHealth <= (GetMaxHealth() / sk_strider_num_missiles2.GetFloat()))
-		{
-			return STRIDER_DEFAULT_RATE_OF_FIRE * 0.5f;
-		}
 	return STRIDER_DEFAULT_RATE_OF_FIRE;
 }
 

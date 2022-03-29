@@ -991,7 +991,7 @@ void CFastZombie::AlertSound( void )
 #define FASTZOMBIE_MAXLEAP			300
 float CFastZombie::InnateRange1MaxRange( void ) 
 { 
-	if (g_pGameRules->IsSkillLevel(SKILL_HARD))
+	if (g_pGameRules->IsSkillLevel(SKILL_HARD) || g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL))
 	{
 		return (FASTZOMBIE_MAXLEAP * 2);
 	}
@@ -1038,7 +1038,7 @@ int CFastZombie::RangeAttack1Conditions( float flDot, float flDist )
 		return COND_TOO_FAR_TO_ATTACK;
 	}
 
-	if ((g_pGameRules->IsSkillLevel(SKILL_HARD)) && (flDist < FASTZOMBIE_MINLEAP * 0.5))
+	if ((g_pGameRules->IsSkillLevel(SKILL_HARD) || g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL)) && (flDist < FASTZOMBIE_MINLEAP * 0.5))
 	{
 		return COND_NONE;
 	}
@@ -1461,7 +1461,7 @@ int CFastZombie::TranslateSchedule( int scheduleType )
 		{
 			return SCHED_FASTZOMBIE_TORSO_MELEE_ATTACK1;
 		}
-		else if (g_pGameRules->IsSkillLevel(SKILL_HARD))
+		else if (g_pGameRules->IsSkillLevel(SKILL_HARD) || g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL))
 		{
 			return SCHED_FASTZOMBIE_MELEE_ATTACK3;
 		}

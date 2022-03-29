@@ -12,10 +12,22 @@
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
+ConVar sk_dynamic_resupply_modifier("sk_dynamic_resupply_modifier", "1.0");
+ConVar sk_dynamic_resupply_variation("sk_dynamic_resupply_variation", "0.1");
 
-ConVar sk_dynamic_resupply_modifier1("sk_dynamic_resupply_modifier1", "1.20");
-ConVar sk_dynamic_resupply_modifier2("sk_dynamic_resupply_modifier2", "0.80");
-ConVar sk_dynamic_resupply_modifier3("sk_dynamic_resupply_modifier3", "0.60");
+ConVar sk_dynamic_resupply_health("sk_dynamic_resupply_health", "1.0");
+ConVar sk_dynamic_resupply_armor("sk_dynamic_resupply_armor", "0.3");
+
+ConVar sk_dynamic_resupply_ammo_pistol("sk_dynamic_resupply_ammo_pistol", "0.5");
+ConVar sk_dynamic_resupply_ammo_smg1("sk_dynamic_resupply_ammo_smg1", "0.5");
+ConVar sk_dynamic_resupply_ammo_smg1_alt("sk_dynamic_resupply_ammo_smg1_alt", "0.1");
+ConVar sk_dynamic_resupply_ammo_ar2("sk_dynamic_resupply_ammo_ar2", "0.4");
+ConVar sk_dynamic_resupply_ammo_shotgun("sk_dynamic_resupply_ammo_shotgun", "0.5");
+ConVar sk_dynamic_resupply_ammo_rpg("sk_dynamic_resupply_ammo_rpg", "0");
+ConVar sk_dynamic_resupply_ammo_grenade("sk_dynamic_resupply_ammo_grenade", "0.1");
+ConVar sk_dynamic_resupply_ammo_357("sk_dynamic_resupply_ammo_357", "0.1");
+ConVar sk_dynamic_resupply_ammo_crossbow("sk_dynamic_resupply_ammo_crossbow", "0");
+ConVar sk_dynamic_resupply_ammo_ar2_alt("sk_dynamic_resupply_ammo_ar2_alt", "0");
 
 extern ConVar sk_battery;
 extern ConVar sk_healthkit;
@@ -49,16 +61,16 @@ static DynamicResupplyItems_t g_DynamicResupplyHealthItems[] =
 // Ammo types
 static DynamicResupplyItems_t g_DynamicResupplyAmmoItems[] =
 {
-	{ "item_ammo_pistol",			"Pistol",		SIZE_AMMO_PISTOL,		0.5f },
-	{ "item_ammo_smg1",				"SMG1",			SIZE_AMMO_SMG1,			0.4f },
-	{ "item_ammo_smg1_grenade",		"SMG1_Grenade", SIZE_AMMO_SMG1_GRENADE, 0.0f },
-	{ "item_ammo_ar2",				"AR2",			SIZE_AMMO_AR2,			0.0f },
-	{ "item_box_buckshot",			"Buckshot",		SIZE_AMMO_BUCKSHOT,		0.0f },
-	{ "item_rpg_round",				"RPG_Round",	SIZE_AMMO_RPG_ROUND,	0.0f },
-	{ "weapon_frag",				"Grenade",		1,						0.1f },
-	{ "item_ammo_357",				"357",			SIZE_AMMO_357,			0.0f },
-	{ "item_ammo_crossbow",			"XBowBolt",		SIZE_AMMO_CROSSBOW,		0.0f },
-	{ "item_ammo_ar2_altfire",		"AR2AltFire",	SIZE_AMMO_AR2_ALTFIRE,	0.0f },
+	{ "item_ammo_pistol",			"Pistol",		SIZE_AMMO_PISTOL,		sk_dynamic_resupply_ammo_pistol.GetFloat() },
+	{ "item_ammo_smg1",				"SMG1",			SIZE_AMMO_SMG1,			sk_dynamic_resupply_ammo_smg1.GetFloat() },
+	{ "item_ammo_smg1_grenade",		"SMG1_Grenade", SIZE_AMMO_SMG1_GRENADE, sk_dynamic_resupply_ammo_smg1_alt.GetFloat() },
+	{ "item_ammo_ar2",				"AR2",			SIZE_AMMO_AR2,			sk_dynamic_resupply_ammo_ar2.GetFloat() },
+	{ "item_box_buckshot",			"Buckshot",		SIZE_AMMO_BUCKSHOT,		sk_dynamic_resupply_ammo_shotgun.GetFloat() },
+	{ "item_rpg_round",				"RPG_Round",	SIZE_AMMO_RPG_ROUND,	sk_dynamic_resupply_ammo_rpg.GetFloat() },
+	{ "weapon_frag",				"Grenade",		1,						sk_dynamic_resupply_ammo_grenade.GetFloat() },
+	{ "item_ammo_357",				"357",			SIZE_AMMO_357,			sk_dynamic_resupply_ammo_357.GetFloat() },
+	{ "item_ammo_crossbow",			"XBowBolt",		SIZE_AMMO_CROSSBOW,		sk_dynamic_resupply_ammo_crossbow.GetFloat() },
+	{ "item_ammo_ar2_altfire",		"AR2AltFire",	SIZE_AMMO_AR2_ALTFIRE,	sk_dynamic_resupply_ammo_ar2_alt.GetFloat() },
 };
 
 #define DS_HEALTH_INDEX		0
@@ -172,18 +184,18 @@ CItem_DynamicResupply::CItem_DynamicResupply( void )
 	m_version = VERSION_CURRENT;
 
 	// Setup default values
-	m_flDesiredHealth[0] = 1.0;	// Health
-	m_flDesiredHealth[1] = 0.3;	// Armor
-	m_flDesiredAmmo[0] = 0.5;	// Pistol
-	m_flDesiredAmmo[1] = 0.5;	// SMG1
-	m_flDesiredAmmo[2] = 0.1;	// SMG1 Grenade
-	m_flDesiredAmmo[3] = 0.4;	// AR2
-	m_flDesiredAmmo[4] = 0.5;	// Shotgun
-	m_flDesiredAmmo[5] = 0.0;	// RPG Round
-	m_flDesiredAmmo[6] = 0.1;	// Grenade
-	m_flDesiredAmmo[7] = 0.25;	// 357
-	m_flDesiredAmmo[8] = 0;		// Crossbow
-	m_flDesiredAmmo[9] = 0;		// AR2 alt-fire
+	m_flDesiredHealth[0] = sk_dynamic_resupply_health.GetFloat();	// Health
+	m_flDesiredHealth[1] = sk_dynamic_resupply_armor.GetFloat();	// Armor
+	m_flDesiredAmmo[0] = sk_dynamic_resupply_ammo_pistol.GetFloat();	// Pistol
+	m_flDesiredAmmo[1] = sk_dynamic_resupply_ammo_smg1.GetFloat();		// SMG1
+	m_flDesiredAmmo[2] = sk_dynamic_resupply_ammo_smg1_alt.GetFloat();	// SMG1 Grenade
+	m_flDesiredAmmo[3] = sk_dynamic_resupply_ammo_ar2.GetFloat();		// AR2
+	m_flDesiredAmmo[4] = sk_dynamic_resupply_ammo_shotgun.GetFloat();	// Shotgun
+	m_flDesiredAmmo[5] = sk_dynamic_resupply_ammo_rpg.GetFloat();		// RPG Round
+	m_flDesiredAmmo[6] = sk_dynamic_resupply_ammo_grenade.GetFloat();	// Grenade
+	m_flDesiredAmmo[7] = sk_dynamic_resupply_ammo_357.GetFloat();		// 357
+	m_flDesiredAmmo[8] = sk_dynamic_resupply_ammo_crossbow.GetFloat();	// Crossbow
+	m_flDesiredAmmo[9] = sk_dynamic_resupply_ammo_ar2_alt.GetFloat();	// AR2 alt-fire
 }
 
 
@@ -465,24 +477,10 @@ void CItem_DynamicResupply::ComputeHealthRatios( CItem_DynamicResupply* pMaster,
 			}
 		}
 
-		if (g_pGameRules->IsSkillLevel(SKILL_EASY))
-		{
-			pSpawnInfo[i].m_flDesiredRatio = pMaster->m_flDesiredHealth[i] * sk_dynamic_resupply_modifier1.GetFloat();
-			pSpawnInfo[i].m_flDelta = pSpawnInfo[i].m_flDesiredRatio - pSpawnInfo[i].m_flCurrentRatio;
-			pSpawnInfo[i].m_flDelta = clamp(pSpawnInfo[i].m_flDelta, 0, 1);
-		}
-		else if (g_pGameRules->IsSkillLevel(SKILL_HARD))
-		{
-			pSpawnInfo[i].m_flDesiredRatio = pMaster->m_flDesiredHealth[i] * sk_dynamic_resupply_modifier3.GetFloat();
-			pSpawnInfo[i].m_flDelta = pSpawnInfo[i].m_flDesiredRatio - pSpawnInfo[i].m_flCurrentRatio;
-			pSpawnInfo[i].m_flDelta = clamp(pSpawnInfo[i].m_flDelta, 0, 1);
-		}
-		else
-		{
-			pSpawnInfo[i].m_flDesiredRatio = pMaster->m_flDesiredHealth[i] * sk_dynamic_resupply_modifier2.GetFloat();
-			pSpawnInfo[i].m_flDelta = pSpawnInfo[i].m_flDesiredRatio - pSpawnInfo[i].m_flCurrentRatio;
-			pSpawnInfo[i].m_flDelta = clamp(pSpawnInfo[i].m_flDelta, 0, 1);
-		}
+		pSpawnInfo[i].m_flDesiredRatio = pMaster->m_flDesiredHealth[i] * sk_dynamic_resupply_modifier.GetFloat() 
+			+ RandomFloat(-sk_dynamic_resupply_variation.GetFloat(), sk_dynamic_resupply_variation.GetFloat());
+		pSpawnInfo[i].m_flDelta = pSpawnInfo[i].m_flDesiredRatio - pSpawnInfo[i].m_flCurrentRatio;
+		pSpawnInfo[i].m_flDelta = clamp(pSpawnInfo[i].m_flDelta, 0, 1);
 	}
 
 	if ( iDebug )
@@ -522,24 +520,14 @@ void CItem_DynamicResupply::ComputeAmmoRatios( CItem_DynamicResupply* pMaster, C
 		}
 
 		// Use the master if we're supposed to
-		if (g_pGameRules->IsSkillLevel(SKILL_EASY))
-		{
-			pSpawnInfo[i].m_flDesiredRatio = pMaster->m_flDesiredAmmo[i] * sk_dynamic_resupply_modifier1.GetFloat();
-			pSpawnInfo[i].m_flDelta = pSpawnInfo[i].m_flDesiredRatio - pSpawnInfo[i].m_flCurrentRatio;
-			pSpawnInfo[i].m_flDelta = clamp(pSpawnInfo[i].m_flDelta, 0, 1);
-		}
-		else if (g_pGameRules->IsSkillLevel(SKILL_HARD))
-		{
-			pSpawnInfo[i].m_flDesiredRatio = pMaster->m_flDesiredAmmo[i] * sk_dynamic_resupply_modifier3.GetFloat();
-			pSpawnInfo[i].m_flDelta = pSpawnInfo[i].m_flDesiredRatio - pSpawnInfo[i].m_flCurrentRatio;
-			pSpawnInfo[i].m_flDelta = clamp(pSpawnInfo[i].m_flDelta, 0, 1);
-		}
+		if (pMaster->m_flDesiredAmmo[i] == 5 || pMaster->m_flDesiredAmmo[i] == 8 || pMaster->m_flDesiredAmmo[i] == 9)	// RPG, Crossbow and ar2 altfire exceptions
+			pSpawnInfo[i].m_flDesiredRatio = pMaster->m_flDesiredAmmo[i] * sk_dynamic_resupply_modifier.GetFloat();
 		else
-		{
-			pSpawnInfo[i].m_flDesiredRatio = pMaster->m_flDesiredAmmo[i] * sk_dynamic_resupply_modifier2.GetFloat();
-			pSpawnInfo[i].m_flDelta = pSpawnInfo[i].m_flDesiredRatio - pSpawnInfo[i].m_flCurrentRatio;
-			pSpawnInfo[i].m_flDelta = clamp(pSpawnInfo[i].m_flDelta, 0, 1);
-		}
+			pSpawnInfo[i].m_flDesiredRatio = pMaster->m_flDesiredAmmo[i] * sk_dynamic_resupply_modifier.GetFloat() 
+			+ RandomFloat(-sk_dynamic_resupply_variation.GetFloat(), sk_dynamic_resupply_variation.GetFloat());
+		pSpawnInfo[i].m_flDelta = pSpawnInfo[i].m_flDesiredRatio - pSpawnInfo[i].m_flCurrentRatio;
+		pSpawnInfo[i].m_flDelta = clamp(pSpawnInfo[i].m_flDelta, 0, 1);
+
 	}
 
 	if ( iDebug )

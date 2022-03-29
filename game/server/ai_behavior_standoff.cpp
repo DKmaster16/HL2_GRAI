@@ -263,8 +263,24 @@ void CAI_StandoffBehavior::SetParameters( const AI_StandoffParams_t &params, CAI
 	m_vecStandoffGoalPosition = GOAL_POSITION_INVALID;
 	if ( GetOuter() && GetOuter()->GetShotRegulator() )
 	{
-		GetOuter()->GetShotRegulator()->SetBurstShotCountRange( m_params.minShots, m_params.maxShots );
-		GetOuter()->GetShotRegulator()->SetRestInterval( m_params.minTimeShots, m_params.maxTimeShots );
+		if (GetOuter()->GetActiveWeapon()->ClassMatches("weapon_shotgun") || GetOuter()->GetActiveWeapon()->ClassMatches("weapon_357"))
+		{
+			if (m_params.minTimeShots < 0.3f)
+			{
+				m_params.minTimeShots = 0.3f;
+			}
+			if (m_params.maxTimeShots < m_params.minTimeShots)
+			{
+				m_params.minTimeShots = m_params.minTimeShots;
+			}
+			GetOuter()->GetShotRegulator()->SetBurstShotCountRange(1, 1);
+			GetOuter()->GetShotRegulator()->SetRestInterval(m_params.minTimeShots, m_params.maxTimeShots);
+		}
+		else
+		{
+			GetOuter()->GetShotRegulator()->SetBurstShotCountRange(m_params.minShots, m_params.maxShots);
+			GetOuter()->GetShotRegulator()->SetRestInterval(m_params.minTimeShots, m_params.maxTimeShots);
+		}
 	}
 }
 
@@ -1176,8 +1192,8 @@ AI_StandoffParams_t g_StandoffParamsByAgression[] =
 	{ 	AIHCR_MOVE_ON_COVER,	true,			true, 			4.0, 			8.0, 			2, 			4, 			50,			false,	30 		},	// AGGR_VERY_LOW
 	{ 	AIHCR_MOVE_ON_COVER,	true,			true, 			2.0, 			5.0, 			3, 			5, 			25,			false, 	20		},	// AGGR_LOW
 	{ 	AIHCR_MOVE_ON_COVER,	true,			true, 			0.6, 			2.5, 			3, 			6, 			25,			false, 	10		},	// AGGR_MEDIUM
-	{ 	AIHCR_MOVE_ON_COVER,	true,			true, 			0.2, 			1.5, 			5, 			8, 			10,			false, 	10		},	// AGGR_HIGH
-	{ 	AIHCR_MOVE_ON_COVER,	false,			true, 			0, 				0, 				100,		100, 		0,			false, 	5		},	// AGGR_VERY_HIGH
+	{ 	AIHCR_MOVE_ON_COVER,	true,			true, 			0.2, 			1.5, 			6, 			12, 		10,			false, 	10		},	// AGGR_HIGH
+	{ 	AIHCR_MOVE_ON_COVER,	false,			true, 			0,				0, 				40,			40, 		0,			false, 	5		},	// AGGR_VERY_HIGH
 };
 
 //-------------------------------------

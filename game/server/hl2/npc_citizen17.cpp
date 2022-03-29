@@ -1439,7 +1439,8 @@ int CNPC_Citizen::TranslateSchedule( int scheduleType )
 	{
 	case SCHED_IDLE_STAND:
 	case SCHED_ALERT_STAND:
-		if( m_NPCState != NPC_STATE_COMBAT && pLocalPlayer && !pLocalPlayer->IsAlive() && CanJoinPlayerSquad() )
+	case SCHED_COMBAT_STAND:
+		if( pLocalPlayer && !pLocalPlayer->IsAlive() && CanJoinPlayerSquad() )	//m_NPCState != NPC_STATE_COMBAT && 
 		{
 			// Player is dead! 
 			float flDist;

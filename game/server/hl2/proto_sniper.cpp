@@ -84,7 +84,7 @@ ConVar sniper_alyx_laser("sniper_alyx_laser", "1");
 #define	SNIPER_DEFAULT_PAINT_NPC_TIME_NOISE		0.75f
 #endif
 
-#define SNIPER_SUBSEQUENT_PAINT_TIME	( ( g_pGameRules->IsSkillLevel(SKILL_HARD) ) ? 0.3f : 0.4f )
+#define SNIPER_SUBSEQUENT_PAINT_TIME	( ( g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL) ) ? 0.3f : 0.4f )
 
 #define SNIPER_FOG_PAINT_ENEMY_TIME	    0.25f
 #define SNIPER_PAINT_DECOY_TIME			2.0f
@@ -653,7 +653,7 @@ void CProtoSniper::LaserOn( const Vector &vecTarget, const Vector &vecDeviance )
 			m_pBeam = CBeam::BeamCreate("effects/laser1.vmt", 1.5f);
 			m_pBeam->SetColor(255, 175, 0);	// Paint her laser orange
 		} 
-		else if (!g_pGameRules->IsSkillLevel(SKILL_HARD))	// && pPlayer->IRelationType(this) != D_LI
+		else if (!g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL))	// && pPlayer->IRelationType(this) != D_LI
 		{
 			m_pBeam = CBeam::BeamCreate("effects/bluelaser1.vmt", 1.0f);
 			m_pBeam->SetColor(0, 100, 255);
@@ -684,7 +684,7 @@ void CProtoSniper::LaserOn( const Vector &vecTarget, const Vector &vecDeviance )
 	
 	// The beam is backwards, sortof. The endpoint is the sniper. This is
 	// so that the beam can be tapered to very thin where it emits from the sniper.
-	if (relation == D_LI || !g_pGameRules->IsSkillLevel(SKILL_HARD))
+	if (relation == D_LI || !g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL))
 	{
 		m_pBeam->PointsInit(vecInitialAim, GetBulletOrigin());
 		m_pBeam->SetBrightness(255);
@@ -850,7 +850,7 @@ void CProtoSniper::PaintTarget( const Vector &vecTarget, float flPaintTime )
 	Disposition_t relation = IRelationType(pPlayer);
 
 	UTIL_TraceLine( vecStart, vecStart + vecCurrentDir * 8192, MASK_SHOT, this, COLLISION_GROUP_NONE, &tr );
-	if (relation == D_LI || !g_pGameRules->IsSkillLevel(SKILL_HARD))
+	if (relation == D_LI || !g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL))
 	{
 		m_pBeam->SetStartPos(tr.endpos);
 		m_pBeam->RelinkBeam();
@@ -2074,7 +2074,7 @@ void CProtoSniper::StartTask( const Task_t *pTask )
 				;
 
 				// Faster target acquisition
-				if (g_pGameRules->IsSkillLevel(SKILL_HARD))
+				if (g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL))
 				{
 					m_flPaintTime *= sk_sniper_diabolical_paint_scale.GetFloat();
 				}

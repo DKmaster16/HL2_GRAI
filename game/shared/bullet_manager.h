@@ -30,13 +30,10 @@ class CSimulatedBullet
 {
 public:
 	CSimulatedBullet();
-	CSimulatedBullet(FireBulletsInfo_t info, Vector newdir, CBaseEntity *pInfictor, CBaseEntity *pAdditionalIgnoreEnt,
-		bool bTraceHull
-//#ifndef CLIENT_DLL
-//		, CBaseEntity *pCaller
-//#endif
-		);
+	CSimulatedBullet(FireBulletsInfo_t info, Vector newdir, CBaseEntity *pInfictor, 
+		CBaseEntity *pAdditionalIgnoreEnt, bool bTraceHull	, CBaseEntity *pCaller);
 	~CSimulatedBullet();
+//	void			DoImpactEffect(trace_t &tr, int nDamageType);
 
 	inline float GetBulletSpeedRatio(void) //The percent of bullet speed 
 	{

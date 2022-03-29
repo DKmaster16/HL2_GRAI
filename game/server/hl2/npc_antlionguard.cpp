@@ -95,8 +95,9 @@ ConVar	g_antlionguard_hemorrhage( "g_antlionguard_hemorrhage", "1", FCVAR_NONE, 
 ConVar	sk_antlionguard_health( "sk_antlionguard_health", "0" );
 ConVar	sk_antlion_guard_bullet_damage_scale( "sk_antlion_guard_bullet_damage_scale", "0.3" );
 ConVar	sk_antlion_guard_buckshot_damage_scale( "sk_antlion_guard_buckshot_damage_scale", "0.25" );
-ConVar	sk_antlion_guard_357_damage_scale( "sk_antlion_guard_357_damage_scale", "0.65" );
-ConVar	sk_antlion_guard_diabolical_damage_scale("sk_antlion_guard_diabolical_damage_scale", "0.65");
+ConVar	sk_antlion_guard_357_damage_scale( "sk_antlion_guard_357_damage_scale", "1.0" );
+ConVar	sk_antlion_guard_diabolical_damage_scale("sk_antlion_guard_diabolical_damage_scale", "0.5");
+ConVar	sk_antlion_guard_hard_damage_scale("sk_antlion_guard_hard_damage_scale", "0.75");
 
 int	g_interactionAntlionGuardFoundPhysicsObject = 0;	// We're moving to a physics object to shove it, don't all choose the same object
 int	g_interactionAntlionGuardShovedPhysicsObject = 0;	// We've punted an object, it is now clear to be chosen by others
@@ -2154,10 +2155,14 @@ int CNPC_AntlionGuard::OnTakeDamage_Alive( const CTakeDamageInfo &info )
 		}
 	}
 
-	// Hack to make antlion guard harder in HARD
-	if ( g_pGameRules->IsSkillLevel(SKILL_HARD)  && !(info.GetDamageType() & DMG_CRUSH) )
+	// Hack to make antlion guard harder in HARD and DIABOLICAL
+	if ( !(info.GetDamageType() & DMG_CRUSH) )
 	{
+		if ( g_pGameRules->IsSkillLevel( SKILL_DIABOLICAL ) )
 		dInfo.SetDamage( dInfo.GetDamage() * sk_antlion_guard_diabolical_damage_scale.GetFloat() );
+		if ( g_pGameRules->IsSkillLevel( SKILL_HARD ) )
+		dInfo.SetDamage( dInfo.GetDamage() * sk_antlion_guard_hard_damage_scale.GetFloat() );
+
 	}
 
 	// Cap damage taken by crushing (otherwise we can get crushed oddly)

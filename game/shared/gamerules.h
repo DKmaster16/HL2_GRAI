@@ -242,9 +242,9 @@ public:
 		{
 			iLevel = 1;
 		}
-		else if ( iLevel > 3 )
+		else if ( iLevel > 4 )	// was 3
 		{
-			iLevel = 3; 
+			iLevel = 4;	// was 3
 		}
 
 		g_iSkillLevel = iLevel;

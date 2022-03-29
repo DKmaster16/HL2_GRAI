@@ -975,14 +975,12 @@ void CHL2_Player::HandleAdmireGlovesAnimation( void )
 		m_flAdmireGlovesAnimTime = 0.0f;
 }
 
-#define HL2PLAYER_RELOADGAME_ATTACK_DELAY 1.0f
+#define HL2PLAYER_RELOADGAME_ATTACK_DELAY 0.4f
 
 void CHL2_Player::Activate( void )
 {
 	BaseClass::Activate();
 	InitSprinting();
-
-#ifdef HL2_EPISODIC
 
 	// Delay attacks by 1 second after loading a game.
 	if ( GetActiveWeapon() )
@@ -1001,8 +999,6 @@ void CHL2_Player::Activate( void )
 			GetActiveWeapon()->m_flNextSecondaryAttack = gpGlobals->curtime + HL2PLAYER_RELOADGAME_ATTACK_DELAY;
 		}
 	}
-
-#endif
 
 	GetPlayerProxy();
 }

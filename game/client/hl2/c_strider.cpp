@@ -5,10 +5,14 @@
 // $NoKeywords: $
 //=============================================================================//
 #include "cbase.h"
+#include "c_baseentity.h"
 #include "c_ai_basenpc.h"
 #include "c_te_particlesystem.h"
 #include "fx.h"
 #include "fx_sparks.h"
+#include "fx_impact.h"
+#include "IEffects.h"
+#include "beam_flags.h"
 #include "c_tracer.h"
 #include "clientsideeffects.h"
 #include "iefx.h"
@@ -1046,3 +1050,54 @@ void StriderBloodCallback( const CEffectData &data )
 
 DECLARE_CLIENT_EFFECT( "StriderBlood", StriderBloodCallback );
 
+//-----------------------------------------------------------------------------
+// Purpose: Handle gunship impacts
+//-----------------------------------------------------------------------------
+void ImpactStriderCallback(const CEffectData &data)
+{
+	trace_t tr;
+	Vector vecOrigin, vecStart, vecShotDir;
+	int iMaterial, iDamageType, iHitbox;
+	short nSurfaceProp;
+	C_BaseEntity *pEntity = ParseImpactData(data, &vecOrigin, &vecStart, &vecShotDir, nSurfaceProp, iMaterial, iDamageType, iHitbox);
+
+	if (!pEntity)
+		return;
+
+	// If we hit, perform our custom effects and play the sound
+	if (Impact(vecOrigin, vecStart, iMaterial, iDamageType, iHitbox, pEntity, tr))
+	{
+		// Check for custom effects based on the Decal index
+		PerformCustomEffects(vecOrigin, tr, vecShotDir, iMaterial, 6);
+	}
+
+	PlayImpactSound(pEntity, tr, vecOrigin, nSurfaceProp);
+	int s_iImpactEffectTexture = -1;
+
+	s_iImpactEffectTexture = modelinfo->GetModelIndex("sprites/physbeam.vmt");
+	// Add a halo
+	CBroadcastRecipientFilter filter;
+	te->BeamRingPoint(filter, 0.0,
+		tr.endpos,							//origin
+		0,									//start radius
+		64,									//end radius
+		s_iImpactEffectTexture,				//texture
+		0,									//halo index
+		0,									//start frame
+		0,									//framerate
+		0.2,								//life
+		10,									//width
+		0,									//spread
+		0,									//amplitude
+		255,								//r
+		255,								//g
+		255,								//b
+		50,									//a
+		0,									//speed
+		FBEAM_FADEOUT
+		);
+
+	g_pEffects->EnergySplash(tr.endpos, tr.plane.normal);
+}
+
+DECLARE_CLIENT_EFFECT("ImpactStrider", ImpactStriderCallback);

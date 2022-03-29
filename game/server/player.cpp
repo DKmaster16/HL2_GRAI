@@ -1120,7 +1120,7 @@ int CBasePlayer::OnTakeDamage( const CTakeDamageInfo &inputInfo )
 
 	if (g_pGameRules->IsSkillLevel(SKILL_HARD))
 	{
-		// Diabolical armor at the Half-Life 1 level
+		// Diabolical armor
 		flBonus = ARMOR_BONUS_DIABOLICAL;	// 1 Armor = 2 Health
 		flRatio = ARMOR_RATIO_DIABOLICAL;	// Absorbs 83% of the damage, potential health in the Citadel = 500
 	}
@@ -6943,7 +6943,7 @@ bool CBasePlayer::ShouldAutoaim( void )
 		return false;
 
 	// autoaiming is only for easy and medium skill
-	return ( IsX360() || !g_pGameRules->IsSkillLevel(SKILL_HARD) );
+	return ( IsX360() || !g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL));
 }
 
 //-----------------------------------------------------------------------------

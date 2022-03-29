@@ -14,16 +14,17 @@
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
+ConVar floating_phys_energy_scale("floating_phys_energy_scale", "3");
 
 //==============================================================================================
 // PLAYER PHYSICS DAMAGE TABLE
 //==============================================================================================
 static impactentry_t playerLinearTable[] =
 {
-	{ 150*150, 5 },
-	{ 250*250, 10 },
-	{ 450*450, 20 },
-	{ 550*550, 50 },
+	{ 100*100, 5 },
+	{ 200*200, 10 },
+	{ 400*400, 25 },
+	{ 500*500, 50 },
 	{ 700*700, 100 },
 	{ 1000*1000, 500 },
 };
@@ -33,7 +34,7 @@ static impactentry_t playerAngularTable[] =
 	{ 100*100, 10 },
 	{ 150*150, 20 },
 	{ 200*200, 50 },
-	{ 300*300, 500 },
+	{ 300*300, 100 },
 };
 
 impactdamagetable_t gDefaultPlayerImpactDamageTable =
@@ -46,16 +47,16 @@ impactdamagetable_t gDefaultPlayerImpactDamageTable =
 
 	24*24.0f,	// minimum linear speed
 	360*360.0f,	// minimum angular speed
-	2.0f,		// can't take damage from anything under 2kg
+	0.45f,		// can't take damage from anything under 1 pound (was 2kg)
 
-	5.0f,		// anything less than 5kg is "small"
-	5.0f,		// never take more than 5 pts of damage from anything under 5kg
+	2.0f,		// anything less than (5)2kg is "small"
+	10.0f,		// never take more than (5)10 pts of damage from anything under (5)2kg
 	36*36.0f,	// <5kg objects must go faster than 36 in/s to do damage
 
 	0.0f,		// large mass in kg (no large mass effects)
 	1.0f,		// large mass scale
 	2.0f,		// large mass falling scale
-	320.0f,		// min velocity for player speed to cause damage
+	300.0f,		// min velocity for player speed to cause damage (was 320)
 
 };
 
@@ -108,18 +109,18 @@ impactdamagetable_t gDefaultPlayerVehicleImpactDamageTable =
 //==============================================================================================
 static impactentry_t npcLinearTable[] =
 {
-	{ 150*150, 5 },
-	{ 250*250, 10 },
-	{ 350*350, 50 },
-	{ 500*500, 100 },
-	{ 1000*1000, 500 },
+	{ 100*100, 30 },	//5
+	{ 200*200, 60 },	//10
+	{ 300*300, 120 },	//50
+	{ 500*500, 300 },	//100
+	{ 1000*1000, 500 },	//500
 };
 
 static impactentry_t npcAngularTable[] =
 {
-	{ 100*100, 10 },
-	{ 150*150, 25 },
-	{ 200*200, 50 },
+	{ 100*100, 30 },
+	{ 150*150, 60 },
+	{ 200*200, 150 },
 	{ 250*250, 500 },
 };
 
@@ -133,10 +134,10 @@ impactdamagetable_t gDefaultNPCImpactDamageTable =
 
 	24*24,		// minimum linear speed squared
 	360*360,	// minimum angular speed squared (360 deg/s to cause spin/slice damage)
-	2,			// can't take damage from anything under 2kg
+	1,			// can't take damage from anything under (2)1kg
 
 	5,			// anything less than 5kg is "small"
-	5,			// never take more than 5 pts of damage from anything under 5kg
+	10,			// never take more than (5)20 pts of damage from anything under 5kg
 	36*36,		// <5kg objects must go faster than 36 in/s to do damage
 
 	VPHYSICS_LARGE_OBJECT_MASS,		// large mass in kg 
@@ -378,9 +379,9 @@ float CalculatePhysicsImpactDamage( int index, gamevcollisionevent_t *pEvent, co
 	// Add extra oomph for floating objects
 	if ( pEvent->pEntities[index]->IsFloating() && !pEvent->pEntities[otherIndex]->IsWorld() )
 	{
-		if ( energyScale < 3.0f )
+		if (energyScale < floating_phys_energy_scale.GetFloat())
 		{
-			energyScale = 3.0f;
+			energyScale = floating_phys_energy_scale.GetFloat();
 		}
 	}
 

@@ -661,7 +661,7 @@ void CNPC_Antlion::MeleeAttack( float distance, float damage, QAngle &viewPunch,
 		//FIXME: Until the interaction is setup, kill combine soldiers in one hit -- jdw
 		if ( FClassnameIs( pHurt, "npc_combine_s" ) )
 		{
-			if (g_pGameRules->IsSkillLevel(SKILL_HARD))
+			if (g_pGameRules->IsSkillLevel(SKILL_HARD) || g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL))
 			{
 				CTakeDamageInfo	dmgInfo(this, this, pHurt->m_iHealth - 25, DMG_SLASH);
 				CalculateMeleeDamageForce(&dmgInfo, vecForceDir, pHurt->GetAbsOrigin());
@@ -1116,7 +1116,7 @@ void CNPC_Antlion::HandleAnimEvent( animevent_t *pEvent )
 				SetNextAttack( gpGlobals->curtime + flTime + random->RandomFloat( 0.5f, 2.0f ) );
 
 				// Tell any squadmates not to fire for some portion of the time this volley will be in the air (except on hard)
-				if ( g_pGameRules->IsSkillLevel( SKILL_HARD ) == false )
+				if ( g_pGameRules->IsSkillLevel( SKILL_HARD ) == false || g_pGameRules->IsSkillLevel( SKILL_HARD ) == false )
 					DelaySquadAttack( flTime );
 
 				for ( int i = 0; i < 6; i++ )
