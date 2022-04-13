@@ -230,7 +230,8 @@ public:
 
 	// Called at the end of GameFrame (i.e. after all game logic has run this frame)
 	virtual void EndGameFrame( void );
-
+	
+	int g_skill;
 	virtual bool IsSkillLevel( int iLevel ) { return GetSkillLevel() == iLevel; }
 	virtual int	GetSkillLevel() { return g_iSkillLevel; }
 	virtual void OnSkillLevelChanged( int iNewLevel ) {};

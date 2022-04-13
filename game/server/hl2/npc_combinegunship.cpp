@@ -2986,10 +2986,6 @@ int	CNPC_CombineGunship::OnTakeDamage_Alive( const CTakeDamageInfo &inputInfo )
 		// Take a percentage of our health away
 		// Adjust health for damage
 		int iHealthIncrements = sk_gunship_health_increments.GetInt();
-		if ( g_pGameRules->IsSkillLevel( SKILL_DIABOLICAL ) )
-		{
-			iHealthIncrements = floor( iHealthIncrements * 1.5 );
-		}
 		info.SetDamage( ( GetMaxHealth() / (float)iHealthIncrements ) + 1 );
 		
 		// Find out which "stage" we're at in our health

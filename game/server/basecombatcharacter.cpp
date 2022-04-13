@@ -69,8 +69,9 @@ ConVar ai_force_serverside_ragdoll( "ai_force_serverside_ragdoll", "0" );
 ConVar nb_last_area_update_tolerance( "nb_last_area_update_tolerance", "4.0", FCVAR_CHEAT, "Distance a character needs to travel in order to invalidate cached area" ); // 4.0 tested as sweet spot (for wanderers, at least). More resulted in little benefit, less quickly diminished benefit [7/31/2008 tom]
 
 ConVar sk_ammo_wpn_scale1("sk_ammo_wpn_scale1", "0.9");
-ConVar sk_ammo_wpn_scale2("sk_ammo_wpn_scale2", "0.6");
+ConVar sk_ammo_wpn_scale2("sk_ammo_wpn_scale2", "0.6"); 
 ConVar sk_ammo_wpn_scale3("sk_ammo_wpn_scale3", "0.3");
+ConVar sk_ammo_wpn_scale4("sk_ammo_wpn_scale4", "0.3");
 
 #ifndef _RETAIL
 ConVar ai_use_visibility_cache( "ai_use_visibility_cache", "1" );
@@ -1929,9 +1930,13 @@ void CBaseCombatCharacter::Weapon_Drop( CBaseCombatWeapon *pWeapon, const Vector
 			{
 				pWeapon->m_iClip1 = pWeapon->GetDefaultClip1() * RandomFloat(sk_ammo_wpn_scale2.GetFloat(), 1.0f);
 			}
-			else
+			else if (g_pGameRules->IsSkillLevel(SKILL_HARD))
 			{
 				pWeapon->m_iClip1 = pWeapon->m_iClip1 * RandomFloat(sk_ammo_wpn_scale3.GetFloat(), 1.0f);
+			}
+			else
+			{
+				pWeapon->m_iClip1 = pWeapon->m_iClip1 * RandomFloat(sk_ammo_wpn_scale4.GetFloat(), 1.0f);
 			}
 		}
 

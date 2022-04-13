@@ -101,9 +101,7 @@ ConVar npc_strider_shake_ropes_magnitude( "npc_strider_shake_ropes_magnitude", "
 ConVar strider_ar2_altfire_dmg( "strider_ar2_altfire_dmg", "25" );
 
 // Number of RPG hits it takes to kill a strider on each skill level.
-ConVar sk_strider_num_missiles1("sk_strider_num_missiles1", "5");
-ConVar sk_strider_num_missiles2("sk_strider_num_missiles2", "7");
-ConVar sk_strider_num_missiles3("sk_strider_num_missiles3", "10");
+ConVar sk_strider_num_missiles("sk_strider_num_missiles", "5");
 ConVar sk_strider_num_missiles_npc("sk_strider_num_missiles_npc", "10");
 
 ConVar strider_missile_suppress_dist( "strider_missile_suppress_dist", "240" );
@@ -3118,18 +3116,7 @@ int CNPC_Strider::OnTakeDamage_Alive( const CTakeDamageInfo &info )
 
 			if( bPlayer )
 			{
-				if( g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL) )
-				{
-					damage = GetMaxHealth() / sk_strider_num_missiles3.GetFloat();
-				}
-				else if( g_pGameRules->IsSkillLevel(SKILL_HARD) )
-				{
-					damage = GetMaxHealth() / sk_strider_num_missiles2.GetFloat();
-				}
-				else 
-				{
-					damage = GetMaxHealth() / sk_strider_num_missiles1.GetFloat();
-				}
+				damage = GetMaxHealth() / sk_strider_num_missiles.GetFloat();
 			}
 
 			m_iHealth -= damage;

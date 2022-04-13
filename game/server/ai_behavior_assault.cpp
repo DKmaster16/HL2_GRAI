@@ -251,7 +251,8 @@ CAssaultPoint *CAI_AssaultBehavior::FindAssaultPoint( string_t iszAssaultPointNa
 	CUtlVector<CAssaultPoint*>pAssaultPoints;
 	CUtlVector<CAssaultPoint*>pClearAssaultPoints;
 
-	CAssaultPoint *pAssaultEnt = (CAssaultPoint *)gEntList.FindEntityByName( NULL, iszAssaultPointName );
+	// Prevents non-assault points (e.g. rally points) from crashing the game (FROM MAPBASE)
+	CAssaultPoint *pAssaultEnt = dynamic_cast<CAssaultPoint*>(gEntList.FindEntityByName( NULL, iszAssaultPointName ));
 
 	while( pAssaultEnt != NULL )
 	{
@@ -1643,10 +1644,15 @@ AI_BEGIN_CUSTOM_SCHEDULE_PROVIDER(CAI_AssaultBehavior)
 		"		TASK_SET_SCHEDULE						SCHEDULE:SCHED_HOLD_RALLY_POINT"
 		"	"
 		"	Interrupts"
-		"		COND_HEAR_DANGER"
-		"		COND_PROVOKED"
-		"		COND_NO_PRIMARY_AMMO"
+		"		COND_NEW_ENEMY"
+		"		COND_CAN_RANGE_ATTACK1"
+		"		COND_CAN_MELEE_ATTACK1"
+		"		COND_LIGHT_DAMAGE"
+		"		COND_HEAVY_DAMAGE"
 		"		COND_PLAYER_PUSHING"
+		"		COND_HEAR_DANGER"
+		"		COND_HEAR_BULLET_IMPACT"
+		"		COND_NO_PRIMARY_AMMO"
 	)
 
 	//=========================================================
@@ -1690,7 +1696,7 @@ AI_BEGIN_CUSTOM_SCHEDULE_PROVIDER(CAI_AssaultBehavior)
 		"		TASK_WAIT_ASSAULT_DELAY					0"
 		"	"
 		"	Interrupts"
-		//"		COND_NEW_ENEMY"
+		"		COND_NEW_ENEMY"
 		"		COND_CAN_RANGE_ATTACK1"
 		"		COND_CAN_MELEE_ATTACK1"
 		"		COND_LIGHT_DAMAGE"
@@ -1766,8 +1772,15 @@ AI_BEGIN_CUSTOM_SCHEDULE_PROVIDER(CAI_AssaultBehavior)
 		"		TASK_HIT_ASSAULT_POINT					0"
 		"	"
 		"	Interrupts"
-		"		COND_NO_PRIMARY_AMMO"
+		"		COND_NEW_ENEMY"
+		"		COND_CAN_RANGE_ATTACK1"
+		"		COND_CAN_MELEE_ATTACK1"
+		"		COND_LIGHT_DAMAGE"
+		"		COND_HEAVY_DAMAGE"
+		"		COND_PLAYER_PUSHING"
 		"		COND_HEAR_DANGER"
+		"		COND_HEAR_BULLET_IMPACT"
+		"		COND_NO_PRIMARY_AMMO"
 	)
 
 	//=========================================================

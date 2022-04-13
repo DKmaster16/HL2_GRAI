@@ -1118,7 +1118,7 @@ int CBasePlayer::OnTakeDamage( const CTakeDamageInfo &inputInfo )
 	if ( !info.GetDamage() )
 		return 0;
 
-	if (g_pGameRules->IsSkillLevel(SKILL_HARD))
+	if (g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL))
 	{
 		// Diabolical armor
 		flBonus = ARMOR_BONUS_DIABOLICAL;	// 1 Armor = 2 Health

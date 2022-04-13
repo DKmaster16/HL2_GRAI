@@ -74,30 +74,30 @@ ConVar  physcannon_mega_enabled( "physcannon_mega_enabled", "0", FCVAR_CHEAT | F
 ConVar	sv_robust_explosions( "sv_robust_explosions","1", FCVAR_REPLICATED );
 
 // Damage scale for damage inflicted by the player on each skill level.
-ConVar	sk_dmg_inflict_scale0( "sk_dmg_inflict_scale0", "1.40", FCVAR_REPLICATED );
 ConVar	sk_dmg_inflict_scale1( "sk_dmg_inflict_scale1", "1.40", FCVAR_REPLICATED );
-ConVar	sk_dmg_inflict_scale2( "sk_dmg_inflict_scale2", "1.00", FCVAR_REPLICATED );
+ConVar	sk_dmg_inflict_scale2( "sk_dmg_inflict_scale2", "1.40", FCVAR_REPLICATED );
 ConVar	sk_dmg_inflict_scale3( "sk_dmg_inflict_scale3", "1.00", FCVAR_REPLICATED );
+ConVar	sk_dmg_inflict_scale4( "sk_dmg_inflict_scale4", "1.00", FCVAR_REPLICATED );
 
 // Damage scale for damage taken by the player on each skill level.
-ConVar	sk_dmg_take_scale0("sk_dmg_take_scale0", "0.5", FCVAR_REPLICATED);
-ConVar	sk_dmg_take_scale1( "sk_dmg_take_scale1", "1.0", FCVAR_REPLICATED );
-ConVar	sk_dmg_take_scale2( "sk_dmg_take_scale2", "1.5", FCVAR_REPLICATED );
-ConVar	sk_dmg_take_scale3( "sk_dmg_take_scale3", "2.0", FCVAR_REPLICATED );
+ConVar	sk_dmg_take_scale1("sk_dmg_take_scale1", "0.5", FCVAR_REPLICATED);
+ConVar	sk_dmg_take_scale2( "sk_dmg_take_scale2", "1.0", FCVAR_REPLICATED );
+ConVar	sk_dmg_take_scale3( "sk_dmg_take_scale3", "1.5", FCVAR_REPLICATED );
+ConVar	sk_dmg_take_scale4( "sk_dmg_take_scale4", "2.0", FCVAR_REPLICATED );
 
 ConVar	sk_allow_autoaim( "sk_allow_autoaim", "0", FCVAR_REPLICATED | FCVAR_ARCHIVE_XBOX );
 
 // Autoaim scale
-ConVar	sk_autoaim_scale0( "sk_autoaim_scale0", "1.0", FCVAR_REPLICATED );
 ConVar	sk_autoaim_scale1( "sk_autoaim_scale1", "1.0", FCVAR_REPLICATED );
-ConVar	sk_autoaim_scale2( "sk_autoaim_scale2", "1.0", FCVAR_REPLICATED );
+ConVar	sk_autoaim_scale2( "sk_autoaim_scale2", "0.2", FCVAR_REPLICATED );
 //ConVar	sk_autoaim_scale3( "sk_autoaim_scale3", "0.0", FCVAR_REPLICATED ); NOT CURRENTLY OFFERED ON SKILL 3
+//ConVar	sk_autoaim_scale4( "sk_autoaim_scale4", "0.0", FCVAR_REPLICATED ); NOT CURRENTLY OFFERED ON SKILL 3
 
 // Quantity scale for ammo received by the player.
-ConVar	sk_ammo_qty_scale0 ( "sk_ammo_qty_scale0", "2.00", FCVAR_REPLICATED );
-ConVar	sk_ammo_qty_scale1 ( "sk_ammo_qty_scale1", "1.00", FCVAR_REPLICATED );
+ConVar	sk_ammo_qty_scale1 ( "sk_ammo_qty_scale1", "1.20", FCVAR_REPLICATED );
 ConVar	sk_ammo_qty_scale2 ( "sk_ammo_qty_scale2", "1.00", FCVAR_REPLICATED );
-ConVar	sk_ammo_qty_scale3 ( "sk_ammo_qty_scale3", "1.00", FCVAR_REPLICATED );
+ConVar	sk_ammo_qty_scale3 ( "sk_ammo_qty_scale3", "0.60", FCVAR_REPLICATED );
+ConVar	sk_ammo_qty_scale4 ( "sk_ammo_qty_scale4", "0.60", FCVAR_REPLICATED );
 
 ConVar	sk_plr_health_drop_time		( "sk_plr_health_drop_time", "10", FCVAR_REPLICATED );
 ConVar	sk_plr_grenade_drop_time	( "sk_plr_grenade_drop_time", "10", FCVAR_REPLICATED );
@@ -1634,18 +1634,19 @@ void CHalfLife2::AdjustPlayerDamageTaken( CTakeDamageInfo *pInfo )
 	switch( GetSkillLevel() )
 	{
 	case SKILL_EASY:
-		pInfo->ScaleDamage( sk_dmg_take_scale0.GetFloat() );
-		break;
-
-	case SKILL_MEDIUM:
 		pInfo->ScaleDamage( sk_dmg_take_scale1.GetFloat() );
 		break;
 
-	case SKILL_HARD:
+	case SKILL_MEDIUM:
 		pInfo->ScaleDamage( sk_dmg_take_scale2.GetFloat() );
 		break;
+
+	case SKILL_HARD:
+		pInfo->ScaleDamage( sk_dmg_take_scale3.GetFloat() );
+		break;
+
 	case SKILL_DIABOLICAL:
-		pInfo->ScaleDamage(sk_dmg_take_scale3.GetFloat());
+		pInfo->ScaleDamage( sk_dmg_take_scale4.GetFloat() );
 		break;
 	}
 }
@@ -1657,19 +1658,19 @@ float CHalfLife2::AdjustPlayerDamageInflicted( float damage )
 	switch( GetSkillLevel() ) 
 	{
 	case SKILL_EASY:
-		return damage * sk_dmg_inflict_scale0.GetFloat();
-		break;
-
-	case SKILL_MEDIUM:
 		return damage * sk_dmg_inflict_scale1.GetFloat();
 		break;
 
-	case SKILL_HARD:
+	case SKILL_MEDIUM:
 		return damage * sk_dmg_inflict_scale2.GetFloat();
 		break;
 
-	case SKILL_DIABOLICAL:
+	case SKILL_HARD:
 		return damage * sk_dmg_inflict_scale3.GetFloat();
+		break;
+
+	case SKILL_DIABOLICAL:
+		return damage * sk_dmg_inflict_scale4.GetFloat();
 		break;
 
 	default:
@@ -1744,16 +1745,16 @@ float CHalfLife2::GetAmmoQuantityScale( int iAmmoIndex )
 	switch( GetSkillLevel() )
 	{
 	case SKILL_EASY:
-		return sk_ammo_qty_scale0.GetFloat();
-
-	case SKILL_MEDIUM:
 		return sk_ammo_qty_scale1.GetFloat();
 
-	case SKILL_HARD:
+	case SKILL_MEDIUM:
 		return sk_ammo_qty_scale2.GetFloat();
 
-	case SKILL_DIABOLICAL:
+	case SKILL_HARD:
 		return sk_ammo_qty_scale3.GetFloat();
+
+	case SKILL_DIABOLICAL:
+		return sk_ammo_qty_scale4.GetFloat();
 
 	default:
 		return 0.0f;

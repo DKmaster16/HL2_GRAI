@@ -301,7 +301,7 @@ void CNPC_Combine::InputStopPatrolling( inputdata_t &inputdata )
 //-----------------------------------------------------------------------------
 void CNPC_Combine::InputAssault( inputdata_t &inputdata )
 {
-	m_AssaultBehavior.SetParameters( AllocPooledString(inputdata.value.String()), CUE_DONT_WAIT, RALLY_POINT_SELECT_DEFAULT );
+	m_AssaultBehavior.SetParameters( AllocPooledString(inputdata.value.String()), CUE_ENTITY_INPUT, RALLY_POINT_SELECT_DEFAULT );	// CUE_DONT_WAIT
 }
 
 //-----------------------------------------------------------------------------
