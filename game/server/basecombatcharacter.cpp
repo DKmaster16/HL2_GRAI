@@ -68,6 +68,11 @@ ConVar ai_force_serverside_ragdoll( "ai_force_serverside_ragdoll", "0" );
 
 ConVar nb_last_area_update_tolerance( "nb_last_area_update_tolerance", "4.0", FCVAR_CHEAT, "Distance a character needs to travel in order to invalidate cached area" ); // 4.0 tested as sweet spot (for wanderers, at least). More resulted in little benefit, less quickly diminished benefit [7/31/2008 tom]
 
+ConVar sk_ammo_wpn_scale1("sk_ammo_wpn_scale1", "0.9");
+ConVar sk_ammo_wpn_scale2("sk_ammo_wpn_scale2", "0.6"); 
+ConVar sk_ammo_wpn_scale3("sk_ammo_wpn_scale3", "0.3");
+ConVar sk_ammo_wpn_scale4("sk_ammo_wpn_scale4", "0.3");
+
 #ifndef _RETAIL
 ConVar ai_use_visibility_cache( "ai_use_visibility_cache", "1" );
 #define ShouldUseVisibilityCache() ai_use_visibility_cache.GetBool()
@@ -1368,7 +1373,8 @@ Vector CBaseCombatCharacter::CalcDamageForceVector( const CTakeDamageInfo &info 
 			// This simulates features that usually vary from
 			// person-to-person variables such as bodyweight,
 			// which are all indentical for characters using the same model.
-			float scale = random->RandomFloat( 0.85, 1.15 );
+			// DK: Old RandomFloat was 0.85, 1.15
+			float scale = random->RandomFloat( 0.8, 1.2 );
 			Vector force = info.GetDamageForce();
 			force.x *= scale;
 			force.y *= scale;
@@ -1396,10 +1402,10 @@ Vector CBaseCombatCharacter::CalcDamageForceVector( const CTakeDamageInfo &info 
 		// the ragdolls a bodacious "really got blowed up" look.
 		if( info.GetDamageType() & DMG_BLAST )
 		{
-			// exaggerate the force from explosions a little (37.5%)
+			// exaggerate the force from explosions a little (37.5%) DK: I don't exaggerate, old value was 1.375f
 			forceVector = (GetLocalOrigin() + Vector(0, 0, WorldAlignSize().z) ) - pForce->GetLocalOrigin();
 			VectorNormalize(forceVector);
-			forceVector *= 1.375f;
+			forceVector *= 1.0f;
 		}
 		else
 		{
@@ -1529,16 +1535,14 @@ bool CBaseCombatCharacter::BecomeRagdoll( const CTakeDamageInfo &info, const Vec
 	CTakeDamageInfo newinfo = info;
 	newinfo.SetDamageForce( forceVector );
 
-#ifdef HL2_EPISODIC
-	// Burning corpses are server-side in episodic, if we're in darkness mode
-	if ( IsOnFire() && HL2GameRules()->IsAlyxInDarknessMode() )
+	// Burning corpses are server-side. Removed: && HL2GameRules()->IsAlyxInDarknessMode()
+	if (IsOnFire() && HL2GameRules()->IsAlyxInDarknessMode())
 	{
 		CBaseEntity *pRagdoll = CreateServerRagdoll( this, m_nForceBone, newinfo, COLLISION_GROUP_DEBRIS );
 		FixupBurningServerRagdoll( pRagdoll );
 		RemoveDeferred();
 		return true;
 	}
-#endif
 
 #ifdef HL2_DLL	
 
@@ -1565,13 +1569,6 @@ bool CBaseCombatCharacter::BecomeRagdoll( const CTakeDamageInfo &info, const Vec
 	if( hl2_episodic.GetBool() && Classify() == CLASS_PLAYER_ALLY_VITAL )
 	{
 		CreateServerRagdoll( this, m_nForceBone, newinfo, COLLISION_GROUP_INTERACTIVE_DEBRIS, true );
-		RemoveDeferred();
-		return true;
-	}
-
-	if (info.GetAmmoType() != GetAmmoDef()->Index("Crossbow Bolt"))
-	{
-		CreateServerRagdoll(this, m_nForceBone, newinfo, COLLISION_GROUP_INTERACTIVE_DEBRIS, true);
 		RemoveDeferred();
 		return true;
 	}
@@ -1912,79 +1909,37 @@ void CBaseCombatCharacter::Weapon_Drop( CBaseCombatWeapon *pWeapon, const Vector
 	if ( !pWeapon )
 		return;
 
-	// If I'm an NPC, fill the weapon with ammo before I drop it.
-	if ( GetFlags() & FL_NPC )
+	// If I'm an NPC, fill the weapon with ammo before I drop it. DK: Unless it's hard mode :>
+	if (GetFlags() & FL_NPC)
 	{
 		if ( pWeapon->UsesClipsForAmmo1() )
 		{
-			CBasePlayer *pPlayer = UTIL_PlayerByIndex(1);
-
-			CHalfLife2 *pHL2GameRules = static_cast<CHalfLife2 *>(g_pGameRules);
-//			pWeapon->m_iClip1 = pWeapon->GetDefaultClip1();
-
-			if (FClassnameIs(pWeapon, "weapon_smg1"))
+			if (g_pGameRules->IsSkillLevel(SKILL_EASY))
 			{
-				// Figure out how much damage one piece of this type of ammo does to this type of enemy.
-				float flAmmoDamage = g_pGameRules->GetAmmoDamage(UTIL_PlayerByIndex(1), this, pWeapon->GetPrimaryAmmoType());
+				pWeapon->m_iClip1 = pWeapon->GetDefaultClip1() * RandomFloat(sk_ammo_wpn_scale1.GetFloat(), 1.0f);
 
-				if (pHL2GameRules->NPC_ShouldDrainSMGAmmo(pPlayer))
+				if (FClassnameIs(pWeapon, "weapon_smg1"))
 				{
-					// Drop enough ammo to kill 1 of me.
-					pWeapon->m_iClip1 = (GetMaxHealth() / flAmmoDamage);
-				}
-				else
-				{
-					// Drop enough ammo to kill 2 of me.
-					pWeapon->m_iClip1 = (GetMaxHealth() / flAmmoDamage) * 2;
+					// Drop enough ammo to kill just under 2 me.
+					// Figure out how much damage one piece of this type of ammo does to this type of enemy.
+					float flAmmoDamage = g_pGameRules->GetAmmoDamage(UTIL_PlayerByIndex(1), this, pWeapon->GetPrimaryAmmoType());
+					pWeapon->m_iClip1 = (GetMaxHealth() / flAmmoDamage) * RandomFloat(1.5, 2.0);	// A little bit of ranodmness
 				}
 			}
-			else if (FClassnameIs(pWeapon, "weapon_ar2"))
+			else if (g_pGameRules->IsSkillLevel(SKILL_MEDIUM))
 			{
-				// Figure out how much damage one piece of this type of ammo does to this type of enemy.
-				float flAmmoDamage = g_pGameRules->GetAmmoDamage(UTIL_PlayerByIndex(1), this, pWeapon->GetPrimaryAmmoType());
-
-				if (pHL2GameRules->NPC_ShouldDrainAR2Ammo(pPlayer))
-				{
-					// Drop enough ammo to kill 1 of me.
-					pWeapon->m_iClip1 = (GetMaxHealth() / flAmmoDamage);
-				}
-				else
-				{
-					// Drop enough ammo to kill 2 of me.
-					pWeapon->m_iClip1 = (GetMaxHealth() / flAmmoDamage) * 2;
-				}
+				pWeapon->m_iClip1 = pWeapon->GetDefaultClip1() * RandomFloat(sk_ammo_wpn_scale2.GetFloat(), 1.0f);
 			}
-			else if ( FClassnameIs( pWeapon, "weapon_shotgun" ) )
+			else if (g_pGameRules->IsSkillLevel(SKILL_HARD))
 			{
-				if ( pHL2GameRules->NPC_ShouldDrainShotgunAmmo( pPlayer ) )
-				{
-					// Drop half the ammo left.
-					pWeapon->m_iClip1 *= 0.5;
-				}
-				else
-				{
-					// Drop between what you have left and maximum clip
-					pWeapon->m_iClip1 = RandomInt( pWeapon->m_iClip1, pWeapon->GetDefaultClip1() - 1 );
-				}
+				pWeapon->m_iClip1 = pWeapon->m_iClip1 * RandomFloat(sk_ammo_wpn_scale3.GetFloat(), 1.0f);
 			}
-			else if (FClassnameIs(pWeapon, "weapon_pistol"))
+			else
 			{
-				if (pHL2GameRules->NPC_ShouldDrainPistolAmmo(pPlayer))
-				{
-					// Don't drop more than 10 rounds.
-					if (pWeapon->m_iClip1 > 10)
-						pWeapon->m_iClip1 = 10;
-				}
-				else
-				{
-					// Drop between 10 and maximum clip
-					pWeapon->m_iClip1 = RandomInt(10, pWeapon->GetDefaultClip1());
-				}
+				pWeapon->m_iClip1 = pWeapon->m_iClip1 * RandomFloat(sk_ammo_wpn_scale4.GetFloat(), 1.0f);
 			}
-
-			if (pWeapon->m_iClip1 == 0)
-				pWeapon->m_iClip1 = 1; // Don't be empty or else, player can't pick this up.
 		}
+
 		if ( pWeapon->UsesClipsForAmmo2() )
 		{
 			pWeapon->m_iClip2 = pWeapon->GetDefaultClip2();
@@ -3333,7 +3288,7 @@ WeaponProficiency_t CBaseCombatCharacter::CalcWeaponProficiency( CBaseCombatWeap
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-#define MAX_MISS_CANDIDATES 16
+#define MAX_MISS_CANDIDATES 32
 CBaseEntity *CBaseCombatCharacter::FindMissTarget( void )
 {
 	CBaseEntity *pMissCandidates[ MAX_MISS_CANDIDATES ];
@@ -3341,7 +3296,7 @@ CBaseEntity *CBaseCombatCharacter::FindMissTarget( void )
 
 	CBasePlayer *pPlayer = UTIL_GetLocalPlayer();
 	CBaseEntity *pEnts[256];
-	Vector		radius( 100, 100, 100);
+	Vector		radius( 325, 325, 325);
 	Vector		vecSource = GetAbsOrigin();
 
 	int numEnts = UTIL_EntitiesInBox( pEnts, 256, vecSource-radius, vecSource+radius, 0 );

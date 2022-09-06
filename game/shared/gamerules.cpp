@@ -34,7 +34,7 @@
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
-//ConVar skill("skill", "1");
+//ConVar g_skill("g_skill", "1", FCVAR_ARCHIVE | FCVAR_REPLICATED);
 ConVar sk_diabolical("sk_diabolical", "0");
 ConVar g_Language( "g_Language", "0", FCVAR_REPLICATED );
 ConVar sk_autoaim_mode( "sk_autoaim_mode", "1", FCVAR_ARCHIVE | FCVAR_REPLICATED );
@@ -269,14 +269,16 @@ void CGameRules::RefreshSkillData ( bool forceUpdate )
 #endif 
 
 	ConVarRef skill( "skill" );
-
-//	ConVarRef skill_lvl( "skill_lvl" );
+//	ConVarRef g_skill( "g_skill" );
 
 	if (sk_diabolical.GetBool())
+	{
 		g_skill = 4;
+	}
 	else
+	{
 		g_skill = skill.GetInt();
-
+	}
 	SetSkillLevel(g_skill);
 #ifdef HL2_DLL
 	// HL2 current only uses one skill config file that represents MEDIUM skill level and
@@ -602,10 +604,13 @@ ConVar skill( "skill", "1" );
 void CGameRules::Think()
 {
 	if (sk_diabolical.GetBool())
+	{
 		g_skill = 4;
+	}
 	else
+	{
 		g_skill = skill.GetInt();
-
+	}
 	GetVoiceGameMgr()->Update( gpGlobals->frametime );
 	SetSkillLevel(g_skill);
 

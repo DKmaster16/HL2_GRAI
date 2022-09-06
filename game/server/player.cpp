@@ -186,8 +186,8 @@ ConVar	sk_player_bod_health("sk_player_bod_health", "20");
 ConVar	sk_player_bod_scale("sk_player_bod_scale", "0.5");
 ConVar	sk_armor_ratio("sk_armor_ratio", "0.1");
 ConVar	sk_armor_bonus("sk_armor_bonus", "0.4");
-//ConVar	sk_armor_ratio_diabolical("sk_armor_ratio_diabolical", "0.17");
-//ConVar	sk_armor_bonus_diabolical("sk_armor_bonus_diabolical", "0.5");
+ConVar	sk_armor_ratio_diabolical("sk_armor_ratio_diabolical", "0.17");
+ConVar	sk_armor_bonus_diabolical("sk_armor_bonus_diabolical", "0.5");
 ConVar	sk_armor_ratio_blast_scale("sk_armor_ratio_blast_scale", "1.0");
 ConVar	sk_armor_bonus_blast_scale("sk_armor_bonus_blast_scale", "1.667");
 ConVar	sk_armor_ratio_slash_scale("sk_armor_ratio_slash_scale", "2.0");
@@ -963,11 +963,11 @@ void CBasePlayer::TraceAttack( const CTakeDamageInfo &inputInfo, const Vector &v
 			info.ScaleDamage(sk_player_bod_scale.GetFloat());
 		}
 
-//#ifdef HL2_EPISODIC
+#ifdef HL2_EPISODIC
 		// If this damage type makes us bleed, then do so
 		bool bShouldBleed = !g_pGameRules->Damage_ShouldNotBleed( info.GetDamageType() );
 		if ( bShouldBleed )
-//#endif
+#endif
 		{
 			SpawnBlood(ptr->endpos, vecDir, BloodColor(), info.GetDamage());// a little surface blood.
 			TraceBleed( info.GetDamage(), vecDir, ptr, info.GetDamageType() );
@@ -1041,8 +1041,8 @@ void CBasePlayer::DamageEffect(float flDamage, int fDamageType)
 #define ARMOR_BONUS  sk_armor_bonus.GetFloat()	// Each Point of Armor is work 1/x points of health, 1 armor = 2.5 health
 
 // Bad suit
-//#define ARMOR_RATIO_DIABOLICAL	sk_armor_ratio_diabolical.GetFloat()	// Armor Takes 83% of the damage
-//#define ARMOR_BONUS_DIABOLICAL	sk_armor_bonus_diabolical.GetFloat()		// 1 armor = 2 health
+#define ARMOR_RATIO_DIABOLICAL	sk_armor_ratio_diabolical.GetFloat()	// Armor Takes 83% of the damage
+#define ARMOR_BONUS_DIABOLICAL	sk_armor_bonus_diabolical.GetFloat()		// 1 armor = 2 health
 
 //---------------------------------------------------------
 //---------------------------------------------------------
@@ -1117,19 +1117,19 @@ int CBasePlayer::OnTakeDamage( const CTakeDamageInfo &inputInfo )
 	// Early out if there's no damage
 	if ( !info.GetDamage() )
 		return 0;
-/*
+
 	if (g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL))
 	{
 		// Diabolical armor
 		flBonus = ARMOR_BONUS_DIABOLICAL;	// 1 Armor = 2 Health
 		flRatio = ARMOR_RATIO_DIABOLICAL;	// Absorbs 83% of the damage, potential health in the Citadel = 500
 	}
-	else */
-//	{
+	else 
+	{
 		// Normal and Hard armor a bit better than Diabolical
 		flBonus = ARMOR_BONUS;	// 1 Armor = 2.5 Health
 		flRatio = ARMOR_RATIO;	// Absorbs 90% of the damage,potential health in the Citadel = 600
-//	}
+	}
 
 	// NOTE: Numbers might have been changed
 	// blasts damage armor more, except for diabolical, raw damage is already too high, while armor absorbs less damage at the same time.
