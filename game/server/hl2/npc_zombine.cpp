@@ -44,14 +44,14 @@ enum
 	SQUAD_SLOT_ZOMBINE_SPRINT2,
 };
 
-#define MIN_SPRINT_TIME 3.5f
-#define MAX_SPRINT_TIME 5.5f
+//#define MIN_SPRINT_TIME 3.5f
+//#define MAX_SPRINT_TIME 5.5f
 
 #define MIN_SPRINT_DISTANCE 64.0f
 #define MAX_SPRINT_DISTANCE 1024.0f
 
-#define SPRINT_CHANCE_VALUE 25	// Was 10
-#define SPRINT_CHANCE_VALUE_DARKNESS 65	// Was 50
+//#define SPRINT_CHANCE_VALUE 10
+#define SPRINT_CHANCE_VALUE_DARKNESS 50
 
 #define GRENADE_PULL_MAX_DISTANCE 256.0f
 
@@ -72,8 +72,14 @@ int AE_ZOMBINE_PULLPIN;
 extern bool IsAlyxInDarknessMode();
 
 ConVar	sk_zombie_soldier_health( "sk_zombie_soldier_health","0");
-ConVar	sk_zombie_soldier_grenade_damage("sk_zombie_soldier_grenade_damage", "270");
-ConVar	sk_zombie_soldier_grenade_radius("sk_zombie_soldier_grenade_radius", "225");
+ConVar	sk_zombie_soldier_grenade_damage("sk_zombie_soldier_grenade_damage", "200");
+ConVar	sk_zombie_soldier_grenade_radius("sk_zombie_soldier_grenade_radius", "250");
+
+ConVar	sk_zombie_soldier_sprint_chance("sk_zombie_soldier_sprint_chance", "10");
+ConVar	sk_zombie_soldier_sprint_interval_min("sk_zombie_soldier_sprint_interval_min", "2.5");
+ConVar	sk_zombie_soldier_sprint_interval_max("sk_zombie_soldier_sprint_interval_max", "5.0");
+ConVar	sk_zombie_soldier_sprint_time_min("sk_zombie_soldier_sprint_time_min", "3.5");
+ConVar	sk_zombie_soldier_sprint_time_max("sk_zombie_soldier_sprint_time_max", "5.5");
 
 float g_flZombineGrenadeTimes = 0;
 
@@ -531,8 +537,6 @@ void CNPC_Zombine::TraceAttack( const CTakeDamageInfo &info, const Vector &vecDi
 	}
 }
 
-//extern ConVar sk_plr_dmg_fraggrenade;
-
 void CNPC_Zombine::HandleAnimEvent( animevent_t *pEvent )
 {
 	if ( pEvent->event == AE_ZOMBINE_PULLPIN )
@@ -563,8 +567,8 @@ void CNPC_Zombine::HandleAnimEvent( animevent_t *pEvent )
 
 				pGrenade->SetParent( this, iAttachment );
 
-				pGrenade->SetDamage(sk_zombie_soldier_grenade_damage.GetFloat());
-				pGrenade->SetDamageRadius(sk_zombie_soldier_grenade_radius.GetFloat());
+				pGrenade->SetDamage( sk_zombie_soldier_grenade_damage.GetFloat() ); 
+				pGrenade->SetDamageRadius( sk_zombie_soldier_grenade_radius.GetFloat() );
 				m_hGrenade = pGrenade;
 				
 				EmitSound( "Zombine.ReadyGrenade" );
@@ -613,7 +617,7 @@ bool CNPC_Zombine::AllowedToSprint( void )
 	if ( IsSprinting() )
 		return false;
 
-		int iChance = SPRINT_CHANCE_VALUE;
+	int iChance = sk_zombie_soldier_sprint_chance.GetInt();
 
 	CHL2_Player *pPlayer = dynamic_cast <CHL2_Player*> ( AI_GetSinglePlayer() );
 
@@ -662,7 +666,7 @@ void CNPC_Zombine::StopSprint( void )
 	GetNavigator()->SetMovementActivity( ACT_WALK );
 
 	m_flSprintTime = gpGlobals->curtime;
-	m_flSprintRestTime = m_flSprintTime + random->RandomFloat( 2.5f, 5.0f );
+	m_flSprintRestTime = m_flSprintTime + random->RandomFloat( sk_zombie_soldier_sprint_interval_min.GetFloat(), sk_zombie_soldier_sprint_interval_max.GetFloat() );
 }
 
 void CNPC_Zombine::Sprint( bool bMadSprint )
@@ -673,7 +677,7 @@ void CNPC_Zombine::Sprint( bool bMadSprint )
 	OccupyStrategySlotRange( SQUAD_SLOT_ZOMBINE_SPRINT1, SQUAD_SLOT_ZOMBINE_SPRINT2 );
 	GetNavigator()->SetMovementActivity( ACT_RUN );
 
-	float flSprintTime = random->RandomFloat( MIN_SPRINT_TIME, MAX_SPRINT_TIME );
+	float flSprintTime = random->RandomFloat( sk_zombie_soldier_sprint_time_min.GetFloat(), sk_zombie_soldier_sprint_time_max.GetFloat() );
 
 	//If holding a grenade then sprint until it blows up.
 	if ( HasGrenade() || bMadSprint == true )
@@ -684,7 +688,7 @@ void CNPC_Zombine::Sprint( bool bMadSprint )
 	m_flSprintTime = gpGlobals->curtime + flSprintTime;
 
 	//Don't sprint for this long after I'm done with this sprint run.
-	m_flSprintRestTime = m_flSprintTime + random->RandomFloat( 2.5f, 5.0f );
+	m_flSprintRestTime = m_flSprintTime + random->RandomFloat( sk_zombie_soldier_sprint_interval_min.GetFloat(), sk_zombie_soldier_sprint_interval_max.GetFloat() );
 
 	EmitSound( "Zombine.Charge" );
 }
@@ -1032,6 +1036,5 @@ AI_BEGIN_CUSTOM_NPC( npc_zombine, CNPC_Zombine )
 	)
 
 AI_END_CUSTOM_NPC()
-
 
 

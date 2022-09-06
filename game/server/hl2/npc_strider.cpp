@@ -101,9 +101,7 @@ ConVar npc_strider_shake_ropes_magnitude( "npc_strider_shake_ropes_magnitude", "
 ConVar strider_ar2_altfire_dmg( "strider_ar2_altfire_dmg", "25" );
 
 // Number of RPG hits it takes to kill a strider on each skill level.
-ConVar sk_strider_num_missiles1("sk_strider_num_missiles1", "5");
-ConVar sk_strider_num_missiles2("sk_strider_num_missiles2", "7");
-ConVar sk_strider_num_missiles3("sk_strider_num_missiles3", "10");
+ConVar sk_strider_num_missiles("sk_strider_num_missiles", "5");
 ConVar sk_strider_num_missiles_npc("sk_strider_num_missiles_npc", "10");
 
 ConVar strider_missile_suppress_dist( "strider_missile_suppress_dist", "240" );
@@ -120,7 +118,7 @@ ConVar sk_strider_aggressive_shoot_on_target_time("sk_strider_aggressive_shoot_o
 ConVar sk_strider_aggressive_shoot_on_target_time_direct("sk_strider_aggressive_shoot_on_target_time_direct", "0.9");
 ConVar sk_strider_aggressive_shoot_downtime("sk_strider_aggressive_shoot_downtime", "1.25");
 ConVar sk_strider_aggressive_shoot_variation("sk_strider_aggressive_shoot_variation", "0.24");
-ConVar sk_strider_aggressive_rate_of_fire("sk_strider_aggressive_rate_of_fire", "8.333");	// 500 RPM used to be 600 RPM
+ConVar sk_strider_aggressive_rate_of_fire("sk_strider_aggressive_rate_of_fire", "10.0");
 
 //-----------------------------------------------------------------------------
 
@@ -2564,8 +2562,7 @@ int CNPC_Strider::MeleeAttack1Conditions( float flDot, float flDist )
 		return COND_NONE;
 
 	// No more stabbing players... unless?
-	if (pEnemy->IsPlayer() && HasSpawnFlags(SF_CAN_STOMP_PLAYER) && 
-		(!g_pGameRules->IsSkillLevel(SKILL_HARD) && !g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL))) // Always stomp on hard	
+	if ( pEnemy->IsPlayer() && !HasSpawnFlags( SF_CAN_STOMP_PLAYER ) ) 	
 	{
 		return COND_NONE;
 	}
@@ -2763,7 +2760,7 @@ void CNPC_Strider::MakeTracer( const Vector &vecTracerSrc, const trace_t &tr, in
 
 	flTracerDist = VectorNormalize( vecDir );
 
-	UTIL_Tracer( vecTracerSrc, tr.endpos, 0, TRACER_DONT_USE_ATTACHMENT, 9000, true, "StriderTracer" );
+	UTIL_Tracer( vecTracerSrc, tr.endpos, 0, TRACER_DONT_USE_ATTACHMENT, 8000, true, "StriderTracer" );
 }
 
 //---------------------------------------------------------
@@ -3118,18 +3115,7 @@ int CNPC_Strider::OnTakeDamage_Alive( const CTakeDamageInfo &info )
 
 			if( bPlayer )
 			{
-				if( g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL) )
-				{
-					damage = GetMaxHealth() / sk_strider_num_missiles3.GetFloat();
-				}
-				else if( g_pGameRules->IsSkillLevel(SKILL_HARD) )
-				{
-					damage = GetMaxHealth() / sk_strider_num_missiles2.GetFloat();
-				}
-				else 
-				{
-					damage = GetMaxHealth() / sk_strider_num_missiles1.GetFloat();
-				}
+				damage = GetMaxHealth() / sk_strider_num_missiles.GetFloat();
 			}
 
 			m_iHealth -= damage;
@@ -3824,26 +3810,25 @@ void CNPC_Strider::ShootMinigun( const Vector *pTarget, float aimError, const Ve
 		QAngle muzzleAng;
 
 		GetAttachment( "minigun", muzzlePos, muzzleAng );
-		
+
 		Vector vecShootDir = *pTarget - muzzlePos;
-		VectorNormalize( vecShootDir );
-		
-		Vector vecShootDirFinal = GetActualShootPosition(vecShootDir);
+		VectorNormalize(vecShootDir);
 
-		FireBulletsInfo_t info(1, muzzlePos, vecShootDirFinal, vecSpread, MAX_COORD_RANGE, m_miniGunDirectAmmo);
-		info.m_iTracerFreq = 1;
-		info.m_nFlags = AMMO_DARK_ENERGY;
-
-		if( m_bMinigunUseDirectFire )
+		if (m_bMinigunUseDirectFire)
 		{
-			info.m_iAmmoType = m_miniGunDirectAmmo;
+			// exactly on target w/tracer
+			FireBulletsInfo_t info(1, muzzlePos, vecShootDir, vecSpread, 8192, m_miniGunDirectAmmo, 1);
+			info.m_nFlags = AMMO_DARK_ENERGY;
+			FireBullets(info);
 		}
 		else
 		{
-			info.m_iAmmoType = m_miniGunAmmo;
+			// exactly on target w/tracer
+			FireBulletsInfo_t info(1, muzzlePos, vecShootDir, vecSpread, 8192, m_miniGunAmmo, 1);
+			info.m_nFlags = AMMO_DARK_ENERGY;
+			FireBullets(info);
 		}
 
-		FireBullets(info);
 		//g_pEffects->MuzzleFlash( muzzlePos, muzzleAng, random->RandomFloat( 2.0f, 4.0f ) , MUZZLEFLASH_TYPE_STRIDER );
 		DoMuzzleFlash();
 
@@ -5351,8 +5336,18 @@ void CStriderMinigun::Think( IStriderMinigunHost *pHost, float dt )
 			float flFactor = (flRemainingShootTime - pHost->GetMinigunOnTargetTime() ) / m_shootDuration;
 
 			flFactor = MAX( 0.0f, flFactor );
+			
+			Vector muzzlePos;
+			QAngle muzzleAng;
 
-			Vector vecTarget = pTargetEnt->BodyTarget( assert_cast<CNPC_Strider *>(pHost->GetEntity())->GetAdjustedOrigin());
+			pHost->GetEntity()->GetAttachment("minigun", muzzlePos, muzzleAng);
+
+			Vector vecTarget = pHost->GetEntity()->GetActualShootPosition(muzzlePos);
+
+//			Vector vecTarget = vecProjectedPosition - muzzlePos;
+//			VectorNormalize(vecShootDir);
+
+//			Vector vecTarget = pTargetEnt->BodyTarget( assert_cast<CNPC_Strider *>(pHost->GetEntity())->GetAdjustedOrigin()); //
 
 			Vector vecLine = m_vecAnchor - vecTarget;
 			

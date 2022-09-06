@@ -14,7 +14,7 @@
 #include "tier0/memdbgon.h"
 
 #define WATERBULLET_INITIAL_SPEED		1000.0
-#define WATERBULLET_STOP_TIME			0.2 // how long it takes a bullet in water to come to a stop!
+#define WATERBULLET_STOP_TIME			0.5 // how long it takes a bullet in water to come to a stop!
 
 #define WATERBULLET_DECAY	( WATERBULLET_INITIAL_SPEED / WATERBULLET_STOP_TIME )
 
@@ -76,12 +76,12 @@ void CWaterBullet::BulletThink()
 	//NDebugOverlay::Line( GetAbsOrigin(), GetAbsOrigin() - GetAbsVelocity() * 0.1, 255, 255, 255, false, 1 );
 	SetNextThink( gpGlobals->curtime + 0.05 );
 
-
+/*
 	QAngle angles = GetAbsAngles();
 	angles.x += random->RandomInt( -6, 6 );
 	angles.y += random->RandomInt( -6, 6 );
 	SetAbsAngles( angles );
-
+*/
 
 	Vector forward;
 	AngleVectors( GetAbsAngles(), &forward );

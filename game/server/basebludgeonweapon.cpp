@@ -162,7 +162,7 @@ void CBaseHLBludgeonWeapon::Hit( trace_t &traceHit, Activity nHitActivity, bool 
 			info.AdjustPlayerDamageInflictedForSkillLevel();
 		}
 
-		CalculateMeleeDamageForce( &info, hitDirection, traceHit.endpos );
+		CalculateMeleeDamageForce( &info, hitDirection, traceHit.endpos, 0.6f );
 
 		pHitEntity->DispatchTraceAttack( info, hitDirection, &traceHit ); 
 		ApplyMultiDamage();

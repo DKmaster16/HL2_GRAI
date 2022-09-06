@@ -35,6 +35,17 @@ int ITEM_GiveAmmo( CBasePlayer *pPlayer, float flCount, const char *pszAmmoName,
 	return pPlayer->GiveAmmo( flCount, iAmmoType, bSuppressSound );
 }
 
+extern ConVar sk_size_ammo_pistol;
+extern ConVar sk_size_ammo_pistol_large;
+extern ConVar sk_size_ammo_smg1;
+extern ConVar sk_size_ammo_smg1_large;
+extern ConVar sk_size_ammo_ar2;
+extern ConVar sk_size_ammo_ar2_large;
+extern ConVar sk_size_ammo_buckshot;
+extern ConVar sk_size_ammo_357;
+extern ConVar sk_size_ammo_357_large;
+extern ConVar sk_size_ammo_crossbow;
+
 // ========================================================================
 //	>> BoxSRounds
 // ========================================================================
@@ -55,7 +66,7 @@ public:
 	}
 	bool MyTouch( CBasePlayer *pPlayer )
 	{
-		if (ITEM_GiveAmmo( pPlayer, SIZE_AMMO_PISTOL, "Pistol"))
+		if (ITEM_GiveAmmo( pPlayer, sk_size_ammo_pistol.GetInt(), "Pistol"))
 		{
 			if ( g_pGameRules->ItemShouldRespawn( this ) == GR_ITEM_RESPAWN_NO )
 			{
@@ -90,7 +101,7 @@ public:
 	}
 	bool MyTouch( CBasePlayer *pPlayer )
 	{
-		if (ITEM_GiveAmmo( pPlayer, SIZE_AMMO_PISTOL_LARGE, "Pistol"))
+		if (ITEM_GiveAmmo( pPlayer, sk_size_ammo_pistol_large.GetInt(), "Pistol"))
 		{
 			if ( g_pGameRules->ItemShouldRespawn( this ) == GR_ITEM_RESPAWN_NO )
 			{
@@ -124,7 +135,7 @@ public:
 	}
 	bool MyTouch( CBasePlayer *pPlayer )
 	{
-		if (ITEM_GiveAmmo( pPlayer, SIZE_AMMO_SMG1, "SMG1"))
+		if (ITEM_GiveAmmo(pPlayer, sk_size_ammo_smg1.GetInt(), "SMG1"))
 		{
 			if ( g_pGameRules->ItemShouldRespawn( this ) == GR_ITEM_RESPAWN_NO )
 			{
@@ -158,7 +169,7 @@ public:
 	}
 	bool MyTouch( CBasePlayer *pPlayer )
 	{
-		if (ITEM_GiveAmmo( pPlayer, SIZE_AMMO_SMG1_LARGE, "SMG1"))
+		if (ITEM_GiveAmmo( pPlayer, sk_size_ammo_smg1_large.GetInt(), "SMG1"))
 		{
 			if ( g_pGameRules->ItemShouldRespawn( this ) == GR_ITEM_RESPAWN_NO )
 			{
@@ -192,7 +203,7 @@ public:
 	}
 	bool MyTouch( CBasePlayer *pPlayer )
 	{
-		if (ITEM_GiveAmmo( pPlayer, SIZE_AMMO_AR2, "AR2"))
+		if (ITEM_GiveAmmo( pPlayer, sk_size_ammo_ar2.GetInt(), "AR2"))
 		{
 			if ( g_pGameRules->ItemShouldRespawn( this ) == GR_ITEM_RESPAWN_NO )
 			{
@@ -226,7 +237,7 @@ public:
 	}
 	bool MyTouch( CBasePlayer *pPlayer )
 	{
-		if (ITEM_GiveAmmo( pPlayer, SIZE_AMMO_AR2_LARGE, "AR2"))
+		if (ITEM_GiveAmmo( pPlayer, sk_size_ammo_ar2_large.GetInt(), "AR2"))
 		{
 			if ( g_pGameRules->ItemShouldRespawn( this ) == GR_ITEM_RESPAWN_NO )
 			{
@@ -262,7 +273,7 @@ public:
 
 	bool MyTouch( CBasePlayer *pPlayer )
 	{
-		if (ITEM_GiveAmmo( pPlayer, SIZE_AMMO_357, "357"))
+		if (ITEM_GiveAmmo( pPlayer, sk_size_ammo_357.GetInt(), "357"))
 		{
 			if ( g_pGameRules->ItemShouldRespawn( this ) == GR_ITEM_RESPAWN_NO )
 			{
@@ -297,7 +308,7 @@ public:
 
 	bool MyTouch( CBasePlayer *pPlayer )
 	{
-		if (ITEM_GiveAmmo( pPlayer, SIZE_AMMO_357_LARGE, "357"))
+		if (ITEM_GiveAmmo( pPlayer, sk_size_ammo_357_large.GetInt(), "357"))
 		{
 			if ( g_pGameRules->ItemShouldRespawn( this ) == GR_ITEM_RESPAWN_NO )
 			{
@@ -333,7 +344,7 @@ public:
 
 	bool MyTouch( CBasePlayer *pPlayer )
 	{
-		if (ITEM_GiveAmmo( pPlayer, SIZE_AMMO_CROSSBOW, "XBowBolt" ))
+		if (ITEM_GiveAmmo( pPlayer, sk_size_ammo_crossbow.GetInt(), "XBowBolt" ))
 		{
 			if ( g_pGameRules->ItemShouldRespawn( this ) == GR_ITEM_RESPAWN_NO )
 			{
@@ -539,7 +550,7 @@ public:
 	}
 	bool MyTouch( CBasePlayer *pPlayer )
 	{
-		if (ITEM_GiveAmmo( pPlayer, SIZE_AMMO_BUCKSHOT, "Buckshot"))
+		if (ITEM_GiveAmmo( pPlayer, sk_size_ammo_buckshot.GetInt(), "Buckshot"))
 		{
 			if ( g_pGameRules->ItemShouldRespawn( this ) == GR_ITEM_RESPAWN_NO )
 			{

@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//========= Copyright © 1996-2005, Valve Corporation, All rights reserved. ============//
 //
 // Purpose: Defines the headcrab, a tiny, jumpy alien parasite.
 //
@@ -42,7 +42,7 @@ public:
 	void	Touch( CBaseEntity *pOther );
 	Vector	BodyTarget( const Vector &posSrc, bool bNoisy = true );
 	float	GetAutoAimRadius();
-	void	TraceAttack( const CTakeDamageInfo &info, const Vector &vecDir, trace_t *ptr, CDmgAccumulator *pAccumulator );
+	void	TraceAttack( const CTakeDamageInfo &info, const Vector &vecDir, trace_t *ptr,  CDmgAccumulator *pAccumulator );
 	void	Ignite( float flFlameLifetime, bool bNPCOnly = true, float flSize = 0.0f, bool bCalledByLevelDesigner = false );
 
 	float	MaxYawSpeed( void );
@@ -90,6 +90,9 @@ public:
 	virtual void PlayerHasIlluminatedNPC( CBasePlayer *pPlayer, float flDot );
 
 	void DropFromCeiling( void );
+
+	// Additional shots to kill
+	float	m_flAdditionalShots;
 
 	DEFINE_CUSTOM_AI;
 	DECLARE_DATADESC();
@@ -268,9 +271,9 @@ public:
 	virtual void AlertSound( void );
 	virtual void ImpactSound( void );
 	virtual void TelegraphSound( void );
-#if HL2_EPISODIC
+//#if HL2_EPISODIC
 	virtual bool FInViewCone( CBaseEntity *pEntity );
-#endif
+//#endif
 
 	//
 	// CBaseEntity implementation.

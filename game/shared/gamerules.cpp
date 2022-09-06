@@ -34,7 +34,8 @@
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
-
+//ConVar skill("skill", "1");
+ConVar sk_diabolical("sk_diabolical", "0");
 ConVar g_Language( "g_Language", "0", FCVAR_REPLICATED );
 ConVar sk_autoaim_mode( "sk_autoaim_mode", "1", FCVAR_ARCHIVE | FCVAR_REPLICATED );
 
@@ -269,8 +270,14 @@ void CGameRules::RefreshSkillData ( bool forceUpdate )
 
 	ConVarRef skill( "skill" );
 
-	SetSkillLevel( skill.IsValid() ? skill.GetInt() : 1 );
+//	ConVarRef skill_lvl( "skill_lvl" );
 
+	if (sk_diabolical.GetBool())
+		g_skill = 4;
+	else
+		g_skill = skill.GetInt();
+
+	SetSkillLevel(g_skill);
 #ifdef HL2_DLL
 	// HL2 current only uses one skill config file that represents MEDIUM skill level and
 	// synthesizes EASY and HARD. (sjb)
@@ -278,19 +285,19 @@ void CGameRules::RefreshSkillData ( bool forceUpdate )
 
 	if (g_pGameRules->IsSkillLevel(SKILL_EASY))
 	{
-		Q_snprintf(szExec, sizeof(szExec), "exec skill_0.cfg\n");
+		Q_snprintf(szExec, sizeof(szExec), "exec skill_1.cfg\n");
 	}
 	else if (g_pGameRules->IsSkillLevel(SKILL_MEDIUM))
 	{
-		Q_snprintf(szExec, sizeof(szExec), "exec skill_1.cfg\n");
+		Q_snprintf(szExec, sizeof(szExec), "exec skill_2.cfg\n");
 	}
 	else if (g_pGameRules->IsSkillLevel(SKILL_HARD))
 	{
-		Q_snprintf(szExec, sizeof(szExec), "exec skill_2.cfg\n");
+		Q_snprintf(szExec, sizeof(szExec), "exec skill_3.cfg\n");
 	}
 	else if (g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL))
 	{
-		Q_snprintf(szExec, sizeof(szExec), "exec skill_3.cfg\n");
+		Q_snprintf(szExec, sizeof(szExec), "exec skill_4.cfg\n");
 	}
 
 
@@ -594,8 +601,13 @@ ConVar skill( "skill", "1" );
 
 void CGameRules::Think()
 {
+	if (sk_diabolical.GetBool())
+		g_skill = 4;
+	else
+		g_skill = skill.GetInt();
+
 	GetVoiceGameMgr()->Update( gpGlobals->frametime );
-	SetSkillLevel( skill.GetInt() );
+	SetSkillLevel(g_skill);
 
 	if ( log_verbose_enable.GetBool() )
 	{

@@ -230,7 +230,7 @@ void CCrossbowBolt::BoltTouch( CBaseEntity *pOther )
 		{
 			CTakeDamageInfo	dmgInfo( this, GetOwnerEntity(), sk_plr_dmg_crossbow.GetFloat(), DMG_NEVERGIB );
 			dmgInfo.AdjustPlayerDamageInflictedForSkillLevel();
-			CalculateMeleeDamageForce( &dmgInfo, vecNormalizedVel, tr.endpos, 0.7f );
+			CalculateMeleeDamageForce( &dmgInfo, vecNormalizedVel, tr.endpos, 0.5f );	//0.7f
 			dmgInfo.SetDamagePosition( tr.endpos );
 			pOther->DispatchTraceAttack( dmgInfo, vecNormalizedVel, &tr );
 
@@ -244,7 +244,7 @@ void CCrossbowBolt::BoltTouch( CBaseEntity *pOther )
 		else
 		{
 			CTakeDamageInfo	dmgInfo( this, GetOwnerEntity(), sk_plr_dmg_crossbow.GetFloat(), DMG_BULLET | DMG_NEVERGIB );
-			CalculateMeleeDamageForce( &dmgInfo, vecNormalizedVel, tr.endpos, 0.7f );
+			CalculateMeleeDamageForce( &dmgInfo, vecNormalizedVel, tr.endpos, 0.1f );
 			dmgInfo.SetDamagePosition( tr.endpos );
 			pOther->DispatchTraceAttack( dmgInfo, vecNormalizedVel, &tr );
 		}
@@ -319,7 +319,7 @@ void CCrossbowBolt::BoltTouch( CBaseEntity *pOther )
 			// See if we should reflect off this surface
 			float hitDot = DotProduct( tr.plane.normal, -vecDir );
 			
-			if ( ( hitDot < 0.5f ) && ( speed > 150 ) )
+			if ( ( hitDot < 0.5f ) && ( speed > 100 ) )
 			{
 				Vector vReflection = 2.0f * tr.plane.normal * hitDot + vecDir;
 				

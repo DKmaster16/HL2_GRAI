@@ -160,10 +160,10 @@ int CAI_SchedulesManager::GetPathID( const char *token )
 {
 	if		( !stricmp( token, "TRAVEL" ) )	{	return PATH_TRAVEL;		}
 	else if ( !stricmp( token, "LOS" ) )		{	return PATH_LOS;		}
-	else if ( !stricmp( token, "FLANK" ) )		{	return PATH_FLANK;		}
-	else if ( !stricmp( token, "FLANK_LOS" ) )	{	return PATH_FLANK_LOS;	}
+//	else if ( !stricmp( token, "FLANK" ) )		{	return PATH_FLANK;		}
+//	else if ( !stricmp( token, "FLANK_LOS" ) )	{	return PATH_FLANK_LOS;	}
 	else if ( !stricmp( token, "COVER" ) )		{	return PATH_COVER;		}
-	else if ( !stricmp( token, "COVER_LOS" ) )	{	return PATH_COVER_LOS;	}
+//	else if ( !stricmp( token, "COVER_LOS" ) )	{	return PATH_COVER_LOS;	}
 
 	return -1;
 }

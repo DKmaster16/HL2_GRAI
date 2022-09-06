@@ -5095,7 +5095,7 @@ void C_BaseAnimating::StudioFrameAdvance()
 
 	SetCycle( flNewCycle );
 
-	m_flGroundSpeed = GetSequenceGroundSpeed( hdr, GetSequence() ) * GetModelScale();
+	m_flGroundSpeed = GetSequenceGroundSpeed( hdr, GetSequence() ) * GetModelScale() * m_flPlaybackRate;
 
 #if 0
 	// I didn't have a test case for this, but it seems like the right thing to do.  Check multi-player!
@@ -5285,7 +5285,7 @@ void C_BaseAnimating::ResetSequenceInfo( void )
 	}
 
 	CStudioHdr *pStudioHdr = GetModelPtr();
-	m_flGroundSpeed = GetSequenceGroundSpeed( pStudioHdr, GetSequence() ) * GetModelScale();
+	m_flGroundSpeed = GetSequenceGroundSpeed( pStudioHdr, GetSequence() ) * GetModelScale() * m_flPlaybackRate;
 	m_bSequenceLoops = ((GetSequenceFlags( pStudioHdr, GetSequence() ) & STUDIO_LOOPING) != 0);
 	// m_flAnimTime = gpGlobals->time;
 	m_flPlaybackRate = 1.0;

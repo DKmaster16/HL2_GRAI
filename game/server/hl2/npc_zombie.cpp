@@ -25,7 +25,9 @@
 
 
 ConVar	sk_zombie_health( "sk_zombie_health","0");
-
+ConVar	sk_zombie_model_scale_min("sk_zombie_model_scale_min", "0.97");
+ConVar	sk_zombie_model_scale_max("sk_zombie_model_scale_max", "1.03");
+ConVar	sk_zombie_speed_scale( "sk_zombie_speed_scale", "1.0" );
 envelopePoint_t envZombieMoanVolumeFast[] =
 {
 	{	7.0f, 7.0f,
@@ -275,13 +277,18 @@ void CZombie::Spawn( void )
 
 	m_fIsHeadless = false;
 
+
 #ifdef HL2_EPISODIC
 	SetBloodColor( BLOOD_COLOR_ZOMBIE );
 #else
 	SetBloodColor( BLOOD_COLOR_GREEN );
 #endif // HL2_EPISODIC
 
-	m_iHealth			= sk_zombie_health.GetFloat();
+	//	Make them a little bit taller or smaller
+	float mdl_scale = random->RandomFloat(sk_zombie_model_scale_min.GetFloat(), sk_zombie_model_scale_max.GetFloat());
+	SetModelScale(mdl_scale);
+
+	m_iHealth			= sk_zombie_health.GetFloat() * pow(mdl_scale, 4);
 	m_flFieldOfView		= 0.2;
 
 	CapabilitiesClear();
@@ -297,6 +304,11 @@ void CZombie::Spawn( void )
 //-----------------------------------------------------------------------------
 void CZombie::PrescheduleThink( void )
 {
+	if (IsAlive())	//&& GetNavigator()->IsGoalActive() && m_flGroundSpeed != 0
+	{
+		m_flPlaybackRate = sk_zombie_speed_scale.GetFloat();
+	}
+
   	if( gpGlobals->curtime > m_flNextMoanSound )
   	{
   		if( CanPlayMoanSound() )
@@ -319,7 +331,7 @@ void CZombie::PrescheduleThink( void )
 //-----------------------------------------------------------------------------
 int CZombie::SelectSchedule ( void )
 {
-	if( HasCondition( COND_PHYSICS_DAMAGE ) && !m_ActBusyBehavior.IsActive() )
+	if( HasCondition( COND_PHYSICS_DAMAGE ) && !m_ActBusyBehavior.IsActive() || !hl2_episodic.GetBool() && HasCondition( COND_HEAVY_DAMAGE ) )
 	{
 		return SCHED_FLINCH_PHYSICS;
 	}
@@ -824,7 +836,7 @@ int CZombie::OnTakeDamage_Alive( const CTakeDamageInfo &inputInfo )
 #ifndef HL2_EPISODIC
 	if ( inputInfo.GetDamageType() & DMG_BUCKSHOT )
 	{
-		if( !m_fIsTorso && inputInfo.GetDamage() > (m_iMaxHealth/4) )
+		if( !m_fIsTorso && inputInfo.GetDamage() > (m_iMaxHealth/6) )
 		{
 			// Always flinch if damaged a lot by buckshot, even if not shot in the head.
 			// The reason for making sure we did at least 1/4th of the zombie's max health
@@ -843,9 +855,9 @@ int CZombie::OnTakeDamage_Alive( const CTakeDamageInfo &inputInfo )
 bool CZombie::IsHeavyDamage( const CTakeDamageInfo &info )
 {
 //#ifdef HL2_EPISODIC
-	if ( info.GetDamageType() & DMG_BUCKSHOT )
+	if ( info.GetDamageType() & (DMG_BULLET | DMG_BUCKSHOT) )
 	{
-		if ( !m_fIsTorso && info.GetDamage() > (m_iMaxHealth/3) )
+		if ( !m_fIsTorso && info.GetDamage() > (m_iMaxHealth/6) )
 			return true;
 	}
 

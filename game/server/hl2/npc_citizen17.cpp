@@ -50,6 +50,8 @@ extern ConVar sk_healthvial;
 const int MAX_PLAYER_SQUAD = 4;
 
 ConVar	sk_citizen_health				( "sk_citizen_health",					"0");
+ConVar	sk_citizen_model_scale_min		( "sk_citizen_model_scale_min",			"0.95");
+ConVar	sk_citizen_model_scale_max		( "sk_citizen_model_scale_max",			"1.05");
 ConVar	sk_citizen_heal_player			( "sk_citizen_heal_player",				"25");
 ConVar	sk_citizen_heal_player_delay	( "sk_citizen_heal_player_delay",		"25");
 ConVar	sk_citizen_giveammo_player_delay( "sk_citizen_giveammo_player_delay",	"10");
@@ -480,7 +482,12 @@ void CNPC_Citizen::Spawn()
 	m_bRPGAvoidPlayer = false;
 
 	m_bShouldPatrol = false;
-	m_iHealth = sk_citizen_health.GetFloat();
+
+	//	Make them a little bit taller or smaller
+	float mdl_scale = random->RandomFloat(sk_citizen_model_scale_min.GetFloat(), sk_citizen_model_scale_max.GetFloat());
+	SetModelScale(mdl_scale);
+
+	m_iHealth = sk_citizen_health.GetFloat() * pow(mdl_scale, 4);
 	
 	// Are we on a train? Used in trainstation to have NPCs on trains.
 	if ( GetMoveParent() && FClassnameIs( GetMoveParent(), "func_tracktrain" ) )
@@ -1439,8 +1446,8 @@ int CNPC_Citizen::TranslateSchedule( int scheduleType )
 	{
 	case SCHED_IDLE_STAND:
 	case SCHED_ALERT_STAND:
-	case SCHED_COMBAT_STAND:
-		if( pLocalPlayer && !pLocalPlayer->IsAlive() && CanJoinPlayerSquad() )	//m_NPCState != NPC_STATE_COMBAT && 
+//	case SCHED_COMBAT_STAND:
+		if (m_NPCState != NPC_STATE_COMBAT && pLocalPlayer && !pLocalPlayer->IsAlive() && CanJoinPlayerSquad())
 		{
 			// Player is dead! 
 			float flDist;
@@ -2297,6 +2304,12 @@ int CNPC_Citizen::OnTakeDamage_Alive( const CTakeDamageInfo &info )
 			}
 		}
 	}
+
+	//!!!HACKHACK - EP2 - Stop citizens taking too much physics damage to prevent them dying
+	// in freak accidents resembling spontaneous stress damage death in vortal coil chapter
+	if (hl2_episodic.GetBool() && info.GetDamageType() & (DMG_CRUSH | DMG_BURN))
+		newInfo.SetDamage(3);
+
 
 	return BaseClass::OnTakeDamage_Alive( newInfo );
 }

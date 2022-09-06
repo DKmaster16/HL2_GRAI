@@ -870,6 +870,7 @@ exit 1
     <ClInclude Include="..\..\game\shared\sixense\sixense_convars_extern.h" />
     <ClInclude Include="..\..\public\tools\bonelist.h" />
     <ClInclude Include="toolframework_client.h" />
+    <ClInclude Include="worldlight.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mp3player.cpp" />
@@ -1478,6 +1479,7 @@ exit 1
     <ClCompile Include="..\..\public\tools\bonelist.cpp" />
     <ClCompile Include="entity_client_tools.cpp" />
     <ClCompile Include="toolframework_client.cpp" />
+    <ClCompile Include="worldlight.cpp" />
   </ItemGroup>
   <ItemGroup>
   </ItemGroup>

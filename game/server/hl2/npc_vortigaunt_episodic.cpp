@@ -45,7 +45,7 @@ class CVortigauntChargeToken;
 
 #define VORTIGAUNT_FEAR_ZOMBIE_DIST_SQR		Square(60)	// back away from zombies inside this radius
 
-#define	PLAYER_CRITICAL_HEALTH_PERC			0.15f
+#define	PLAYER_CRITICAL_HEALTH_PERC			0.2f
 
 #define TLK_SQUISHED_GRUB "TLK_SQUISHED_GRUB" // response rule for vortigaunts when they step on a grub
 

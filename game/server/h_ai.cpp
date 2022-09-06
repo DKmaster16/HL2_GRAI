@@ -12,8 +12,8 @@
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
-#define		NUM_LATERAL_CHECKS		26  // how many checks are made on each side of a NPC looking for lateral cover OLD: 13
-#define		NUM_LATERAL_LOS_CHECKS		12  // how many checks are made on each side of a NPC looking for lateral cover OLD: 6
+#define		NUM_LATERAL_CHECKS			64	// how many checks are made on each side of a NPC looking for lateral cover OLD: 13
+#define		NUM_LATERAL_LOS_CHECKS		32  // how many checks are made on each side of a NPC looking for lateral cover OLD: 6
 
 #define		TOSS_HEIGHT_MAX		300 // altitude of initial trace done to see how high something can be tossed
 

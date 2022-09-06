@@ -102,6 +102,8 @@ public:
 	EHANDLE						m_hDecoyObject;
 	float						m_flDecoyRadius;
 
+	float			m_flRealGroundSpeed;
+
 	void			StartTask( const Task_t *pTask );
 	void			RunTask( const Task_t *pTask );
 	void			PostNPCInit();
@@ -329,6 +331,8 @@ public:
 
 	int				m_iTacticalVariant;
 	int				m_iPathfindingVariant;
+
+	Disposition_t	IRelationType(CBaseEntity *pTarget);
 	void			AddEntityRelationship(CBaseEntity *pEntity, Disposition_t nDisposition, int nPriority);
 };
 

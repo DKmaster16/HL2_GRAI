@@ -36,6 +36,8 @@ public:
 	void		OnListened();
 
 	void		ClearAttackConditions( void );
+	
+	void		TraceAttack(const CTakeDamageInfo &info, const Vector &vecDir, trace_t *ptr, CDmgAccumulator *pAccumulator);
 
 	bool		m_fIsBlocking;
 
@@ -47,6 +49,13 @@ public:
 private:
 	bool		ShouldHitPlayer( const Vector &targetDir, float targetDist );
 
+	// Additional shots to kill
+	float	m_flAdditionalShots;
+
+protected:
+	bool m_bHeadShot;
+
+	bool m_bLimbShot;
 #if HL2_EPISODIC
 public:
 	Activity	NPC_TranslateActivity( Activity eNewActivity );

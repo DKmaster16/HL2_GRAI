@@ -46,8 +46,11 @@ ConVar	g_debug_antlion( "g_debug_antlion", "0" );
 ConVar	sk_antlion_health( "sk_antlion_health", "0" );
 ConVar	sk_antlion_swipe_damage( "sk_antlion_swipe_damage", "0" );
 ConVar	sk_antlion_jump_damage( "sk_antlion_jump_damage", "0" );
-ConVar  sk_antlion_air_attack_dmg( "sk_antlion_air_attack_dmg", "0" );
-ConVar	sk_antlion_357_damage_scale("sk_antlion_357_damage_scale", "2.0");
+ConVar  sk_antlion_air_attack_dmg("sk_antlion_air_attack_dmg", "0");
+ConVar  sk_antlion_pounce_interval("sk_antlion_pounce_interval", "1.5");
+
+// antlion damage adjusters
+ConVar	sk_antlion_357_damage_scale("sk_antlion_357_damage_scale", "1.25");
 ConVar	sk_antlion_buckshot_damage_scale("sk_antlion_buckshot_damage_scale", "1.35");
 
 #ifdef HL2_EPISODIC
@@ -55,15 +58,16 @@ ConVar	sk_antlion_buckshot_damage_scale("sk_antlion_buckshot_damage_scale", "1.3
 // workers
 #define ANTLION_WORKERS_BURST() (true)
 #define ANTLION_WORKER_BURST_IS_POISONOUS() (true)
-
+#endif
 ConVar  sk_antlion_worker_burst_damage( "sk_antlion_worker_burst_damage", "50", FCVAR_NONE, "How much damage is inflicted by an antlion worker's death explosion." );
 ConVar	sk_antlion_worker_health( "sk_antlion_worker_health", "0", FCVAR_NONE, "Hitpoints of an antlion worker. If 0, will use base antlion hitpoints."   );
 ConVar  sk_antlion_worker_spit_speed( "sk_antlion_worker_spit_speed", "0", FCVAR_NONE, "Speed at which an antlion spit grenade travels." );
+ConVar  sk_antlion_worker_spit_interval_min("sk_antlion_worker_spit_interval_min", "0.5", FCVAR_NONE, "Minimum time between spit attacks.");
+ConVar  sk_antlion_worker_spit_interval_max("sk_antlion_worker_spit_interval_max", "2.5", FCVAR_NONE, "Maximum time between spit attacks.");
 
 // This must agree with the AntlionWorkerBurstRadius() function!
 ConVar  sk_antlion_worker_burst_radius( "sk_antlion_worker_burst_radius", "160", FCVAR_NONE, "Effect radius of an antlion worker's death explosion."  );
 
-#endif
 
 ConVar  g_test_new_antlion_jump( "g_test_new_antlion_jump", "1", FCVAR_ARCHIVE );
 ConVar	antlion_easycrush( "antlion_easycrush", "1" );
@@ -1113,10 +1117,10 @@ void CNPC_Antlion::HandleAnimEvent( animevent_t *pEvent )
 				CSoundEnt::InsertSound( SOUND_DANGER, vTarget, (15*12), flTime, this );
 
 				// Don't fire again until this volley would have hit the ground (with some lag behind it)
-				SetNextAttack( gpGlobals->curtime + flTime + random->RandomFloat( 0.5f, 2.0f ) );
+				SetNextAttack( gpGlobals->curtime + flTime + random->RandomFloat( sk_antlion_worker_spit_interval_min.GetFloat(), sk_antlion_worker_spit_interval_max.GetFloat() ) );
 
 				// Tell any squadmates not to fire for some portion of the time this volley will be in the air (except on hard)
-				if ( g_pGameRules->IsSkillLevel( SKILL_HARD ) == false || g_pGameRules->IsSkillLevel( SKILL_HARD ) == false )
+				if ( g_pGameRules->IsSkillLevel( SKILL_HARD ) == false || g_pGameRules->IsSkillLevel( SKILL_DIABOLICAL ) == false )
 					DelaySquadAttack( flTime );
 
 				for ( int i = 0; i < 6; i++ )
@@ -1191,7 +1195,7 @@ void CNPC_Antlion::HandleAnimEvent( animevent_t *pEvent )
 	{
 		QAngle qa( 4.0f, 0.0f, 0.0f );
 		Vector vec( -250.0f, 1.0f, 1.0f );
-		MeleeAttack( ANTLION_MELEE2_RANGE, sk_antlion_swipe_damage.GetFloat(), qa, vec );
+		MeleeAttack( ANTLION_MELEE2_RANGE, sk_antlion_jump_damage.GetFloat(), qa, vec );
 		return;
 	}
 		
@@ -2439,7 +2443,7 @@ int CNPC_Antlion::SelectSchedule( void )
 				// Pounce if they're too near us
 				if ( HasCondition( COND_CAN_MELEE_ATTACK2 ) )
 				{
-					m_flPounceTime = gpGlobals->curtime + 1.5f;
+					m_flPounceTime = gpGlobals->curtime + sk_antlion_pounce_interval.GetFloat();
 
 					if ( m_bLeapAttack == true )
 						return SCHED_ANTLION_POUNCE_MOVING;
@@ -2468,7 +2472,7 @@ int CNPC_Antlion::SelectSchedule( void )
 					if ( OccupyStrategySlot( SQUAD_SLOT_ANTLION_WORKER_FIRE ) )
 					{
 						EmitSound( "NPC_Antlion.PoisonBurstScream" );
-						SetNextAttack( gpGlobals->curtime + random->RandomFloat( 0.5f, 2.5f ) );
+						SetNextAttack(gpGlobals->curtime + random->RandomFloat(sk_antlion_worker_spit_interval_min.GetFloat(), sk_antlion_worker_spit_interval_max.GetFloat()));	//0.5f, 2.5f
 						if ( GetEnemy() )
 						{
 							m_vSavePosition = GetEnemy()->BodyTarget( GetAbsOrigin() );
@@ -2498,7 +2502,7 @@ int CNPC_Antlion::SelectSchedule( void )
 				// Lunge at the enemy
 				if ( HasCondition( COND_CAN_MELEE_ATTACK2 ) )
 				{
-					m_flPounceTime = gpGlobals->curtime + 1.5f;
+					m_flPounceTime = gpGlobals->curtime + sk_antlion_pounce_interval.GetFloat();
 
 					if ( m_bLeapAttack == true )
 						return SCHED_ANTLION_POUNCE_MOVING;
@@ -2608,6 +2612,12 @@ int CNPC_Antlion::OnTakeDamage_Alive( const CTakeDamageInfo &info )
 		flScale = sk_antlion_buckshot_damage_scale.GetFloat();
 	}
 	
+	// Hack to make antlions easier in EASY
+	if ( g_pGameRules->IsSkillLevel( SKILL_EASY ) && info.GetAttacker() && info.GetAttacker()->IsPlayer())
+	{
+		flScale *= 1.35;
+	}
+
 	if (flScale != 0)
 	{
 		float flDamage = info.GetDamage() * flScale;
@@ -2705,7 +2715,7 @@ void CNPC_Antlion::TraceAttack( const CTakeDamageInfo &info, const Vector &vecDi
 		}
 
 		//More vulnerable when flipped
-		newInfo.ScaleDamage( 4.0f );
+		newInfo.ScaleDamage( 10.0f );
 	}
 	else if ( newInfo.GetDamageType() & (DMG_PHYSGUN) || 
 			( newInfo.GetDamageType() & (DMG_BLAST|DMG_CRUSH) && newInfo.GetDamage() >= 25.0f ) )
@@ -2961,46 +2971,75 @@ int CNPC_Antlion::MeleeAttack2Conditions( float flDot, float flDist )
 	if ( m_flPounceTime > gpGlobals->curtime )
 		return 0;
 
-	float		flPrDist, flPrDot;
-	Vector		vecPrPos;
-	Vector2D	vec2DPrDir;
-
-	//Get our likely position in one half second
-	UTIL_PredictedPosition( GetEnemy(), 0.25f, &vecPrPos );
-
-	//Get the predicted distance and direction
-	flPrDist	= ( vecPrPos - GetAbsOrigin() ).Length();
-	vec2DPrDir	= ( vecPrPos - GetAbsOrigin() ).AsVector2D();
-
-	Vector vecBodyDir = BodyDirection2D();
-
-	Vector2D vec2DBodyDir = vecBodyDir.AsVector2D();
-	
-	flPrDot	= DotProduct2D ( vec2DPrDir, vec2DBodyDir );
-
-	if ( ( flPrDist > ANTLION_MELEE2_RANGE_MAX ) )
+	if (g_pGameRules->IsSkillLevel(SKILL_EASY) && GetEnemy()->IsPlayer())
 	{
-		m_flPounceTime = gpGlobals->curtime + 0.2f;
-		return COND_TOO_FAR_TO_ATTACK;
+		if ( flDist > ANTLION_MELEE2_RANGE_MAX )
+		{
+			m_flPounceTime = gpGlobals->curtime + 0.2f;
+			return COND_TOO_FAR_TO_ATTACK;
+		}
+		else if ( flDist < ANTLION_MELEE2_RANGE_MIN )
+		{
+			m_flPounceTime = gpGlobals->curtime + 0.2f;
+			return COND_TOO_CLOSE_TO_ATTACK;
+		}
+
+		trace_t	tr;
+		AI_TraceHull(WorldSpaceCenter(), GetEnemy()->WorldSpaceCenter(), -Vector(8, 8, 8), Vector(8, 8, 8), MASK_SOLID_BRUSHONLY, this, COLLISION_GROUP_NONE, &tr);
+
+		if (tr.fraction < 1.0f)
+			return 0;
+
+		if (IsMoving())
+			m_bLeapAttack = true;
+		else
+			m_bLeapAttack = false;
+
+		return COND_CAN_MELEE_ATTACK2;
 	}
-	else if ( ( flPrDist < ANTLION_MELEE2_RANGE_MIN ) )
-	{
-		m_flPounceTime = gpGlobals->curtime + 0.2f;
-		return COND_TOO_CLOSE_TO_ATTACK;
-	}
-
-	trace_t	tr;
-	AI_TraceHull( WorldSpaceCenter(), GetEnemy()->WorldSpaceCenter(), -Vector(8,8,8), Vector(8,8,8), MASK_SOLID_BRUSHONLY, this, COLLISION_GROUP_NONE, &tr );
-
-	if ( tr.fraction < 1.0f )
-		return 0;
-
-	if ( IsMoving() )
-		 m_bLeapAttack = true;
 	else
-		 m_bLeapAttack = false;
+	{
+		float		flPrDist, flPrDot;
+		Vector		vecPrPos;
+		Vector2D	vec2DPrDir;
 
-	return COND_CAN_MELEE_ATTACK2;
+		//Get our likely position in one half second
+		UTIL_PredictedPosition(GetEnemy(), 0.25f, &vecPrPos);
+
+		//Get the predicted distance and direction
+		flPrDist = (vecPrPos - GetAbsOrigin()).Length();
+		vec2DPrDir = (vecPrPos - GetAbsOrigin()).AsVector2D();
+
+		Vector vecBodyDir = BodyDirection2D();
+
+		Vector2D vec2DBodyDir = vecBodyDir.AsVector2D();
+
+		flPrDot = DotProduct2D(vec2DPrDir, vec2DBodyDir);
+
+		if ((flPrDist > ANTLION_MELEE2_RANGE_MAX))
+		{
+			m_flPounceTime = gpGlobals->curtime + 0.2f;
+			return COND_TOO_FAR_TO_ATTACK;
+		}
+		else if ((flPrDist < ANTLION_MELEE2_RANGE_MIN))
+		{
+			m_flPounceTime = gpGlobals->curtime + 0.2f;
+			return COND_TOO_CLOSE_TO_ATTACK;
+		}
+
+		trace_t	tr;
+		AI_TraceHull(WorldSpaceCenter(), GetEnemy()->WorldSpaceCenter(), -Vector(8, 8, 8), Vector(8, 8, 8), MASK_SOLID_BRUSHONLY, this, COLLISION_GROUP_NONE, &tr);
+
+		if (tr.fraction < 1.0f)
+			return 0;
+
+		if (IsMoving())
+			m_bLeapAttack = true;
+		else
+			m_bLeapAttack = false;
+
+		return COND_CAN_MELEE_ATTACK2;
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -3034,7 +3073,7 @@ bool CNPC_Antlion::HandleInteraction( int interactionType, void *data, CBaseComb
 		if ( IsWorker() )
 		{
 			float flDuration = *((float *)data);
-			SetNextAttack( gpGlobals->curtime + flDuration );
+			SetNextAttack( gpGlobals->curtime + flDuration + random->RandomFloat( sk_antlion_worker_spit_interval_min.GetFloat(), sk_antlion_worker_spit_interval_max.GetFloat() ) );
 		}
 	}
 
@@ -3383,7 +3422,7 @@ bool CNPC_Antlion::CheckLanding( void )
 				{
 					QAngle qa( 4.0f, 0.0f, 0.0f );
 					Vector vec( -250.0f, 1.0f, 1.0f );
-					MeleeAttack( ANTLION_MELEE1_RANGE, sk_antlion_swipe_damage.GetFloat(), qa, vec );
+					MeleeAttack( ANTLION_MELEE1_RANGE, sk_antlion_air_attack_dmg.GetFloat(), qa, vec );
 				}
 			}
 
@@ -4007,7 +4046,7 @@ bool CNPC_Antlion::ShouldGib( const CTakeDamageInfo &info )
 	if ( info.GetDamageType() & (DMG_ALWAYSGIB|DMG_BLAST) )
 		return true;
 	
-	if ( info.GetDamageType() & (DMG_BUCKSHOT) && m_nSustainedDamage > sk_antlion_health.GetFloat()*0.6 )
+	if ( info.GetDamageType() & (DMG_BUCKSHOT) && m_nSustainedDamage > sk_antlion_health.GetFloat() * 0.2 )
 		return true;
 
 	if ( m_iHealth < -20 )
@@ -4454,7 +4493,7 @@ bool CNPC_Antlion::IsHeavyDamage( const CTakeDamageInfo &info )
 {
 	if ( hl2_episodic.GetBool() && IsWorker() )
 	{
-		if ( m_nSustainedDamage + info.GetDamage() > 6 )
+		if ( m_nSustainedDamage + info.GetDamage() > 8 )
 			return true;
 	}
 	

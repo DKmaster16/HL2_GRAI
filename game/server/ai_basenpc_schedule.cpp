@@ -1220,19 +1220,6 @@ void CAI_BaseNPC::StartTask( const Task_t *pTask )
 		}
 		break;
 
-	case TASK_INCREASE_FRAMERATE:
-		{
-			float newRate = GetPlaybackRate();
-			float percent = pTask->flTaskData / 100.0f;
-
-			newRate += (newRate * percent);
-
-			SetPlaybackRate(newRate);
-
-			TaskComplete();
-		}
-		break;
-
 	case TASK_DEFER_DODGE:
 		m_flNextDodgeTime = gpGlobals->curtime + pTask->flTaskData;
 		TaskComplete();

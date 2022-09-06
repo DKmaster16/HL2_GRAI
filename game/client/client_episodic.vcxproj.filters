@@ -1892,6 +1892,9 @@
     <ClInclude Include="..\shared\func_break.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="worldlight.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mp3player.cpp">
@@ -3414,6 +3417,9 @@
     </ClCompile>
     <ClCompile Include="toolframework_client.cpp">
       <Filter>Tool Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="worldlight.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

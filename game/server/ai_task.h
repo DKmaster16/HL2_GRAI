@@ -241,7 +241,7 @@ enum sharedtasks_e
 		// Walk the current path until for x units
 		TASK_WALK_PATH_FOR_UNITS,
 
-		// Run the current path until you are x units from the goal.
+		// Rung the current path until you are x units from the goal.
 		TASK_RUN_PATH_FLEE,
 
 		// Run the current path for a specified number of seconds
@@ -354,9 +354,6 @@ enum sharedtasks_e
 
 		// Adjust the framerate to plus/minus N%
 		TASK_RANDOMIZE_FRAMERATE,
-
-		// Adjust the framerate to plus N%
-		TASK_INCREASE_FRAMERATE,
 
 		// Immediately change to a schedule of the specified type
 		TASK_SET_SCHEDULE,

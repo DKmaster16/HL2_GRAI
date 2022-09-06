@@ -30,7 +30,7 @@ ConVar	ai_follow_use_points( "ai_follow_use_points", "1" );
 ConVar	ai_follow_use_points_when_moving( "ai_follow_use_points_when_moving", "1" );
 #define FollowMsg(s) if ( !GetOuter() || !ai_debug_follow.GetBool() ) ; else DevMsg( GetOuter(), "Follow: " s )
 
-#define WAIT_HINT_MIN_DIST		(768*768)		// Was: Square(GetHullWidth()) 16*16
+#define WAIT_HINT_MIN_DIST		(16*16)		// Was: Square(GetHullWidth())
 
 //-----------------------------------------------------------------------------
 //
@@ -536,7 +536,7 @@ bool CAI_FollowBehavior::IsFollowGoalInRange( float tolerance, float zTolerance,
 	const Vector &origin = WorldSpaceCenter();
 	const Vector &goal = GetGoalPosition();
 	if ( zTolerance == -1 )
-		zTolerance = GetHullHeight()*2.5;
+		zTolerance = GetHullHeight();
 	float distanceSq = ( goal.AsVector2D() - origin.AsVector2D() ).LengthSqr();
 	tolerance += 0.1;
 
@@ -1075,12 +1075,12 @@ int CAI_FollowBehavior::SelectScheduleMoveToFormation()
 int CAI_FollowBehavior::SelectSchedule()
 {
 	// Allow a range attack if we need to do it
-//	if ( hl2_episodic.GetBool() )
-	
+	if ( hl2_episodic.GetBool() )
+	{
 		// Range attack
 		if ( GetOuter()->ShouldMoveAndShoot() == false && HasCondition( COND_CAN_RANGE_ATTACK1 ) )
 			return SCHED_RANGE_ATTACK1;
-	
+	}
 
 	if ( GetFollowTarget() )
 	{
@@ -2894,7 +2894,7 @@ AI_BEGIN_CUSTOM_SCHEDULE_PROVIDER(CAI_FollowBehavior)
 		"		 TASK_SET_FAIL_SCHEDULE					SCHEDULE:SCHED_FOLLOWER_MOVE_AWAY_FAIL "
 		"		 TASK_STOP_MOVING						0"
 		"		 TASK_FACE_FOLLOW_TARGET				0"
-		"		 TASK_SET_FOLLOW_DELAY					3"
+		"		 TASK_SET_FOLLOW_DELAY					2"
 		""
 		"	Interrupts"
 		"		COND_PLAYER_PUSHING"
@@ -2910,7 +2910,7 @@ AI_BEGIN_CUSTOM_SCHEDULE_PROVIDER(CAI_FollowBehavior)
 		"	Tasks"
 		"		 TASK_STOP_MOVING						0"
 		"		 TASK_FACE_FOLLOW_TARGET				0"
-		"		 TASK_SET_FOLLOW_DELAY					3"
+		"		 TASK_SET_FOLLOW_DELAY					2"
 		""
 		"	Interrupts"
 		"		COND_PLAYER_PUSHING"

@@ -230,7 +230,8 @@ public:
 
 	// Called at the end of GameFrame (i.e. after all game logic has run this frame)
 	virtual void EndGameFrame( void );
-
+	
+	int g_skill;
 	virtual bool IsSkillLevel( int iLevel ) { return GetSkillLevel() == iLevel; }
 	virtual int	GetSkillLevel() { return g_iSkillLevel; }
 	virtual void OnSkillLevelChanged( int iNewLevel ) {};
@@ -238,9 +239,9 @@ public:
 	{
 		int oldLevel = g_iSkillLevel; 
 
-		if ( iLevel < 1 )
+		if ( iLevel < 0 )
 		{
-			iLevel = 1;
+			iLevel = 0;
 		}
 		else if ( iLevel > 4 )	// was 3
 		{

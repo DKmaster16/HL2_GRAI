@@ -263,24 +263,8 @@ void CAI_StandoffBehavior::SetParameters( const AI_StandoffParams_t &params, CAI
 	m_vecStandoffGoalPosition = GOAL_POSITION_INVALID;
 	if ( GetOuter() && GetOuter()->GetShotRegulator() )
 	{
-		if (GetOuter()->GetActiveWeapon()->ClassMatches("weapon_shotgun") || GetOuter()->GetActiveWeapon()->ClassMatches("weapon_357"))
-		{
-			if (m_params.minTimeShots < 0.3f)
-			{
-				m_params.minTimeShots = 0.3f;
-			}
-			if (m_params.maxTimeShots < m_params.minTimeShots)
-			{
-				m_params.minTimeShots = m_params.minTimeShots;
-			}
-			GetOuter()->GetShotRegulator()->SetBurstShotCountRange(1, 1);
-			GetOuter()->GetShotRegulator()->SetRestInterval(m_params.minTimeShots, m_params.maxTimeShots);
-		}
-		else
-		{
-			GetOuter()->GetShotRegulator()->SetBurstShotCountRange(m_params.minShots, m_params.maxShots);
-			GetOuter()->GetShotRegulator()->SetRestInterval(m_params.minTimeShots, m_params.maxTimeShots);
-		}
+		GetOuter()->GetShotRegulator()->SetBurstShotCountRange( m_params.minShots, m_params.maxShots );
+		GetOuter()->GetShotRegulator()->SetRestInterval( m_params.minTimeShots, m_params.maxTimeShots );
 	}
 }
 
@@ -1104,23 +1088,22 @@ void CAI_MappedActivityBehavior_Temporary::UpdateTranslateActivityMap()
 {
 	AI_ActivityMapping_t mappings[] =		// This array cannot be static, as some activity values are set on a per-map-load basis
 	{
-		{	AIP_CROUCHING, 	ACT_IDLE, 				NULL, 				ACT_COVER_LOW, 					},
-		{	AIP_CROUCHING, 	ACT_IDLE_ANGRY,			NULL, 				ACT_COVER_LOW, 					},
-		{	AIP_CROUCHING, 	ACT_WALK, 				NULL, 				ACT_WALK_CROUCH, 				},
-		{	AIP_CROUCHING, 	ACT_RUN, 				NULL, 				ACT_RUN_CROUCH, 				},
-		{	AIP_CROUCHING, 	ACT_WALK_AIM, 			NULL, 				ACT_WALK_CROUCH_AIM,			},
-		{	AIP_CROUCHING, 	ACT_RUN_AIM, 			NULL, 				ACT_RUN_CROUCH_AIM, 			},
-		{	AIP_CROUCHING,	ACT_RELOAD,				NULL, 				ACT_RELOAD_LOW,					},
-		{	AIP_CROUCHING,	ACT_RANGE_ATTACK_SMG1,	NULL,				ACT_RANGE_ATTACK_SMG1_LOW,		},
-		{	AIP_CROUCHING,	ACT_RANGE_ATTACK_AR2,	NULL,				ACT_RANGE_ATTACK_AR2_LOW,		},
-		{	AIP_CROUCHING,	ACT_RANGE_ATTACK_SHOTGUN,	NULL,			ACT_RANGE_ATTACK_SHOTGUN_LOW,	},
-
+		{	AIP_CROUCHING, 	ACT_IDLE, 				NULL, 				ACT_COVER_LOW, 				},
+		{	AIP_CROUCHING, 	ACT_IDLE_ANGRY,			NULL, 				ACT_COVER_LOW, 				},
+		{	AIP_CROUCHING, 	ACT_WALK, 				NULL, 				ACT_WALK_CROUCH, 			},
+		{	AIP_CROUCHING, 	ACT_RUN, 				NULL, 				ACT_RUN_CROUCH, 			},
+		{	AIP_CROUCHING, 	ACT_WALK_AIM, 			NULL, 				ACT_WALK_CROUCH_AIM, 		},
+		{	AIP_CROUCHING, 	ACT_RUN_AIM, 			NULL, 				ACT_RUN_CROUCH_AIM, 		},
+		{	AIP_CROUCHING,	ACT_RELOAD,				NULL, 				ACT_RELOAD_LOW,				},
+		{	AIP_CROUCHING,	ACT_RANGE_ATTACK_SMG1,	NULL,				ACT_RANGE_ATTACK_SMG1_LOW,	},
+		{	AIP_CROUCHING,	ACT_RANGE_ATTACK_AR2,	NULL,				ACT_RANGE_ATTACK_AR2_LOW,	},
+		
 		//----
-		{	AIP_PEEKING, 	ACT_IDLE,				NULL,				ACT_RANGE_AIM_LOW,				},
-		{	AIP_PEEKING, 	ACT_IDLE_ANGRY,			NULL,				ACT_RANGE_AIM_LOW,				},
-		{	AIP_PEEKING, 	ACT_COVER_LOW,			NULL,				ACT_RANGE_AIM_LOW,				},
-		{	AIP_PEEKING, 	ACT_RANGE_ATTACK1,		NULL, 				ACT_RANGE_ATTACK1_LOW,			},
-		{	AIP_PEEKING,	ACT_RELOAD, 			NULL, 				ACT_RELOAD_LOW,					},
+		{	AIP_PEEKING, 	ACT_IDLE,				NULL,				ACT_RANGE_AIM_LOW,			},
+		{	AIP_PEEKING, 	ACT_IDLE_ANGRY,			NULL,				ACT_RANGE_AIM_LOW,			},
+		{	AIP_PEEKING, 	ACT_COVER_LOW,			NULL,				ACT_RANGE_AIM_LOW,			},
+		{	AIP_PEEKING, 	ACT_RANGE_ATTACK1,		NULL, 				ACT_RANGE_ATTACK1_LOW,		},
+		{	AIP_PEEKING,	ACT_RELOAD, 			NULL, 				ACT_RELOAD_LOW,				},
 	};
 
 	m_ActivityMap.RemoveAll();
@@ -1192,8 +1175,8 @@ AI_StandoffParams_t g_StandoffParamsByAgression[] =
 	{ 	AIHCR_MOVE_ON_COVER,	true,			true, 			4.0, 			8.0, 			2, 			4, 			50,			false,	30 		},	// AGGR_VERY_LOW
 	{ 	AIHCR_MOVE_ON_COVER,	true,			true, 			2.0, 			5.0, 			3, 			5, 			25,			false, 	20		},	// AGGR_LOW
 	{ 	AIHCR_MOVE_ON_COVER,	true,			true, 			0.6, 			2.5, 			3, 			6, 			25,			false, 	10		},	// AGGR_MEDIUM
-	{ 	AIHCR_MOVE_ON_COVER,	true,			true, 			0.2, 			1.5, 			6, 			12, 		10,			false, 	10		},	// AGGR_HIGH
-	{ 	AIHCR_MOVE_ON_COVER,	false,			true, 			0,				0, 				40,			40, 		0,			false, 	5		},	// AGGR_VERY_HIGH
+	{ 	AIHCR_MOVE_ON_COVER,	true,			true, 			0.2, 			1.5, 			5, 			8, 			10,			false, 	10		},	// AGGR_HIGH
+	{ 	AIHCR_MOVE_ON_COVER,	false,			true, 			0, 				0, 				100,		100, 		0,			false, 	5		},	// AGGR_VERY_HIGH
 };
 
 //-------------------------------------

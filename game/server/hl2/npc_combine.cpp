@@ -43,6 +43,8 @@ ConVar ai_combine_max_jump_distance("ai_combine_max_jump_distance", "250");
 ConVar ai_combine_max_jump_drop("ai_combine_max_jump_drop", "192");
 ConVar sk_combine_grenade_throw_speed("sk_combine_grenade_throw_speed", "800");
 ConVar sk_combine_grenade_gravity_scale("sk_combine_grenade_gravity_scale", "1.0");
+ConVar sk_combine_s_speed_scale("sk_combine_s_speed_scale", "1.0");
+ConVar sk_combine_elite_speed_scale("sk_combine_elite_speed_scale", "1.2");
 
 #define COMBINE_SKIN_DEFAULT		0
 #define COMBINE_SKIN_SHOTGUNNER		1
@@ -58,9 +60,9 @@ ConVar sk_combine_grenade_gravity_scale("sk_combine_grenade_gravity_scale", "1.0
 
 #define COMBINE_NUM_DECOYS 5
 
-#define COMBINE_EYE_STANDING_POSITION	Vector( 0, 0, 62 )	// ( 0, 0, 66 )
-#define COMBINE_GUN_STANDING_POSITION	Vector( 0, 0, 55 )
-#define COMBINE_EYE_CROUCHING_POSITION	Vector( 0, 0, 38 )	// ( 0, 0, 40 )
+#define COMBINE_EYE_STANDING_POSITION	Vector( 0, 0, 60 )	// ( 0, 0, 66 )
+#define COMBINE_GUN_STANDING_POSITION	Vector( 0, 0, 50 )
+#define COMBINE_EYE_CROUCHING_POSITION	Vector( 0, 0, 37 )	// ( 0, 0, 40 )
 #define COMBINE_GUN_CROUCHING_POSITION	Vector( 0, 0, 36 )
 #define COMBINE_SHOTGUN_STANDING_POSITION	Vector( 0, 0, 36 )
 #define COMBINE_SHOTGUN_CROUCHING_POSITION	Vector( 0, 0, 36 )
@@ -121,7 +123,8 @@ enum SquadSlot_T
 {	
 	SQUAD_SLOT_GRENADE1 = LAST_SHARED_SQUADSLOT,
 	SQUAD_SLOT_GRENADE2,
-	SQUAD_SLOT_ATTACK_OCCLUDER,
+	SQUAD_SLOT_ATTACK_OCCLUDER1,
+	SQUAD_SLOT_ATTACK_OCCLUDER2,
 	SQUAD_SLOT_OVERWATCH,
 	SQUAD_SLOT_FLANK_FIRST,
 	SQUAD_SLOT_FLANK_LAST,
@@ -168,11 +171,12 @@ DEFINE_FIELD( m_nShots, FIELD_INTEGER ),
 DEFINE_FIELD( m_flShotDelay, FIELD_FLOAT ),
 DEFINE_FIELD( m_flStopMoveShootTime, FIELD_TIME ),
 DEFINE_FIELD( m_flTimeSawEnemyAgain, FIELD_TIME ),
-DEFINE_FIELD( m_iNumEnemies, FIELD_INTEGER ),
+//DEFINE_FIELD( m_iNumEnemies, FIELD_INTEGER ),
 //DEFINE_FIELD( m_hDecoyObject, FIELD_EHANDLE ) ,
 //DEFINE_FIELD( m_flDecoyRadius, FIELD_FLOAT ) ,
 //DEFINE_FIELD( m_vecDecoyObjectTarget, FIELD_VECTOR ) ,
 //DEFINE_FIELD(m_hObstructor, FIELD_EHANDLE),
+DEFINE_FIELD( m_flRealGroundSpeed,	FIELD_FLOAT ),
 DEFINE_KEYFIELD( m_iNumGrenades, FIELD_INTEGER, "NumGrenades" ),
 DEFINE_EMBEDDED( m_Sentences ),
 
@@ -230,14 +234,6 @@ bool CNPC_Combine::CreateComponents()
 
 	m_Sentences.Init( this, "NPC_Combine.SentenceParameters" );
 	return true;
-}
-//---------------------------------------------------------
-//---------------------------------------------------------
-void CNPC_Combine::AddEntityRelationship(CBaseEntity *pEntity, Disposition_t nDisposition, int nPriority)
-{
-	if (nDisposition == D_HT && pEntity->ClassMatches("npc_bullseye"))
-		UpdateEnemyMemory(pEntity, pEntity->GetAbsOrigin());
-	BaseClass::AddEntityRelationship(pEntity, nDisposition, nPriority);
 }
 
 //-----------------------------------------------------------------------------
@@ -499,7 +495,7 @@ void CNPC_Combine::GatherConditions()
 	}
 
 	// Build my danger index!
-	m_iNumEnemies = 0;
+/*	m_iNumEnemies = 0;
 
 	AISightIter_t iter;
 	CBaseEntity *pSightEnt;
@@ -508,18 +504,18 @@ void CNPC_Combine::GatherConditions()
 	{
 		if (pSightEnt->Classify() == CLASS_PLAYER_ALLY || CLASS_PLAYER_ALLY_VITAL || CLASS_PLAYER && pSightEnt->IsAlive())
 		{
-/*			// Is this enemy shooting at me?
+			// Is this enemy shooting at me?
 			CAI_BaseNPC *pPlayerAlly = dynamic_cast<CAI_BaseNPC*>(pSightEnt);
 
 			if (pPlayerAlly && pPlayerAlly->GetEnemy() == this)
-*/
+
 			{
 				m_iNumEnemies++;
 			}
 		}
 		pSightEnt = GetSenses()->GetNextSeenEntity(&iter);
 	}
-
+*/
 
 
 	if (!HasCondition(COND_ENEMY_OCCLUDED))
@@ -545,6 +541,17 @@ void CNPC_Combine::GatherConditions()
 //-----------------------------------------------------------------------------
 void CNPC_Combine::PrescheduleThink()
 {
+	if (IsAlive() && GetNavigator()->IsGoalActive() && GetActivity() == ACT_RUN)
+	{
+		if (IsElite())
+		{
+			m_flPlaybackRate = sk_combine_elite_speed_scale.GetFloat();
+		}
+		else
+		{
+			m_flPlaybackRate = sk_combine_s_speed_scale.GetFloat();
+		}
+	}
 	BaseClass::PrescheduleThink();
 
 	// Speak any queued sentences
@@ -670,7 +677,7 @@ bool CNPC_Combine::ShouldMoveAndShoot()
 	m_flStopMoveShootTime = FLT_MAX;
 
 	if( IsCurSchedule( SCHED_COMBINE_HIDE_AND_RELOAD, true ) )
-		m_flStopMoveShootTime = gpGlobals->curtime + random->RandomFloat( 0.1f, 0.3f );
+		m_flStopMoveShootTime = gpGlobals->curtime + random->RandomFloat( 0.2f, 0.4f );
 
 	if( IsCurSchedule( SCHED_TAKE_COVER_FROM_BEST_SOUND, false ) )
 		m_flStopMoveShootTime = gpGlobals->curtime + random->RandomFloat(0.1f, 0.3f);
@@ -685,7 +692,7 @@ bool CNPC_Combine::ShouldMoveAndShoot()
 		m_flStopMoveShootTime = gpGlobals->curtime + random->RandomFloat( 0.4f, 0.6f );
 
 	if( m_pSquad && IsCurSchedule( SCHED_COMBINE_TAKE_COVER1, false ) )
-		m_flStopMoveShootTime = gpGlobals->curtime + random->RandomFloat( 0.4f, 0.6f );
+		m_flStopMoveShootTime = gpGlobals->curtime + random->RandomFloat( 0.5f, 0.7f );
 
 	return BaseClass::ShouldMoveAndShoot();
 }
@@ -1186,9 +1193,9 @@ void CNPC_Combine::StartTask( const Task_t *pTask )
 	case TASK_RANGE_ATTACK1:
 	{
 		m_flShotDelay = GetActiveWeapon()->GetFireRate();
-			if (GetAbsOrigin().DistTo(GetEnemy()->GetAbsOrigin()) <= COMBINE_LARGER_BURST_RANGE)
+			if (GetAbsOrigin().DistTo(GetEnemy()->GetAbsOrigin()) <= COMBINE_LARGER_BURST_RANGE || IsCurSchedule ( SCHED_COMBINE_SUPPRESS ) )
 			{
-				if (!HasShotgun())
+				if (!HasShotgun() || HasShotgun() && IsCurSchedule(SCHED_COMBINE_SUPPRESS))
 				{
 					// Longer burst
 					m_nShots = GetActiveWeapon()->GetRandomBurst() * 3;
@@ -1202,13 +1209,13 @@ void CNPC_Combine::StartTask( const Task_t *pTask )
 					m_nShots = 1;
 
 					// Longer intervals to simulate single shooting
-					m_flNextAttack = gpGlobals->curtime + m_flShotDelay - random->RandomFloat(0, 0.1);	// was - 0.1
+					m_flNextAttack = gpGlobals->curtime + m_flShotDelay + random->RandomFloat(0.1, 0.3);	// was - 0.1
 				}
 			}
 			else
 			{
 				m_nShots = GetActiveWeapon()->GetRandomBurst();
-				m_flNextAttack = gpGlobals->curtime + m_flShotDelay + random->RandomFloat(0.3, 0.1);	// was - 0.1
+				m_flNextAttack = gpGlobals->curtime + m_flShotDelay + random->RandomFloat(0.0, 0.1);	// was - 0.1
 			}
 		ResetIdealActivity(ACT_RANGE_ATTACK1);
 		m_flLastAttackTime = gpGlobals->curtime;
@@ -1861,7 +1868,7 @@ int CNPC_Combine::SelectCombatSchedule()
 			// A crouching guy tries to stay stuck in.
 			if( !IsCrouching() )
 			{
-				if (GetEnemy() && m_iNumEnemies < 3 && random->RandomFloat(0, 100) < 50 && CouldShootIfCrouching(GetEnemy()))
+				if (GetEnemy() && random->RandomFloat(0, 100) < 50 && CouldShootIfCrouching(GetEnemy()))	//m_iNumEnemies < 3
 				{
 					Crouch();
 				}
@@ -1926,13 +1933,13 @@ int CNPC_Combine::SelectCombatSchedule()
 		DesireStand();
 		if (GetEnemy() && OccupyStrategySlotRange(SQUAD_SLOT_ATTACK1, SQUAD_SLOT_ATTACK2) && !(GetEnemy()->GetFlags() & FL_NOTARGET))
 		{
-			if (m_iNumEnemies > 3)
-			{
-					// Hold back!
-					SetIdealActivity(ACT_SIGNAL_TAKECOVER);
-					return SCHED_COMBINE_WAIT_IN_COVER;
-			}
-			else
+//			if (m_iNumEnemies > 3)
+//			{
+//					// Hold back!
+//					SetIdealActivity(ACT_SIGNAL_TAKECOVER);
+//					return SCHED_COMBINE_WAIT_IN_COVER;
+//			}
+//			else
 			{
 					// Charge in and break the enemy's cover!
 					return SCHED_ESTABLISH_LINE_OF_FIRE;
@@ -1941,7 +1948,7 @@ int CNPC_Combine::SelectCombatSchedule()
 		// If I'm a long, long way away, establish a LOF anyway. Once I get there I'll
 		// start respecting the squad slots again. UNLESS there are multiple enemies.
 		float flDistSq = GetEnemy()->WorldSpaceCenter().DistToSqr( WorldSpaceCenter() );
-		if ( m_iNumEnemies < 3 && flDistSq > Square(3000))
+		if ( flDistSq > Square(3000)) //m_iNumEnemies < 3 &&
 			return SCHED_ESTABLISH_LINE_OF_FIRE;
 /*
 		if (CanSuppressEnemy(true) && OccupyStrategySlot(SQUAD_SLOT_ATTACK_OCCLUDER) && !(GetEnemy()->GetFlags() & FL_NOTARGET))	// && !(GetEnemy()->GetFlags() & FL_NOTARGET)
@@ -1956,7 +1963,7 @@ int CNPC_Combine::SelectCombatSchedule()
 	}
 
 	// Try to be a flanker.
-	if (IsInSquad() && !FClassnameIs(GetEnemy(), "npc_bullseye") && GetSquad()->NumMembers() > 3 && IsStrategySlotRangeOccupied(SQUAD_SLOT_ATTACK1, SQUAD_SLOT_ATTACK2) && OccupyStrategySlotRange(SQUAD_SLOT_FLANK_FIRST, SQUAD_SLOT_FLANK_LAST))
+	if (IsInSquad() && !FClassnameIs(GetEnemy(), "npc_bullseye") && GetSquad()->NumMembers() > 3 && OccupyStrategySlotRange(SQUAD_SLOT_FLANK_FIRST, SQUAD_SLOT_FLANK_LAST))
 	{
 		return SCHED_COMBINE_FLANK_ENEMY;
 	}
@@ -1964,7 +1971,7 @@ int CNPC_Combine::SelectCombatSchedule()
 	// --------------------------------------------------------------
 	// Enemy not occluded but isn't open to attack
 	// --------------------------------------------------------------
-	if ( m_iNumEnemies < 4 && HasCondition(COND_SEE_ENEMY) && !HasCondition(COND_CAN_RANGE_ATTACK1 ) )
+	if ( HasCondition(COND_SEE_ENEMY) && !HasCondition(COND_CAN_RANGE_ATTACK1 ) )	//m_iNumEnemies < 4 &&
 	{
 		if ( HasShotgun() || (HasCondition( COND_TOO_FAR_TO_ATTACK ) || IsUsingTacticalVariant(TACTICAL_VARIANT_PRESSURE_ENEMY) ) && OccupyStrategySlotRange( SQUAD_SLOT_ATTACK1, SQUAD_SLOT_ATTACK2 ))
 		{
@@ -2175,7 +2182,10 @@ int CNPC_Combine::SelectSchedule( void )
 							return SCHED_COMBINE_FACE_IDEAL_YAW;
 						}
 
-						return SCHED_TAKE_COVER_FROM_BEST_SOUND;
+						if (pSound->m_iType & SOUND_CONTEXT_REACT_TO_SOURCE)
+							return SCHED_COMBINE_TAKE_COVER1;
+						else
+							return SCHED_TAKE_COVER_FROM_BEST_SOUND;
 					}
 
 					// JAY: This was disabled in HL1.  Test?
@@ -2302,7 +2312,7 @@ int CNPC_Combine::SelectFailSchedule( int failedSchedule, int failedTask, AI_Tas
 {
 	if( failedSchedule == SCHED_COMBINE_TAKE_COVER1 )
 	{
-		if (IsInSquad() && m_iNumEnemies < 4 && HasShotgun() && IsStrategySlotRangeOccupied(SQUAD_SLOT_ATTACK1, SQUAD_SLOT_ATTACK2) && HasCondition(COND_SEE_ENEMY))
+		if (IsInSquad() && HasShotgun() && IsStrategySlotRangeOccupied(SQUAD_SLOT_ATTACK1, SQUAD_SLOT_ATTACK2) && HasCondition(COND_SEE_ENEMY)) //&& m_iNumEnemies < 4
 		{
 			// This eases the effects of an unfortunate bug that usually plagues shotgunners. Since their rate of fire is low,
 			// they spend relatively long periods of time without an attack squad slot. If you corner a shotgunner, usually 
@@ -2370,7 +2380,7 @@ int CNPC_Combine::SelectScheduleAttack()
 		if (flTimeAtFirstHand != AI_INVALID_TIME)
 		{
 			float flTimeEnemySeen = gpGlobals->curtime - flTimeAtFirstHand;
-			if (flTimeEnemySeen > 8.0)
+			if (flTimeEnemySeen > 2.0)
 			{
 				// If we're not in the viewcone of the turret, run up and hit it. Do this a bit later to
 				// give other squadmembers a chance to throw a grenade before I run in.
@@ -2478,11 +2488,11 @@ int CNPC_Combine::SelectScheduleAttack()
 		}
 	}
 
-	if (HasCondition(COND_WEAPON_SIGHT_OCCLUDED))
+	if ( HasCondition( COND_WEAPON_SIGHT_OCCLUDED ) )
 	{
-		// If they are hiding behind something (that we can destroy), start shooting at it.
+		// If they are hiding behind something (that we can destroy?), start shooting at it.
 		CBaseEntity *pBlocker = GetEnemyOccluder();
-		if (pBlocker && pBlocker->GetHealth() > 0 && OccupyStrategySlot(SQUAD_SLOT_ATTACK_OCCLUDER))
+		if ( pBlocker && OccupyStrategySlotRange( SQUAD_SLOT_ATTACK_OCCLUDER1, SQUAD_SLOT_ATTACK_OCCLUDER2 ) ) //&& pBlocker->GetHealth() > 0
 		{
 			return SCHED_SHOOT_ENEMY_COVER;
 		}
@@ -2781,17 +2791,7 @@ int CNPC_Combine::TranslateSchedule(int scheduleType)
 	break;
 	case SCHED_COMBINE_NORMAL_RELOAD:
 	{
-		if (GetEnemy()->ClassMatches("npc_bullseye"))
-		{
-			// Refill the clip
-			if (GetActiveWeapon()->UsesClipsForAmmo1())
-			{
-				GetActiveWeapon()->m_iClip1 = GetActiveWeapon()->GetMaxClip1();
-				ClearCondition(COND_NO_PRIMARY_AMMO);
-				ClearCondition(COND_LOW_PRIMARY_AMMO);
-			}
-		}
-		else if (HasCondition(COND_NO_PRIMARY_AMMO) || HasCondition(COND_LOW_PRIMARY_AMMO))	// Don't reload if you have done so while moving.
+		if (HasCondition(COND_NO_PRIMARY_AMMO) || HasCondition(COND_LOW_PRIMARY_AMMO))	// Don't reload if you have done so while moving.
 		{
 			return SCHED_RELOAD;
 		}
@@ -2958,6 +2958,7 @@ void CNPC_Combine::HandleAnimEvent( animevent_t *pEvent )
 				{
 					DelayAltFireAttack(9999999.0f);
 				}
+
 				// I'm disabling this decrementor. At the time of this change, the elites
 				// don't bother to check if they have grenades anyway. This means that all
 				// elites have infinite combine balls, even if the designer marks the elite
@@ -3029,10 +3030,12 @@ void CNPC_Combine::HandleAnimEvent( animevent_t *pEvent )
 					m_iNumGrenades--;
 				}
 
-				if (g_pGameRules->IsSkillLevel(SKILL_HARD) || g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL))
-					m_flNextGrenadeCheck = gpGlobals->curtime + 2;// wait two seconds on hard skill level
+				if (g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL))
+					m_flNextGrenadeCheck = gpGlobals->curtime + 2;// wait two seconds on diabolical skill level
+				else if (g_pGameRules->IsSkillLevel(SKILL_HARD))
+					m_flNextGrenadeCheck = gpGlobals->curtime + 4;// wait four seconds on hard skill level
 				else
-					m_flNextGrenadeCheck = gpGlobals->curtime + 6;// wait four seconds before even looking again to see if a grenade can be thrown.
+					m_flNextGrenadeCheck = gpGlobals->curtime + 6;// wait six seconds before even looking again to see if a grenade can be thrown.
 			}
 			handledEvent = true;
 			break;
@@ -3045,12 +3048,12 @@ void CNPC_Combine::HandleAnimEvent( animevent_t *pEvent )
 				pGrenade->KeyValue( "velocity", m_vecTossVelocity );
 				pGrenade->Spawn( );
 
-				if ( g_pGameRules->IsSkillLevel(SKILL_HARD) )
-					m_flNextGrenadeCheck = gpGlobals->curtime + 2;// wait two seconds on hard skill level
-				else if (g_pGameRules->IsSkillLevel(SKILL_EASY))
-					m_flNextGrenadeCheck = gpGlobals->curtime + 6;// wait six seconds before even looking again to see if a grenade can be thrown.
+				if ( g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL) )
+					m_flNextGrenadeCheck = gpGlobals->curtime + 2;// wait two seconds on diabolical skill level
+				else if (g_pGameRules->IsSkillLevel(SKILL_HARD))
+					m_flNextGrenadeCheck = gpGlobals->curtime + 4;// wait six seconds before even looking again to see if a grenade can be thrown.
 				else
-					m_flNextGrenadeCheck = gpGlobals->curtime + 4;// wait four 
+					m_flNextGrenadeCheck = gpGlobals->curtime + 6;// wait four seconds on hard skill level
 			}
 			handledEvent = true;
 			break;
@@ -3138,6 +3141,32 @@ void CNPC_Combine::HandleAnimEvent( animevent_t *pEvent )
 		m_iLastAnimEventHandled = pEvent->event;
 	}
 }
+
+//---------------------------------------------------------
+//---------------------------------------------------------
+Disposition_t CNPC_Combine::IRelationType(CBaseEntity *pTarget)
+{
+	if (pTarget->ClassMatches("npc_bullseye"))
+		return D_NU;
+
+	return BaseClass::IRelationType(pTarget);
+}
+
+//---------------------------------------------------------
+//---------------------------------------------------------
+void CNPC_Combine::AddEntityRelationship(CBaseEntity *pEntity, Disposition_t nDisposition, int nPriority)
+{
+	Disposition_t DispCopy = nDisposition;
+	int PriorityCopy = nPriority;
+	if (nDisposition == D_HT && pEntity->ClassMatches("npc_bullseye"))
+	{
+//		UpdateEnemyMemory(pEntity, pEntity->GetAbsOrigin());
+		DispCopy = D_NU;
+		PriorityCopy = nPriority - 1;
+	}
+	BaseClass::AddEntityRelationship(pEntity, DispCopy, PriorityCopy);
+}
+
 
 //-----------------------------------------------------------------------------
 // Purpose: Get shoot position of BCC at an arbitrary position
@@ -3522,7 +3551,7 @@ bool CNPC_Combine::CanAltFireEnemy( bool bUseFreeKnowledge )
 	if (!IsElite() && !IsGuard() && FClassnameIs(GetActiveWeapon(), "weapon_ar2"))
 		return false;
 	
-	if (g_pGameRules->IsSkillLevel(SKILL_EASY) && IsGuard())
+	if (!g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL) && IsGuard())
 		return false;
 
 	if (HasShotgun())
@@ -3537,8 +3566,8 @@ bool CNPC_Combine::CanAltFireEnemy( bool bUseFreeKnowledge )
 	if( !GetEnemy() )
 		return false;
 
-//	if (gpGlobals->curtime < m_flNextGrenadeCheck )
-//		return false;
+	if (gpGlobals->curtime < m_flNextGrenadeCheck )
+		return false;
 
 	// See Steve Bond if you plan on changing this next piece of code!! (SJB) EP2_OUTLAND_10
 	if (m_iNumGrenades < 1)
@@ -3585,8 +3614,8 @@ bool CNPC_Combine::CanAltFireEnemy( bool bUseFreeKnowledge )
 	float flLength = (vShootPosition - vecTarget).Length();
 
 	flLength *= tr.fraction;
-	//If the ball can travel 100% of the distance to the player then let the NPC shoot it. 
-	if (tr.fraction >= 1.0 && (!tr.m_pEnt || !tr.m_pEnt->IsWorld()))	// (!tr.m_pEnt || !tr.m_pEnt->IsWorld()) && Thanks to Mapbase //&& flLength > 128.0f
+	//If the ball can travel 90% of the distance to the player then let the NPC shoot it. 
+	if (tr.fraction >= 0.9 && (!tr.m_pEnt || !tr.m_pEnt->IsWorld()))	// (!tr.m_pEnt || !tr.m_pEnt->IsWorld()) && Thanks to Mapbase //&& flLength > 128.0f
 	{
 		// Target is valid
 		m_vecAltFireTarget = vecTarget;
@@ -3936,7 +3965,7 @@ WeaponProficiency_t CNPC_Combine::CalcWeaponProficiency(CBaseCombatWeapon *pWeap
 		}
 		else
 		{
-			return WEAPON_PROFICIENCY_POOR;	// 3/6
+			return WEAPON_PROFICIENCY_POOR;	// 4.5/9
 		}
 	}
 	else if (FClassnameIs(pWeapon, "weapon_shotgun"))
@@ -4045,7 +4074,9 @@ const char* CNPC_Combine::GetSquadSlotDebugName( int iSquadSlot )
 		break;
 	case SQUAD_SLOT_GRENADE2:			return "SQUAD_SLOT_GRENADE2";	
 		break;
-	case SQUAD_SLOT_ATTACK_OCCLUDER:	return "SQUAD_SLOT_ATTACK_OCCLUDER";	
+	case SQUAD_SLOT_ATTACK_OCCLUDER1:	return "SQUAD_SLOT_ATTACK_OCCLUDER1";	
+		break;
+	case SQUAD_SLOT_ATTACK_OCCLUDER2:	return "SQUAD_SLOT_ATTACK_OCCLUDER2";
 		break;
 	case SQUAD_SLOT_OVERWATCH:			return "SQUAD_SLOT_OVERWATCH";
 		break;
@@ -4272,7 +4303,7 @@ DEFINE_SCHEDULE
  "	Tasks "
  "		TASK_SET_FAIL_SCHEDULE			SCHEDULE:SCHED_FAIL_ESTABLISH_LINE_OF_FIRE"
  "		TASK_SET_TOLERANCE_DISTANCE		48"
- "		TASK_GET_FLANK_RADIUS_PATH_TO_ENEMY_LOS	252"		//TASK_GET_PATH_TO_ENEMY_LKP_LOS 0
+ "		TASK_GET_FLANK_RADIUS_PATH_TO_ENEMY_LOS	144"		//TASK_GET_PATH_TO_ENEMY_LKP_LOS 0
  "		TASK_COMBINE_SET_STANDING		1"
  "		TASK_SPEAK_SENTENCE				1"
  "		TASK_RUN_PATH					0"
@@ -4306,7 +4337,7 @@ DEFINE_SCHEDULE
  "		TASK_SET_FAIL_SCHEDULE					SCHEDULE:SCHED_COMBINE_FLANK_ENEMY"
  "		TASK_STOP_MOVING						0"
  "		TASK_COMBINE_BEGIN_FLANK				0"
- "		TASK_GET_FLANK_ARC_PATH_TO_ENEMY_LOS	90"
+ "		TASK_GET_FLANK_ARC_PATH_TO_ENEMY_LOS	60"
  "		TASK_COMBINE_SET_STANDING				1"
  "		TASK_COMBINE_ANNOUNCE_FLANK				0"
  //"		TASK_SET_ACTIVITY			ACTIVITY:ACT_SIGNAL_ADVANCE"
@@ -4441,7 +4472,7 @@ DEFINE_SCHEDULE
  ""
  "	Interrupts"
  "		COND_ENEMY_DEAD"
- "		COND_LIGHT_DAMAGE"
+ "		COND_REPEATED_DAMAGE"
  "		COND_HEAVY_DAMAGE"
  "		COND_NO_PRIMARY_AMMO"
  "		COND_WEAPON_BLOCKED_BY_FRIEND"
@@ -4462,9 +4493,6 @@ DEFINE_SCHEDULE
  "		TASK_STOP_MOVING			0"
  "		TASK_FACE_ENEMY				0"
  "		TASK_COMBINE_SET_STANDING	0"
- "		TASK_RANGE_ATTACK1			0"
- "		TASK_RANGE_ATTACK1			0"
- "		TASK_RANGE_ATTACK1			0"
  "		TASK_RANGE_ATTACK1			0"
  ""
  "	Interrupts"
@@ -4645,6 +4673,7 @@ DEFINE_SCHEDULE
  "		COND_NEW_ENEMY"
  "		COND_ENEMY_DEAD"
  "		COND_HEAVY_DAMAGE"
+ "		COND_REPEATED_DAMAGE"
 // "		COND_LIGHT_DAMAGE"
  "		COND_LOW_PRIMARY_AMMO"
  "		COND_NO_PRIMARY_AMMO"

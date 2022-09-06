@@ -106,7 +106,7 @@ void CNPC_GMan::Spawn()
 	AddSolidFlags( FSOLID_NOT_STANDABLE );
 	SetMoveType( MOVETYPE_STEP );
 	SetBloodColor( BLOOD_COLOR_RED );
-	m_iHealth			= 100;
+	m_iHealth			= 8;
 	m_flFieldOfView		= 0.5;// indicates the width of this NPC's forward view cone ( as a dotproduct result )
 	m_NPCState			= NPC_STATE_NONE;
 	SetImpactEnergyScale( 0.0f ); // no physics damage on the gman

@@ -144,6 +144,7 @@ enum
 	TASK_HEADCRAB_CHECK_FOR_UNBURROW,
 	TASK_HEADCRAB_JUMP_FROM_CANISTER,
 	TASK_HEADCRAB_CLIMB_FROM_CANISTER,
+	TASK_THREAT_DISPLAY,
 
 	TASK_HEADCRAB_CEILING_WAIT,
 	TASK_HEADCRAB_CEILING_POSITION,
@@ -193,7 +194,11 @@ ConVar	sk_headcrab_melee_dmg( "sk_headcrab_melee_dmg","0");
 ConVar	sk_headcrab_poison_npc_damage( "sk_headcrab_poison_npc_damage", "0" );
 ConVar	sk_headcrab_357_damage_scale("sk_headcrab_357_damage_scale", "2.0");
 ConVar	sk_headcrab_buckshot_damage_scale("sk_headcrab_buckshot_damage_scale", "2.0");
-ConVar	sk_headcrab_bullet_damage_scale("sk_headcrab_bullet_damage_scale", "1.25");
+ConVar	sk_headcrab_bullet_damage_scale("sk_headcrab_bullet_damage_scale", "0.75");
+ConVar	sk_headcrab_9mm_damage_scale("sk_headcrab_9mm_damage_scale", "1.25");
+ConVar	sk_headcrab_max_additional_ammo_shots("sk_headcrab_max_additional_ammo_shots", "1");
+ConVar	sk_headcrab_deliberate_miss_chance("sk_headcrab_deliberate_miss_chance", "0.4");
+ConVar	sk_headcrab_deliberate_miss_decrement("sk_headcrab_deliberate_miss_decrement", "0.4");
 
 extern ConVar sk_npc_dmg_buckshot;
 extern ConVar sk_plr_num_shotgun_pellets;
@@ -620,6 +625,19 @@ void CBaseHeadcrab::HandleAnimEvent( animevent_t *pEvent )
 			{
 				JumpAttack( false, m_vecCommittedJumpPos );
 			}
+			else if (g_pGameRules->IsSkillLevel(SKILL_EASY))
+			{
+				TelegraphSound();
+
+				Vector right;
+
+				GetVectors(NULL, &right, NULL);
+
+				m_vecCommittedJumpPos = pEnemy->EyePosition();
+				m_vecCommittedJumpPos += right * random->RandomFloat(-80, 80);
+				
+				m_bCommittedToJump = true;
+			}
 			else
 			{
 				// Jump at my enemy's eyes.
@@ -655,10 +673,26 @@ void CBaseHeadcrab::HandleAnimEvent( animevent_t *pEvent )
 		
 		if ( pEnemy )
 		{
-			// Once we telegraph, we MUST jump. This is also when commit to what point
-			// we jump at. Jump at our enemy's eyes.
-			m_vecCommittedJumpPos = pEnemy->EyePosition();
-			m_bCommittedToJump = true;
+			if (g_pGameRules->IsSkillLevel(SKILL_EASY))
+			{
+				TelegraphSound();
+
+				Vector right;
+
+				GetVectors(NULL, &right, NULL);
+
+				m_vecCommittedJumpPos = pEnemy->EyePosition();
+				m_vecCommittedJumpPos += right * random->RandomFloat(-80, 80);
+
+				m_bCommittedToJump = true;
+			}
+			else
+			{
+				// Once we telegraph, we MUST jump. This is also when commit to what point
+				// we jump at. Jump at our enemy's eyes.
+				m_vecCommittedJumpPos = pEnemy->EyePosition();
+				m_bCommittedToJump = true;
+			}
 		}
 
 		return;
@@ -801,6 +835,10 @@ void CBaseHeadcrab::RunTask( const Task_t *pTask )
 					// at the enemy from a bad location.
 					m_bAttackFailed = false;
 					m_flNextAttack = gpGlobals->curtime + 1.2f;
+				}
+				else if (g_pGameRules->IsSkillLevel(SKILL_EASY))
+				{
+					m_flNextAttack = gpGlobals->curtime + 0.75f;
 				}
 			}
 			break;
@@ -1385,6 +1423,11 @@ void CBaseHeadcrab::StartTask( const Task_t *pTask )
 		JumpFromCanister();
 		break;
 
+	case TASK_THREAT_DISPLAY:
+		TelegraphSound();
+		SetIdealActivity( (Activity)ACT_HEADCRAB_THREAT_DISPLAY );
+		break;
+
 	case TASK_HEADCRAB_CEILING_POSITION:
 		{
 			trace_t tr;
@@ -1515,7 +1558,27 @@ void CBaseHeadcrab::StartTask( const Task_t *pTask )
 			CPASAttenuationFilter filter( this, ATTN_IDLE );
 			EmitSound( filter, entindex(), CHAN_WEAPON, pAttackSounds[0], GetSoundVolume(), ATTN_IDLE, 0, GetVoicePitch() );
 #endif
-			SetIdealActivity( ACT_RANGE_ATTACK1 );
+			// Just pop up into the air like you're trying to get at the
+			// enemy, even though it's known you can't reach them.
+			if (g_pGameRules->IsSkillLevel(SKILL_EASY))
+			{
+				CBaseEntity *pEnemy = GetEnemy();
+
+				Vector right;
+
+				GetVectors(NULL, &right, NULL);
+
+				m_vecCommittedJumpPos = pEnemy->EyePosition();
+				m_vecCommittedJumpPos += right * random->RandomFloat(-80, 80);
+
+				m_bCommittedToJump = true;
+
+				SetIdealActivity( ACT_RANGE_ATTACK1 );
+			}
+			else
+			{
+				SetIdealActivity( ACT_RANGE_ATTACK1 );
+			}
 			break;
 		}
 
@@ -1726,29 +1789,66 @@ int CBaseHeadcrab::OnTakeDamage_Alive( const CTakeDamageInfo &inputInfo )
 
 	float flScale = 1.0;
 
-	if (info.GetDamageType() & DMG_BULLET)
+	if (info.GetDamageType() & DMG_BUCKSHOT)
 	{
-		flScale = sk_headcrab_bullet_damage_scale.GetFloat();
+		flScale = sk_headcrab_buckshot_damage_scale.GetFloat();
 	}
-
-	if (info.GetAmmoType() == GetAmmoDef()->Index("357"))
+	else if (info.GetAmmoType() == GetAmmoDef()->Index("357"))
 	{
 		flScale = sk_headcrab_357_damage_scale.GetFloat();
 	}
-
-	if (info.GetDamageType() & DMG_BUCKSHOT)
+	else if (info.GetAmmoType() == GetAmmoDef()->Index("Pistol"))
 	{
-		int iHalfMax = sk_npc_dmg_buckshot.GetFloat() * sk_plr_num_shotgun_pellets.GetInt() * 0.5;
-		if (info.GetDamage() >= iHalfMax)
-		{
-			flScale = sk_headcrab_buckshot_damage_scale.GetFloat();
-		}
+		flScale = sk_headcrab_9mm_damage_scale.GetFloat();
+	}
+	else if (info.GetDamageType() & DMG_BULLET)
+	{
+		flScale = sk_headcrab_bullet_damage_scale.GetFloat();
 	}
 
 	if (flScale != 0)
 	{
 		float flDamage = info.GetDamage() * flScale;
 		info.SetDamage(flDamage);
+	}
+
+	CBasePlayer *pPlayer = ToBasePlayer(info.GetAttacker());
+	if (pPlayer != NULL)
+	{
+		// Attempt to drain player's ammo
+		if (info.GetDamageType() & DMG_BULLET && info.GetDamage() >= (float)GetHealth())
+		{
+			CHalfLife2 *pHL2GameRules = static_cast<CHalfLife2 *>(g_pGameRules);
+
+			if (info.GetAmmoType() == GetAmmoDef()->Index("Pistol"))
+			{
+				if (pHL2GameRules->NPC_ShouldDrainPistolAmmo(pPlayer) && m_flAdditionalShots < sk_headcrab_max_additional_ammo_shots.GetInt())
+				{
+					info.SetDamage(1);
+					pHL2GameRules->NPC_TakenAdditionalShots(1);
+					m_flAdditionalShots++;
+				}
+			}
+			else if (info.GetAmmoType() == GetAmmoDef()->Index("AR2"))
+			{
+				if (pHL2GameRules->NPC_ShouldDrainAR2Ammo(pPlayer) && m_flAdditionalShots < sk_headcrab_max_additional_ammo_shots.GetInt())
+				{
+					info.SetDamage(3);
+					pHL2GameRules->NPC_TakenAdditionalShots(1);
+					m_flAdditionalShots++;
+					m_flAdditionalShots++;
+				}
+			}
+			else if (info.GetAmmoType() == GetAmmoDef()->Index("SMG1"))
+			{
+				if (pHL2GameRules->NPC_ShouldDrainSMGAmmo(pPlayer) && m_flAdditionalShots < sk_headcrab_max_additional_ammo_shots.GetInt())
+				{
+					info.SetDamage(1);
+					pHL2GameRules->NPC_TakenAdditionalShots(1);
+					m_flAdditionalShots++;
+				}
+			}
+		}
 	}
 
 	if( info.GetDamageType() & DMG_BLAST )
@@ -1840,7 +1940,7 @@ int CBaseHeadcrab::TranslateSchedule( int scheduleType )
 
 		case SCHED_WAKE_ANGRY:
 		{
-			if ( HaveSequenceForActivity((Activity)ACT_HEADCRAB_THREAT_DISPLAY) )
+			if ( g_pGameRules->IsSkillLevel(SKILL_EASY) )
 				return SCHED_HEADCRAB_WAKE_ANGRY;
 			else
 				return SCHED_HEADCRAB_WAKE_ANGRY_NO_DISPLAY;
@@ -2085,14 +2185,14 @@ void CBaseHeadcrab::Ignite( float flFlameLifetime, bool bNPCOnly, float flSize, 
 
 	bool bWasOnFire = IsOnFire();
 
-#ifdef HL2_EPISODIC
+//#ifdef HL2_EPISODIC
 	if( GetHealth() > flFlameLifetime )
 	{
 		// Add some burn time to very healthy headcrabs to fix a bug where
 		// black headcrabs would sometimes spontaneously extinguish (and survive)
 		flFlameLifetime += 10.0f;
 	}
-#endif// HL2_EPISODIC
+//#endif// HL2_EPISODIC
 
  	BaseClass::Ignite( flFlameLifetime, bNPCOnly, flSize, bCalledByLevelDesigner );
 
@@ -2598,7 +2698,7 @@ void CFastHeadcrab::Spawn( void )
 
 	BaseClass::Spawn();
 
-	m_iHealth = sk_headcrab_health.GetFloat();
+	m_iHealth = sk_headcrab_fast_health.GetFloat();
 
 	m_iRunMode = HEADCRAB_RUNMODE_IDLE;
 	m_flPauseTime = 999999;
@@ -3389,7 +3489,7 @@ void CBlackHeadcrab::Panic( float flDuration )
 }
 
 
-#if HL2_EPISODIC
+//#if HL2_EPISODIC
 //-----------------------------------------------------------------------------
 // Purpose: Black headcrabs have 360-degree vision when they are in the ambush
 //			schedule. This is because they ignore sounds when in ambush, and
@@ -3411,7 +3511,7 @@ bool CBlackHeadcrab::FInViewCone( CBaseEntity *pEntity )
 		return BaseClass::FInViewCone( pEntity );
 	}
 }
-#endif
+//#endif
 
 
 //-----------------------------------------------------------------------------
@@ -3622,6 +3722,7 @@ AI_BEGIN_CUSTOM_NPC( npc_headcrab, CBaseHeadcrab )
 
 	DECLARE_TASK( TASK_HEADCRAB_CEILING_POSITION )
 	DECLARE_TASK( TASK_HEADCRAB_CEILING_WAIT )
+	DECLARE_TASK( TASK_THREAT_DISPLAY )
 	DECLARE_TASK( TASK_HEADCRAB_CEILING_DETACH )
 	DECLARE_TASK( TASK_HEADCRAB_CEILING_FALL )
 	DECLARE_TASK( TASK_HEADCRAB_CEILING_LAND )
@@ -3687,7 +3788,7 @@ AI_BEGIN_CUSTOM_NPC( npc_headcrab, CBaseHeadcrab )
 		"		TASK_SET_ACTIVITY				ACTIVITY:ACT_IDLE "
 		"		TASK_FACE_IDEAL					0"
 		"		TASK_SOUND_WAKE					0"
-		"		TASK_PLAY_SEQUENCE_FACE_ENEMY	ACTIVITY:ACT_HEADCRAB_THREAT_DISPLAY"
+		"		TASK_THREAT_DISPLAY				0"
 		""
 		"	Interrupts"
 	)

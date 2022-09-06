@@ -109,7 +109,7 @@ IMPLEMENT_ACTTABLE(CWeaponAR2);
 CWeaponAR2::CWeaponAR2( )
 {
 	m_fMinRange1	= 65;
-	m_fMaxRange1	= 4096;	// OLD: 2048
+	m_fMaxRange1	= 3600;	// 100 yards
 
 	m_fMinRange2	= 128;
 	m_fMaxRange2	= 1024;
@@ -546,8 +546,8 @@ const WeaponProficiencyInfo_t *CWeaponAR2::GetProficiencyValues()
 {
 	static WeaponProficiencyInfo_t proficiencyTable[] =
 	{
-		{ 6.00,		0.75	},	//poor 6/12
-		{ 4.50,		0.75	},	//average 4.5/9
+		{ 5.00,		0.75	},	//poor 5/10
+		{ 4.00,		0.75	},	//average 4/8
 		{ 3.00,		0.75	},	//good 3/6
 		{ 2.00,		0.75	},	//very good 2/4
 		{ 1.00,		1.00	},	//perfect 1/2

@@ -162,6 +162,8 @@ public:
 
 	void			PrepareReadinessRemap(void);
 
+	void			AnalyzeGunfireSound(CSound *pSound);
+
 	virtual bool	IsNavigationUrgent(void);
 
 	//---------------------------------

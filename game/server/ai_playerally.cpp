@@ -531,7 +531,7 @@ void CAI_PlayerAlly::PrescheduleThink( void )
 
 		float flHealthRegen = flHealthPerSecond * flDelta;
 
-		if ( g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL) )
+		if ( g_pGameRules->IsSkillLevel(SKILL_HARD) )
 			flHealthRegen *= 0.5f;
 		else if ( g_pGameRules->IsSkillLevel(SKILL_EASY) )
 			flHealthRegen *= 1.5f;
@@ -1135,11 +1135,6 @@ int CAI_PlayerAlly::OnTakeDamage_Alive( const CTakeDamageInfo &info )
 			{
 				flDamage = ( GetMaxHealth() * 0.25 );
 				subInfo.SetDamage( flDamage );
-			}
-			if (flDamage > (GetMaxHealth() * 0.1) && flDamage < (GetMaxHealth() * 0.25))
-			{
-				flDamage = (GetMaxHealth() * 0.1);
-				subInfo.SetDamage(flDamage);
 			}
 		}
 	}

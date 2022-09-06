@@ -1883,6 +1883,63 @@
     <ClInclude Include="..\shared\func_break.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="worldlight.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gameui\backgroundmenubutton.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gameui\basepanel.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gameui\cdkeyentrydialog.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gameui\commandcheckbutton.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gameui\contentcontroldialog.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gameui\createmultiplayergamebotpage.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gameui\createmultiplayergamegameplaypage.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gameui\customtabexplanationdialog.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gameui\cvarnegatecheckbutton.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gameui\cvarslider.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gameui\cvartextentry.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gameui\cvartogglecheckbutton.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gameui\engineinterface.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gameui\gameconsole.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gameui\gameconsoledialog.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gameui\gameui_util.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gameui\keytogglecheckbutton.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gameui\labeledcommandcombobox.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mp3player.cpp">
@@ -3369,6 +3426,9 @@
     </ClCompile>
     <ClCompile Include="toolframework_client.cpp">
       <Filter>Tool Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="worldlight.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

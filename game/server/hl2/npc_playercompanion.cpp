@@ -512,7 +512,7 @@ void CNPC_PlayerCompanion::GatherConditions()
 
 bool CNPC_PlayerCompanion::bHighHealth()
 {
-	if ((float)GetHealth() / (float)GetMaxHealth() > 0.75f)
+	if ((float)GetHealth() / (float)GetMaxHealth() > 0.35f)
 	{
 		return true;
 	}
@@ -764,16 +764,16 @@ int CNPC_PlayerCompanion::SelectSchedule()
 //-----------------------------------------------------------------------------
 int CNPC_PlayerCompanion::SelectScheduleDanger()
 {
-	if( HasCondition( COND_HEAR_DANGER ) )
+	if( HasCondition( COND_HEAR_DANGER ) && m_ActBusyBehavior.IsActive() && m_ActBusyBehavior.IsCombatActBusy() )
 	{
 		CSound *pSound;
 		pSound = GetBestSound( SOUND_DANGER );
 
 		ASSERT( pSound != NULL );
 
-		if ( pSound && (pSound->m_iType & SOUND_DANGER) )
+		if ( pSound && (pSound->m_iType & SOUND_DANGER) && (pSound->SoundChannel() != SOUNDENT_CHANNEL_BULLET_IMPACT) )
 		{
-			if ( !(pSound->SoundContext() & (SOUND_CONTEXT_MORTAR|SOUND_CONTEXT_FROM_SNIPER)) || IsOkToCombatSpeak() )
+			if ( !(pSound->SoundContext() & ( SOUND_CONTEXT_MORTAR | SOUND_CONTEXT_FROM_SNIPER | SOUND_BULLET_IMPACT )) || IsOkToCombatSpeak() )
 				SpeakIfAllowed( TLK_DANGER );
 
 			if ( HasCondition( COND_PC_SAFE_FROM_MORTAR ) )
@@ -1124,6 +1124,19 @@ void CNPC_PlayerCompanion::StartTask( const Task_t *pTask )
 			*/
 		}
 		break;
+
+	case TASK_REACT_TO_COMBAT_SOUND:
+	{
+		CSound *pSound = GetBestSound();
+
+		if (pSound && pSound->IsSoundType(SOUND_COMBAT) && pSound->IsSoundType(SOUND_CONTEXT_GUNFIRE))
+		{
+			AnalyzeGunfireSound(pSound);
+		}
+
+		TaskComplete();
+	}
+	break;
 
 	default:
 		BaseClass::StartTask( pTask );
@@ -1863,6 +1876,54 @@ void CNPC_PlayerCompanion::StopAiming( char *pszReason )
 }
 
 //-----------------------------------------------------------------------------
+// Just heard a gunfire sound. Try to figure out how much we should know 
+// about it.
+//-----------------------------------------------------------------------------
+void CNPC_PlayerCompanion::AnalyzeGunfireSound(CSound *pSound)
+{
+	Assert(pSound != NULL);
+
+	if (GetState() != NPC_STATE_ALERT && GetState() != NPC_STATE_IDLE)
+	{
+		// Only have code for IDLE and ALERT now. 
+		return;
+	}
+
+	// Have to verify a bunch of stuff about the sound. It must have a valid BaseCombatCharacter as the owner,
+	// must have a valid target, and we need a valid pointer to the player.
+	if (pSound->m_hOwner.Get() == NULL)
+		return;
+
+	if (pSound->m_hTarget.Get() == NULL)
+		return;
+
+	CBaseCombatCharacter *pSoundOriginBCC = pSound->m_hOwner->MyCombatCharacterPointer();
+	if (pSoundOriginBCC == NULL)
+		return;
+
+	CBaseEntity *pSoundTarget = pSound->m_hTarget.Get();
+
+	CBasePlayer *pPlayer = AI_GetSinglePlayer();
+
+	Assert(pPlayer != NULL);
+
+	if (pSoundTarget == this)
+	{
+		// The shooter is firing at me. Assume if Alyx can hear the gunfire, she can deduce its origin.
+		UpdateEnemyMemory(pSoundOriginBCC, pSoundOriginBCC->GetAbsOrigin(), this);
+	}
+	else if (pSoundTarget == pPlayer)
+	{
+		// The shooter is firing at the player. Assume Alyx can deduce the origin if the player COULD see the origin, and Alyx COULD see the player.
+		if (pPlayer->FVisible(pSoundOriginBCC) && FVisible(pPlayer))
+		{
+			UpdateEnemyMemory(pSoundOriginBCC, pSoundOriginBCC->GetAbsOrigin(), this);
+		}
+	}
+}
+
+
+//-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 #define COMPANION_MAX_LOOK_TIME	3.0f
 #define COMPANION_MIN_LOOK_TIME	1.0f
@@ -2377,16 +2438,17 @@ float CNPC_PlayerCompanion::GetHitgroupDamageMultiplier(int iHitGroup, const CTa
 //------------------------------------------------------------------------------
 WeaponProficiency_t CNPC_PlayerCompanion::CalcWeaponProficiency( CBaseCombatWeapon *pWeapon )
 {
-	if (FClassnameIs(pWeapon, "weapon_shotgun") || Classify() == CLASS_PLAYER_ALLY_VITAL)
+	if (hl2_episodic.GetBool() || FClassnameIs(pWeapon, "weapon_shotgun") || Classify() == CLASS_PLAYER_ALLY_VITAL)
 	{
 		return WEAPON_PROFICIENCY_PERFECT;		// 4-6 shotgun, 1 Barney, 0.5 Alyx
 	}
-/*	else if (FClassnameIs(pWeapon, "weapon_ar2"))
+	else if (FClassnameIs(pWeapon, "weapon_ar2"))
 	{
 		return WEAPON_PROFICIENCY_GOOD;			// 2.5/7.5 AR2
 	}
 		return WEAPON_PROFICIENCY_VERY_GOOD;	// 3/6 SMG1
-*/
+
+/*
 	float chance = random->RandomInt(0, 100);
 
 	if (chance < 50)		// 50% chance to be an average Joe
@@ -2405,7 +2467,7 @@ WeaponProficiency_t CNPC_PlayerCompanion::CalcWeaponProficiency( CBaseCombatWeap
 	{
 		return WEAPON_PROFICIENCY_GOOD; // AR2 = 4, SMG1 = 6
 	}
-
+*/
 }
 
 //-----------------------------------------------------------------------------
@@ -2798,12 +2860,14 @@ bool CNPC_PlayerCompanion::IsGunship( CBaseEntity *pEntity )
 //-----------------------------------------------------------------------------
 int CNPC_PlayerCompanion::OnTakeDamage_Alive( const CTakeDamageInfo &info )
 {
-	if( info.GetAttacker() )
+	CTakeDamageInfo dInfo = info;
+
+	if( dInfo.GetAttacker() )
 	{
 		bool bIsEnvFire;
-		if( ( bIsEnvFire = FClassnameIs( info.GetAttacker(), "env_fire" ) ) != false || FClassnameIs( info.GetAttacker(), "entityflame" ) || FClassnameIs( info.GetAttacker(), "env_entity_igniter" ) )
+		if( ( bIsEnvFire = FClassnameIs( dInfo.GetAttacker(), "env_fire" ) ) != false || FClassnameIs( dInfo.GetAttacker(), "entityflame" ) || FClassnameIs( dInfo.GetAttacker(), "env_entity_igniter" ) )
 		{
-			GetMotor()->SetIdealYawToTarget( info.GetAttacker()->GetAbsOrigin() );
+			GetMotor()->SetIdealYawToTarget( dInfo.GetAttacker()->GetAbsOrigin() );
 			SetCondition( COND_PC_HURTBYFIRE );
 		}
 
@@ -2817,7 +2881,7 @@ int CNPC_PlayerCompanion::OnTakeDamage_Alive( const CTakeDamageInfo &info )
 		//						  npc clipped, this latter case should be rare.
 		if ( bIsEnvFire )
 		{
-			if ( ( GetAbsOrigin() - info.GetAttacker()->GetAbsOrigin() ).Length2DSqr() > Square(12 + GetHullWidth() * .5 ) )
+			if ( ( GetAbsOrigin() - dInfo.GetAttacker()->GetAbsOrigin() ).Length2DSqr() > Square(12 + GetHullWidth() * .5 ) )
 			{
 				return 0;
 			}

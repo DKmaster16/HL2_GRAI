@@ -8,7 +8,7 @@
 #include "cbase.h"
 
 #include "ai_behavior_lead.h"
-#include "ai_memory.h"
+
 #include "ai_goalentity.h"
 #include "ai_navigator.h"
 #include "ai_speech.h"
@@ -660,14 +660,8 @@ int CAI_LeadBehavior::TranslateSchedule( int scheduleType )
 	switch( scheduleType )
 	{
 	case SCHED_LEAD_PAUSE:
-		if (bInCombat)
-		{
-//			if (GetEnemies()->NumEnemies() > 1)
-//			{
-//				return SCHED_TAKE_COVER_FROM_ENEMY;
-//			}
+		if( bInCombat )
 			return SCHED_LEAD_PAUSE_COMBAT;
-		}
 		break;
 	}
 	return BaseClass::TranslateSchedule( scheduleType );
@@ -1260,8 +1254,6 @@ AI_BEGIN_CUSTOM_SCHEDULE_PROVIDER( CAI_LeadBehavior )
 		"		TASK_SET_SCHEDULE			SCHEDULE:SCHED_LEAD_RETRIEVE"
 		""
 		"	Interrupts"
-		"		COND_LOW_PRIMARY_AMMO"
-		"		COND_NO_PRIMARY_AMMO"
 		"		COND_LEAD_FOLLOWER_VERY_CLOSE"
 		"		COND_LEAD_FOLLOWER_MOVING_TOWARDS_ME"
 		"		COND_LEAD_FOLLOWER_NOT_LAGGING"

@@ -49,12 +49,7 @@ public:
 	void		BeginScheduleSelection();
 	void		EndScheduleSelection();
 	void		PrescheduleThink();
-/*
-	EHANDLE				m_hEnemyOccluder;	// The entity my enemy is hiding behind.
 
-	void SetEnemyOccluder(CBaseEntity *pBlocker);
-	CBaseEntity *GetEnemyOccluder(void);
-*/
 	Activity	NPC_TranslateActivity( Activity activity );
 
 	// Conditions:

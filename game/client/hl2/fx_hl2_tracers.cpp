@@ -77,7 +77,7 @@ void GaussTracerCallback( const CEffectData &data )
 	float flVelocity = data.m_flScale;
 	if (!flVelocity)
 	{
-		flVelocity = 6500;
+		flVelocity = 50000;
 	}
 	bool bWhiz = (data.m_fFlags & TRACER_FLAG_WHIZ);
 	FX_GaussTracer( (Vector&)data.m_vStart, (Vector&)data.m_vOrigin, flVelocity, bWhiz );
@@ -98,7 +98,7 @@ void AirboatGunHeavyTracerCallback( const CEffectData &data )
 	// Use default velocity if none specified
 	if ( !flVelocity )
 	{
-		flVelocity = 9000;
+		flVelocity = 8000;
 	}
 
 	//Get out shot direction and length
@@ -131,7 +131,7 @@ void AirboatGunTracerCallback( const CEffectData &data )
 	// Use default velocity if none specified
 	if ( !flVelocity )
 	{
-		flVelocity = 10000;
+		flVelocity = 8000;
 	}
 
 	//Get out shot direction and length
@@ -293,7 +293,7 @@ void AR2TracerCallback( const CEffectData &data )
 	// Use default velocity if none specified
 	if ( !flVelocity )
 	{
-		flVelocity = 9000;
+		flVelocity = 8000;
 	}
 
 	// Do tracer effect

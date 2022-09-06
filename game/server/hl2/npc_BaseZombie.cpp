@@ -51,7 +51,7 @@
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
-extern ConVar sk_npc_head;
+//extern ConVar sk_npc_head;
 
 // Bodyshot damage scale
 ConVar sk_zombie_bullet_damage_scale("sk_zombie_bullet_damage_scale", "0.375");	// Including .357
@@ -60,6 +60,8 @@ ConVar sk_zombie_explosive_damage_scale("sk_zombie_explosive_damage_scale", "1.2
 ConVar sk_zombie_head("sk_zombie_head", "2.0");
 ConVar sk_zombie_head_357("sk_zombie_head_357", "5.0");
 ConVar sk_zombie_head_buckshot_pointblank("sk_zombie_head_buckshot_pointblank", "3.0");
+ConVar sk_zombie_max_additional_ammo_shots("sk_zombie_max_additional_ammo_shots", "10");
+
 //#define ZOMBIE_BULLET_DAMAGE_SCALE 0.5f
 
 int g_interactionZombieMeleeWarning;
@@ -718,6 +720,97 @@ void CNPC_BaseZombie::TraceAttack( const CTakeDamageInfo &info, const Vector &ve
 		infoCopy.ScaleDamage( sk_zombie_buckshot_damage_scale.GetFloat() );
 	}
 
+	CBasePlayer *pPlayer = ToBasePlayer(info.GetAttacker());
+	if (pPlayer != NULL)
+	{
+		// Attempt to drain player's ammo
+		if (info.GetDamageType() & DMG_BULLET)
+		{
+			CHalfLife2 *pHL2GameRules = static_cast<CHalfLife2 *>(g_pGameRules);
+
+			if (info.GetAmmoType() == GetAmmoDef()->Index("Pistol"))
+			{
+				if (pHL2GameRules->NPC_ShouldDrainPistolAmmo(pPlayer) && m_flAdditionalShots < sk_zombie_max_additional_ammo_shots.GetInt())
+				{
+					// Take only one additioanl headshot.
+					if (m_bHeadShot && infoCopy.GetDamage() * sk_zombie_head.GetFloat() >= (float)GetHealth())
+					{
+						infoCopy.SetDamage(1);
+						pHL2GameRules->NPC_TakenAdditionalShots(1);
+						m_flAdditionalShots+=3;
+					}
+					else if (infoCopy.GetDamage() >= (float)GetHealth())
+					{
+						infoCopy.SetDamage(1);
+						pHL2GameRules->NPC_TakenAdditionalShots(1);
+						m_flAdditionalShots++;
+					}
+				}
+			}
+			else if (info.GetAmmoType() == GetAmmoDef()->Index("AR2"))
+			{
+				if (pHL2GameRules->NPC_ShouldDrainAR2Ammo(pPlayer) && m_flAdditionalShots < sk_zombie_max_additional_ammo_shots.GetInt())
+				{
+					// Take only one additioanl headshot.
+					if (m_bHeadShot && infoCopy.GetDamage() * sk_zombie_head.GetFloat() >= (float)GetHealth())
+					{
+						infoCopy.SetDamage(1);
+						pHL2GameRules->NPC_TakenAdditionalShots(1);
+						m_flAdditionalShots+=5;
+					}
+					else if (infoCopy.GetDamage() >= (float)GetHealth())
+					{
+						infoCopy.SetDamage(1);
+						pHL2GameRules->NPC_TakenAdditionalShots(1);
+						m_flAdditionalShots+=2;
+					}
+				}
+			}
+			else if (info.GetAmmoType() == GetAmmoDef()->Index("SMG1"))
+			{
+				if (pHL2GameRules->NPC_ShouldDrainSMGAmmo(pPlayer) && m_flAdditionalShots < sk_zombie_max_additional_ammo_shots.GetInt())
+				{
+					// Take fewer additioanl headshots.
+					if (m_bHeadShot && infoCopy.GetDamage() * sk_zombie_head.GetFloat() >= (float)GetHealth())
+					{
+						infoCopy.SetDamage(1);
+						pHL2GameRules->NPC_TakenAdditionalShots(1);
+						m_flAdditionalShots+=2;
+					}
+					else if (infoCopy.GetDamage() >= (float)GetHealth())
+					{
+						infoCopy.SetDamage(1);
+						pHL2GameRules->NPC_TakenAdditionalShots(1);
+						m_flAdditionalShots++;
+					}
+				}
+			}
+			else if (info.GetAmmoType() == GetAmmoDef()->Index("357"))
+			{
+				if (pHL2GameRules->NPC_ShouldDrain357Ammo(pPlayer) && m_flAdditionalShots < sk_zombie_max_additional_ammo_shots.GetInt()
+					&& !m_bHeadShot && infoCopy.GetDamage() >= (float)GetHealth())
+				{
+					infoCopy.SetDamage(1);
+					pHL2GameRules->NPC_TakenAdditionalShots(1);
+					m_flAdditionalShots+=5;
+				}
+			}
+		}
+	}
+
+	if (m_bHeadShot)
+	{
+#ifdef HL2_EPISODIC
+		SetBloodColor(BLOOD_COLOR_ZOMBIE);
+#else
+		SetBloodColor(BLOOD_COLOR_GREEN);
+#endif // HL2_EPISODIC
+	}
+	else
+	{
+		SetBloodColor(BLOOD_COLOR_RED);
+	}
+
 	BaseClass::TraceAttack( infoCopy, vecDir, ptr, pAccumulator );
 }
 
@@ -788,11 +881,24 @@ HeadcrabRelease_t CNPC_BaseZombie::ShouldReleaseHeadcrab( const CTakeDamageInfo 
 		{
 			if( m_bHeadShot ) 
 			{
-//				if( flDamageThreshold > 0.25 )
-//				{
-					// Enough force to kill the crab.
-				return RELEASE_RAGDOLL_BULLET;
-//				}
+				CHalfLife2 *pHL2GameRules = static_cast<CHalfLife2 *>(g_pGameRules);
+				CBasePlayer *pPlayer = ToBasePlayer(info.GetAttacker());
+				
+				if ( pPlayer != NULL )
+				{
+					// Pistol is likely to be the last weapon player ever uses, gauge his overall ammo economy on that.
+					if ( pHL2GameRules->NPC_ShouldDrainPistolAmmo( pPlayer ) && RandomInt(0, 1) == 0 )	// Half the time
+						return RELEASE_IMMEDIATE;
+					else 
+						return RELEASE_RAGDOLL_BULLET;
+				}
+				else
+				{
+					if (RandomInt(0, 1) == 0)	// Half the time
+						return RELEASE_IMMEDIATE;
+					else
+						return RELEASE_RAGDOLL_BULLET;
+				}
 			}
 			else
 			{
@@ -914,20 +1020,31 @@ int CNPC_BaseZombie::OnTakeDamage_Alive( const CTakeDamageInfo &inputInfo )
 	{
 		HeadcrabRelease_t release = ShouldReleaseHeadcrab( info, flDamageThreshold );
 		
+		float fl_ForceMultiplier = 0.15f;
+
+		if (info.GetDamageType() & DMG_BULLET)
+		{
+			if (info.GetDamageType() & DMG_BUCKSHOT)
+				fl_ForceMultiplier = 6.0f;
+			else if (info.GetDamageType() & DMG_SNIPER)
+				fl_ForceMultiplier = 0.5f;
+			else
+				fl_ForceMultiplier = 3.0f;
+		}
+
 		switch( release )
 		{
 		case RELEASE_IMMEDIATE:
-			ReleaseHeadcrab( EyePosition(), vec3_origin, true, true );
+			ReleaseHeadcrab( EyePosition(), inputInfo.GetDamageForce() * fl_ForceMultiplier * 0.5f, true, true );
 			break;
 
 		case RELEASE_RAGDOLL:
 			// Go easy on headcrab ragdoll force. They're light!
-			ReleaseHeadcrab( EyePosition(), inputInfo.GetDamageForce() * 0.2, true, false, true );
+			ReleaseHeadcrab( EyePosition(), inputInfo.GetDamageForce() * fl_ForceMultiplier, true, false, true );
 			break;
 
 		case RELEASE_RAGDOLL_BULLET:
-			// Since there is no more bullet exaggeration don't touch bullet force.
-			ReleaseHeadcrab(EyePosition(), inputInfo.GetDamageForce()  * 3.5, true, false, true);
+			ReleaseHeadcrab( EyePosition(), inputInfo.GetDamageForce() * fl_ForceMultiplier * 2.0f, true, false, true );
 			break;
 
 		case RELEASE_RAGDOLL_SLICED_OFF:
@@ -1763,6 +1880,8 @@ void CNPC_BaseZombie::Spawn( void )
 	// Zombies get to cheat for 6 seconds (sjb)
 	GetEnemies()->SetFreeKnowledgeDuration( 6.0 );
 
+	m_flAdditionalShots = 0;
+
 	m_ActBusyBehavior.SetUseRenderBounds(true);
 }
 
@@ -2344,7 +2463,7 @@ void CNPC_BaseZombie::Event_Killed( const CTakeDamageInfo &info )
 		VectorNormalize( vecDamageDir );
 
 		// Big blood splat
-		UTIL_BloodSpray( WorldSpaceCenter(), vecDamageDir, BLOOD_COLOR_YELLOW, 8, FX_BLOODSPRAY_CLOUD );
+		UTIL_BloodSpray( WorldSpaceCenter(), vecDamageDir, BLOOD_COLOR_RED, 8, FX_BLOODSPRAY_CLOUD );
 	}
 
    	BaseClass::Event_Killed( info );
@@ -2568,6 +2687,22 @@ void CNPC_BaseZombie::ReleaseHeadcrab( const Vector &vecOrigin, const Vector &ve
 		CopyRenderColorTo( pCrab );
 
 		pCrab->Activate();
+
+		if (UTIL_ShouldShowBlood(BLOOD_COLOR_YELLOW))
+		{
+			UTIL_BloodImpact(pCrab->WorldSpaceCenter(), Vector(0, 0, 1), BLOOD_COLOR_YELLOW, 1);
+
+			for (int i = 0; i < 3; i++)
+			{
+				Vector vecSpot = pCrab->WorldSpaceCenter();
+
+				vecSpot.x += random->RandomFloat(-8, 8);
+				vecSpot.y += random->RandomFloat(-8, 8);
+				vecSpot.z += random->RandomFloat(-8, 8);
+
+				UTIL_BloodDrips(vecSpot, vec3_origin, BLOOD_COLOR_YELLOW, 50);
+			}
+		}
 	}
 
 	if( fRemoveHead )

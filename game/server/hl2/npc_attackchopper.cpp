@@ -142,9 +142,7 @@ ConVar	sk_helicopter_grenadeforce("sk_helicopter_grenadeforce", "55000.0", 0, "T
 ConVar	sk_helicopter_grenade_puntscale("sk_helicopter_grenade_puntscale", "1.5", 0, "When physpunting a chopper's grenade, scale its velocity by this much.");
 
 // Number of bomb hits it takes to kill a chopper on each skill level.
-ConVar sk_helicopter_num_bombs1("sk_helicopter_num_bombs1", "5");
-ConVar sk_helicopter_num_bombs2("sk_helicopter_num_bombs2", "7");
-ConVar sk_helicopter_num_bombs3("sk_helicopter_num_bombs3", "10");
+ConVar sk_helicopter_num_bombs("sk_helicopter_num_bombs", "5");
 
 ConVar	sk_npc_dmg_helicopter_to_plr("sk_npc_dmg_helicopter_to_plr", "3", 0, "Damage helicopter shots deal to the player");
 ConVar	sk_npc_dmg_helicopter("sk_npc_dmg_helicopter", "6", 0, "Damage helicopter shots deal to everything but the player");
@@ -2101,7 +2099,8 @@ void CNPC_AttackHelicopter::ShootAtVehicle(const Vector &vBasePos, const Vector 
 	if (m_nBurstHits < m_nMaxBurstHits)
 	{
 		Vector vecDir;
-		VectorSubtract(GetEnemy()->EyePosition(), vBasePos, vecDir);
+		Vector vecProjectedPosition = GetActualShootPosition(vBasePos);
+		VectorSubtract(vecProjectedPosition, vBasePos, vecDir);
 
 		Vector vecOffset;
 		vecOffset.Random(-5.0f, 5.0f);
@@ -2454,7 +2453,8 @@ void CNPC_AttackHelicopter::ShootAtFacingDirection(const Vector &vBasePos, const
 		if (GetEnemy())
 		{
 			// Find the closest point to the gunDir
-			const Vector &vecCenter = GetEnemy()->WorldSpaceCenter();
+			const Vector &vecCenter = GetActualShootPosition(vBasePos);
+			//			const Vector &vecCenter = GetEnemy()->WorldSpaceCenter();
 
 			float t;
 			Vector vNearPoint;
@@ -2749,14 +2749,14 @@ bool CNPC_AttackHelicopter::IsBombDropFair(const Vector &vecBombStartPos, const 
 		return true;
 
 	// Skip out if we're right above or behind the player.. that's unfair
-	if (GetEnemy() && GetEnemy()->IsPlayer() && (!g_pGameRules->IsSkillLevel(SKILL_HARD) 
+	if (GetEnemy() && GetEnemy()->IsPlayer() && (!g_pGameRules->IsSkillLevel(SKILL_HARD)
 		&& !g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL)))
 	{
 		// How much time will it take to fall?
 		// dx = 0.5 * a * t^2
 		Vector vecTarget = GetEnemy()->BodyTarget(GetAbsOrigin(), false);
 		float dz = vecBombStartPos.z - vecTarget.z;
-		float dt = (dz > 0.0f) ? sqrt(2 * dz / GetCurrentGravity()) : 0.0f;
+		float dt = (dz > 0.0f) ? sqrt(2 * dz / sv_gravity.GetFloat()) : 0.0f;
 
 		// Where will the enemy be in that time?
 		Vector vecEnemyVel = GetEnemy()->GetSmoothedVelocity();
@@ -2942,7 +2942,7 @@ void CNPC_AttackHelicopter::InputDropBombAtTargetInternal(inputdata_t &inputdata
 		Warning("Bomb target %s is above the chopper!\n", STRING(strBombTarget));
 		return;
 	}
-	float dt = sqrt(2 * dz / GetCurrentGravity());
+	float dt = sqrt(2 * dz / sv_gravity.GetFloat());
 
 	// Compute the velocity that would make it happen
 	Vector vecVelocity;
@@ -3533,18 +3533,7 @@ int CNPC_AttackHelicopter::OnTakeDamage(const CTakeDamageInfo &info)
 		CTakeDamageInfo fudgedInfo = info;
 
 		float damage;
-		if (g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL))
-		{
-			damage = GetMaxHealth() / sk_helicopter_num_bombs3.GetFloat();
-		}
-		else if (g_pGameRules->IsSkillLevel(SKILL_HARD))
-		{
-			damage = GetMaxHealth() / sk_helicopter_num_bombs2.GetFloat();
-		}
-		else // Medium, or unspecified
-		{
-			damage = GetMaxHealth() / sk_helicopter_num_bombs1.GetFloat();
-		}
+		damage = GetMaxHealth() / sk_helicopter_num_bombs.GetFloat();
 		damage = ceilf(damage);
 		fudgedInfo.SetDamage(damage);
 		fudgedInfo.SetMaxDamage(damage);

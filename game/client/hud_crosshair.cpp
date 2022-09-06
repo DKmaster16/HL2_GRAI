@@ -294,7 +294,7 @@ void CHudCrosshair::SetCrosshairAngle( const QAngle& angle )
 void CHudCrosshair::SetCrosshair( CHudTexture *texture, const Color& clr )
 {
 	m_pCrosshair = texture;
-	m_clrCrosshair = clr;
+	m_clrCrosshair = Color(255, 220, 0, 255);
 }
 
 //-----------------------------------------------------------------------------
@@ -302,5 +302,5 @@ void CHudCrosshair::SetCrosshair( CHudTexture *texture, const Color& clr )
 //-----------------------------------------------------------------------------
 void CHudCrosshair::ResetCrosshair()
 {
-	SetCrosshair( m_pDefaultCrosshair, Color(255, 255, 255, 255) );
+	SetCrosshair( m_pDefaultCrosshair, Color(255, 220, 0, 255) );
 }

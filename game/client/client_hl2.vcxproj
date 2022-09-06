@@ -388,6 +388,24 @@ exit 1
     <ClInclude Include="..\..\game\shared\weapon_parse.h" />
     <ClInclude Include="..\..\game\shared\weapon_proficiency.h" />
     <ClInclude Include="..\shared\func_break.h" />
+    <ClInclude Include="gameui\backgroundmenubutton.h" />
+    <ClInclude Include="gameui\basepanel.h" />
+    <ClInclude Include="gameui\cdkeyentrydialog.h" />
+    <ClInclude Include="gameui\commandcheckbutton.h" />
+    <ClInclude Include="gameui\contentcontroldialog.h" />
+    <ClInclude Include="gameui\createmultiplayergamebotpage.h" />
+    <ClInclude Include="gameui\createmultiplayergamegameplaypage.h" />
+    <ClInclude Include="gameui\customtabexplanationdialog.h" />
+    <ClInclude Include="gameui\cvarnegatecheckbutton.h" />
+    <ClInclude Include="gameui\cvarslider.h" />
+    <ClInclude Include="gameui\cvartextentry.h" />
+    <ClInclude Include="gameui\cvartogglecheckbutton.h" />
+    <ClInclude Include="gameui\engineinterface.h" />
+    <ClInclude Include="gameui\gameconsole.h" />
+    <ClInclude Include="gameui\gameconsoledialog.h" />
+    <ClInclude Include="gameui\gameui_util.h" />
+    <ClInclude Include="gameui\keytogglecheckbutton.h" />
+    <ClInclude Include="gameui\labeledcommandcombobox.h" />
     <ClInclude Include="game_controls\baseviewport.h" />
     <ClInclude Include="game_controls\clientscoreboarddialog.h" />
     <ClInclude Include="game_controls\commandmenu.h" />
@@ -867,6 +885,7 @@ exit 1
     <ClInclude Include="..\..\game\shared\sixense\sixense_convars_extern.h" />
     <ClInclude Include="..\..\public\tools\bonelist.h" />
     <ClInclude Include="toolframework_client.h" />
+    <ClInclude Include="worldlight.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mp3player.cpp" />
@@ -1463,6 +1482,7 @@ exit 1
     <ClCompile Include="..\..\public\tools\bonelist.cpp" />
     <ClCompile Include="entity_client_tools.cpp" />
     <ClCompile Include="toolframework_client.cpp" />
+    <ClCompile Include="worldlight.cpp" />
   </ItemGroup>
   <ItemGroup>
   </ItemGroup>

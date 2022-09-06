@@ -119,6 +119,8 @@ protected:
 	virtual bool OnBeginMoveAndShoot();
 	virtual void OnEndMoveAndShoot();
 
+//	bool m_bHeadShot;			// Headshots worth more additional shots.
+
 private:
 	bool		PlayerIsCriminal( void );
 	void		ReleaseManhack( void );
@@ -224,6 +226,9 @@ private:
 	// How many shots will I fire in a particular amount of time?
 	int CountShotsInTime( float flDeltaTime ) const;
 	float GetTimeForShots( int nShotCount ) const;
+
+	// Additional shots to kill
+	float	m_flAdditionalShots;
 
 	// Visualize stitch
 	void VisualizeStitch( const Vector &vecStart, const Vector &vecEnd );

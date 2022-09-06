@@ -183,6 +183,9 @@ private:
 	EHANDLE						m_hLastSpitEnemy;
 	int							m_nShakeCount;
 
+	// Additional shots to kill
+	float	m_flAdditionalShots;
+
 	float						m_flNextBloodTime;
 #ifndef _XBOX
 	int							m_nBloodColor;

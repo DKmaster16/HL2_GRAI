@@ -18,7 +18,7 @@
 ConVar	sk_healthkit( "sk_healthkit","0" );		
 ConVar	sk_healthvial( "sk_healthvial","0" );		
 ConVar	sk_healthcharger( "sk_healthcharger","0" );		
-ConVar	sk_healthcharger_plaza( "sk_healthcharger_plaza", "80" );
+
 //-----------------------------------------------------------------------------
 // Small health kit. Heals the player when picked up.
 //-----------------------------------------------------------------------------
@@ -243,15 +243,7 @@ void CWallHealth::Spawn(void)
 
 	SetModel( STRING( GetModelName() ) );
 
-	// Higher capacity rechargers on Plaza defense map
-	if (!Q_strnicmp(STRING(gpGlobals->mapname), "d3_c17_07", 14))
-	{
-		m_iJuice = sk_healthcharger_plaza.GetFloat();
-	}
-	else
-	{
-		m_iJuice = sk_healthcharger.GetFloat();
-	}
+	m_iJuice = sk_healthcharger.GetFloat();
 
 	m_nState = 0;	
 	
@@ -528,15 +520,7 @@ void CNewWallHealth::Spawn(void)
 
 	ResetSequence( LookupSequence( "idle" ) );
 
-	// Double capacity rechargers on Plaza defense map
-	if (!Q_strnicmp(STRING(gpGlobals->mapname), "d3_c17_07", 14))
-	{
-		m_iJuice = sk_healthcharger.GetFloat() * 2;
-	}
-	else
-	{
-		m_iJuice = sk_healthcharger.GetFloat();
-	}
+	m_iJuice = sk_healthcharger.GetFloat();
 
 	m_nState = 0;	
 	

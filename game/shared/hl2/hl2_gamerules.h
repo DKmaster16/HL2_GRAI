@@ -80,16 +80,22 @@ public:
 
 	bool AllowDamage( CBaseEntity *pVictim, const CTakeDamageInfo &info );
 
+	bool	NPC_ShouldDrainPistolAmmo( CBasePlayer *pRecipient );
+	bool	NPC_ShouldDrainSMGAmmo( CBasePlayer *pRecipient );
+	bool	NPC_ShouldDrainAR2Ammo( CBasePlayer *pRecipient );
+	bool	NPC_ShouldDrainShotgunAmmo( CBasePlayer *pRecipient );
+	bool	NPC_ShouldDrain357Ammo( CBasePlayer *pRecipient );
 	bool	NPC_ShouldDropGrenade( CBasePlayer *pRecipient );
 	bool	NPC_ShouldDropHealth( CBasePlayer *pRecipient );
 	void	NPC_DroppedHealth( void );
 	void	NPC_DroppedGrenade( void );
+	void	NPC_TakenAdditionalShots( float NumShots );
 	bool	MegaPhyscannonActive( void ) { return m_bMegaPhysgun;	}
 	
 	virtual bool IsAlyxInDarknessMode();
 
 private:
-
+	float	m_flAdditionalShots;
 	float	m_flLastHealthDropTime;
 	float	m_flLastGrenadeDropTime;
 

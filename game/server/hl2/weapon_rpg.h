@@ -198,8 +198,8 @@ public:
 
 	int		GetMinBurst() { return 1; }
 	int		GetMaxBurst() { return 1; }
-	float	GetMinRestTime() { return 3.0; }
-	float	GetMaxRestTime() { return 3.0; }
+	float	GetMinRestTime() { return 4.0; }
+	float	GetMaxRestTime() { return 4.0; }
 
 	bool	WeaponLOSCondition( const Vector &ownerPos, const Vector &targetPos, bool bSetConditions );
 	int		WeaponRangeAttack1Condition( float flDot, float flDist );

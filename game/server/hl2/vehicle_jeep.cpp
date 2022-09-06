@@ -67,6 +67,8 @@ const char *g_pJeepThinkContext = "JeepSeagullThink";
 ConVar	sk_jeep_gauss_damage( "sk_jeep_gauss_damage", "15" );
 ConVar	hud_jeephint_numentries( "hud_jeephint_numentries", "10", FCVAR_NONE );
 ConVar	g_jeepexitspeed( "g_jeepexitspeed", "100", FCVAR_CHEAT );
+ConVar	sk_jeep_flechette_dmg_scale( "sk_jeep_flechette_dmg_scale", "0.5" );
+ConVar	sk_jeep_bullet_dmg_scale( "sk_jeep_bullet_dmg_scale", "0.25" );
 
 extern ConVar autoaim_max_dist;
 extern ConVar sv_vehicle_autoaim_scale;
@@ -284,7 +286,7 @@ void CPropJeep::TraceAttack( const CTakeDamageInfo &inputInfo, const Vector &vec
 	{
 		if ( inputInfo.GetDamageType() & DMG_BULLET )
 		{
-			info.ScaleDamage( 0.0001 );
+			info.ScaleDamage( sk_jeep_bullet_dmg_scale.GetFloat() );
 		}
 	}
 
@@ -296,8 +298,9 @@ void CPropJeep::TraceAttack( const CTakeDamageInfo &inputInfo, const Vector &vec
 //-----------------------------------------------------------------------------
 float CPropJeep::PassengerDamageModifier( const CTakeDamageInfo &info )
 {
+	// That is too easy!
 	if ( info.GetInflictor() && FClassnameIs( info.GetInflictor(), "hunter_flechette" ) )
-		return 0.1f;
+		return sk_jeep_flechette_dmg_scale.GetFloat();	//0.1f
 
 	return 1.0f;
 }
@@ -325,12 +328,12 @@ int CPropJeep::OnTakeDamage( const CTakeDamageInfo &inputInfo )
 	// small amounts of shock damage disrupt the car, but aren't transferred to the player
 	if ( info.GetDamageType() == DMG_SHOCK )
 	{
-		if ( info.GetDamage() <= 10 )
-		{
+//		if ( info.GetDamage() <= 10 )
+//		{
 			// take 10% damage and make the engine stall
 			info.ScaleDamage( 0.1 );
 			m_throttleDisableTime = gpGlobals->curtime + 2;
-		}
+//		}
 	}
 
 	//Check to do damage to driver
@@ -1342,7 +1345,7 @@ void CPropJeep::DriveVehicle( float flFrameTime, CUserCmd *ucmd, int iButtonsDow
 	int iButtons = ucmd->buttons;
 
 	//Adrian: No headlights on Superfly.
-/*	if ( ucmd->impulse == 100 )
+	if ( ucmd->impulse == 100 )
 	{
 		if (HeadlightIsOn())
 		{
@@ -1352,7 +1355,7 @@ void CPropJeep::DriveVehicle( float flFrameTime, CUserCmd *ucmd, int iButtonsDow
 		{
 			HeadlightTurnOn();
 		}
-	}*/
+	}
 		
 	// Only handle the cannon if the vehicle has one
 	if ( m_bHasGun )

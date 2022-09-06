@@ -25,7 +25,7 @@
 #include "tier0/memdbgon.h"
 
 ConVar monk_headshot_freq( "monk_headshot_freq", "2" );
-ConVar sk_monk_health("sk_monk_health", "0");
+
 //-----------------------------------------------------------------------------
 // Activities.
 //-----------------------------------------------------------------------------
@@ -270,7 +270,7 @@ void CNPC_Monk::Spawn()
 	AddSolidFlags( FSOLID_NOT_STANDABLE );
 	SetMoveType( MOVETYPE_STEP );
 	SetBloodColor( BLOOD_COLOR_RED );
-	m_iHealth = sk_monk_health.GetFloat();
+	m_iHealth			= 100;
 	m_flFieldOfView		= m_flFieldOfView = -0.707; // 270`
 	m_NPCState			= NPC_STATE_NONE;
 
@@ -589,7 +589,7 @@ void CNPC_Monk::GatherConditions()
 		pSightEnt = GetSenses()->GetNextSeenEntity( &iter );
 	}
 
-	if( m_iDangerousZombies >= 3 || (GetEnemy() && GetHealth() < 60) )
+	if( m_iDangerousZombies >= 3 || (GetEnemy() && GetHealth() < 25) )
 	{
 		// I see many zombies, or I'm quite injured.
 		SpeakIfAllowed( TLK_HELP_ME );

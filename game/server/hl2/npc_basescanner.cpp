@@ -1,4 +1,4 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//====== Copyright © 1996-2005, Valve Corporation, All rights reserved. =======
 //
 // Purpose: 
 //
@@ -1029,10 +1029,7 @@ bool CNPC_BaseScanner::OverrideMove( float flInterval )
 		Vector vMoveTargetPos(0,0,0);
 		CBaseEntity *pMoveTarget = NULL;
 
-		// The original line of code was, due to the accidental use of '|' instead of
-		// '&', always true. Replacing with 'true' to suppress the warning without changing
-		// the (long-standing) behavior.
-		if ( true ) //!GetNavigator()->IsGoalActive() || ( GetNavigator()->GetCurWaypointFlags() | bits_WP_TO_PATHCORNER ) )
+		if ( !GetNavigator()->IsGoalActive() || ( GetNavigator()->GetCurWaypointFlags() | bits_WP_TO_PATHCORNER ) )
 		{
 			// Select move target 
 			if ( GetTarget() != NULL )

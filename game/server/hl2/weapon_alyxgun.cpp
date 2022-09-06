@@ -90,20 +90,15 @@ acttable_t	CWeaponAlyxGun::m_acttable[] =
 IMPLEMENT_ACTTABLE(CWeaponAlyxGun);
 
 #define TOOCLOSETIMER_OFF	0.0f
-#define ALYX_TOOCLOSETIMER	1.0f		// Time an enemy must be tooclose before Alyx is allowed to shoot it.
+#define ALYX_TOOCLOSETIMER	0.5f		// Time an enemy must be tooclose before Alyx is allowed to shoot it.
 
 //=========================================================
 CWeaponAlyxGun::CWeaponAlyxGun( )
 {
-	m_fMinRange1		= 1;
-	m_fMaxRange1		= 5000;
-
 	m_flTooCloseTimer	= TOOCLOSETIMER_OFF;
 
-#ifdef HL2_EPISODIC
 	m_fMinRange1		= 60;
 	m_fMaxRange1		= 2048;
-#endif//HL2_EPISODIC
 }
 
 CWeaponAlyxGun::~CWeaponAlyxGun( )
@@ -134,7 +129,7 @@ void CWeaponAlyxGun::Equip( CBaseCombatCharacter *pOwner )
 //-----------------------------------------------------------------------------
 int CWeaponAlyxGun::WeaponRangeAttack1Condition( float flDot, float flDist )
 {
-#ifdef HL2_EPISODIC
+//#ifdef HL2_EPISODIC
 	
 	if( flDist < m_fMinRange1 )
 	{
@@ -182,11 +177,11 @@ int CWeaponAlyxGun::WeaponRangeAttack1Condition( float flDot, float flDist )
 
 	return nBaseCondition;
 
-#else 
+//#else 
 
-	return BaseClass::WeaponRangeAttack1Condition( flDot, flDist );
+//	return BaseClass::WeaponRangeAttack1Condition( flDot, flDist );
 
-#endif//HL2_EPISODIC
+//#endif//HL2_EPISODIC
 }
 
 //-----------------------------------------------------------------------------

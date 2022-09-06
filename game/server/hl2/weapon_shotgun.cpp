@@ -46,7 +46,7 @@ public:
 
 	virtual const Vector& GetBulletSpread( void )
 	{
-		static Vector AllyCone = VECTOR_CONE_5DEGREES;
+		static Vector AllyCone = VECTOR_CONE_4DEGREES;
 		static Vector cone = VECTOR_CONE_6DEGREES;
 
 		if( GetOwner() && (GetOwner()->Classify() == CLASS_PLAYER_ALLY) )	// _VITAL
@@ -62,7 +62,7 @@ public:
 	const WeaponProficiencyInfo_t *GetProficiencyValues();
 
 	virtual int				GetMinBurst() { return 1; }
-	virtual int				GetMaxBurst() { return 2; }	// was 3
+	virtual int				GetMaxBurst() { return 3; }
 
 	virtual float			GetMinRestTime();
 	virtual float			GetMaxRestTime();
@@ -190,10 +190,10 @@ void CWeaponShotgun::FireNPCPrimaryAttack( CBaseCombatCharacter *pOperator, bool
 	}
 
 	// Only combine soldiers can double shoot, metrocops and citizens use semi auto fire instead
-	if (!npc->IsMoving() && FClassnameIs(GetOwner(), "npc_combine_s"))
+	if ( !npc->IsMoving() && FClassnameIs(GetOwner(), "npc_combine_s") || (GetOwner()->Classify() == CLASS_PLAYER_ALLY_VITAL) )
 	{
 		// Shotgunner stands still while shooting, that means he has to do a pump animation after each shot, so we let him fire double barreled shot.
-		pOperator->FireBullets(sk_plr_num_shotgun_pellets.GetInt() * 2, vecShootOrigin, vecShootDir, GetBulletSpread()*1.6f, MAX_TRACE_LENGTH, m_iPrimaryAmmoType, 0);
+		pOperator->FireBullets(sk_plr_num_shotgun_pellets.GetInt() * 2, vecShootOrigin, vecShootDir, GetBulletSpread()*1.75f, MAX_TRACE_LENGTH, m_iPrimaryAmmoType, 0);
 		WeaponSound(WPN_DOUBLE);
 		m_iClip1 = m_iClip1 - 2;
 		WeaponSound(SPECIAL1);
@@ -202,7 +202,7 @@ void CWeaponShotgun::FireNPCPrimaryAttack( CBaseCombatCharacter *pOperator, bool
 	{
 		// Shotgunner is moving and shooting, do semi auto shooting due to not having to pump.
 		pOperator->FireBullets(sk_plr_num_shotgun_pellets.GetInt() - 1, vecShootOrigin, vecShootDir, GetBulletSpread(), MAX_TRACE_LENGTH, m_iPrimaryAmmoType, 0, -1, -1, 0, NULL, true, true);
-		pOperator->FireBullets(1, vecShootOrigin, vecShootDir, GetBulletSpread() * 1.6f, MAX_TRACE_LENGTH, m_iPrimaryAmmoType, 0);
+		pOperator->FireBullets(1, vecShootOrigin, vecShootDir, GetBulletSpread() * 1.75f, MAX_TRACE_LENGTH, m_iPrimaryAmmoType, 0);
 		WeaponSound(SINGLE_NPC);
 		m_iClip1 = m_iClip1 - 1;
 	}
@@ -252,30 +252,23 @@ void CWeaponShotgun::Operator_HandleAnimEvent( animevent_t *pEvent, CBaseCombatC
 //			reasonable defaults for the weapon. To address difficulty concerns,
 //			we are going to fix the combine's rate of shotgun fire in episodic.
 //			This change will not affect Alyx using a shotgun in EP1. (sjb)
-//			
-//			DK: Combine shotgunners fire really fast on Diabolical difficulty
-//			Fire rate is all over the place, which I actually like really,
-//			Rate of fire falls anywhere between 2.5 to 5 rounds per second.
-//			Lower difficulties fire between 2.5 to 1.25 rounds per second.
 //-----------------------------------------------------------------------------
 float CWeaponShotgun::GetMinRestTime()
 {
-	if (GetOwner() && GetOwner()->Classify() == CLASS_COMBINE && FClassnameIs(GetOwner(), "npc_combine_s"))	// hl2_episodic.GetBool() && 
+	if (GetOwner() && GetOwner()->Classify() == CLASS_COMBINE && FClassnameIs(GetOwner(), "npc_combine_s"))
 	{
-		if (g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL))
+		if (g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL))	//hl2_episodic.GetBool() &&
 		{
-			return 0.17f;
+			return 0.2f;
 		}
 		else
 		{
-			return 0.3f;
+			return 0.6f;
 		}
 	}
-	else
-	{
-		return 0.6f;
-	}
-	
+
+	return 1.2f;
+
 	return BaseClass::GetMinRestTime();
 }
 
@@ -283,22 +276,19 @@ float CWeaponShotgun::GetMinRestTime()
 //-----------------------------------------------------------------------------
 float CWeaponShotgun::GetMaxRestTime()
 {
-	if (GetOwner() && GetOwner()->Classify() == CLASS_COMBINE && FClassnameIs(GetOwner(), "npc_combine_s"))	//hl2_episodic.GetBool() &&
+	if (GetOwner() && GetOwner()->Classify() == CLASS_COMBINE && FClassnameIs(GetOwner(), "npc_combine_s"))
 	{
-		if (g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL))
+		if (g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL))	//hl2_episodic.GetBool() &&
 		{
-			return 0.34f;
+			return 0.5f;
 		}
 		else
 		{
-			return 0.6f;
+			return 1.2f;
 		}
 	}
-	else
-	{
-		return 0.8f;
-	}
 
+	return 1.5f;
 
 	return BaseClass::GetMaxRestTime();
 }
@@ -309,24 +299,19 @@ float CWeaponShotgun::GetMaxRestTime()
 //-----------------------------------------------------------------------------
 float CWeaponShotgun::GetFireRate()
 {
-	if (g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL))
+	if (GetOwner() && GetOwner()->Classify() == CLASS_COMBINE && FClassnameIs(GetOwner(), "npc_combine_s"))
 	{
-
-		if (GetOwner() && GetOwner()->Classify() == CLASS_COMBINE && FClassnameIs(GetOwner(), "npc_combine_s"))	//hl2_episodic.GetBool() &&
+		if ( g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL) )	//hl2_episodic.GetBool() &&
 		{
-			return 0.25f;	// OLD: 0.8f
+			return 0.4f;	// OLD: 0.8f
 		}
-
-		return 0.5;	// was 0.7
+		else
+		{
+			return 0.7f;	// OLD: 0.8f
+		}
 	}
-	else 
-		if (GetOwner() && GetOwner()->Classify() == CLASS_COMBINE && FClassnameIs(GetOwner(), "npc_combine_s"))	//hl2_episodic.GetBool() &&
-		{
-			return 0.5f;	// OLD: 0.8f
-		}
 
-	return 0.7;	// was 0.7
-
+	return 0.8f;	// was 0.7
 }
 
 //-----------------------------------------------------------------------------
@@ -538,7 +523,7 @@ void CWeaponShotgun::PrimaryAttack( void )
 	
 	// Fire the bullets, and force the first shot to be perfectly accuracy
 	pPlayer->FireBullets( sk_plr_num_shotgun_pellets.GetInt() - 1, vecSrc, vecAiming, GetBulletSpread(), MAX_TRACE_LENGTH, m_iPrimaryAmmoType, 0, -1, -1, 0, NULL, true, true );
-	pPlayer->FireBullets( 1, vecSrc, vecAiming, GetBulletSpread() * 1.6f, MAX_TRACE_LENGTH, m_iPrimaryAmmoType, 0);
+	pPlayer->FireBullets( 1, vecSrc, vecAiming, GetBulletSpread() * 1.75f, MAX_TRACE_LENGTH, m_iPrimaryAmmoType, 0);
 	
 	pPlayer->ViewPunch( QAngle( random->RandomFloat( -3, -2 ), random->RandomFloat( -3, 3 ), 0 ) );	// (-2, -1) (-2, 2)
 
@@ -596,7 +581,7 @@ void CWeaponShotgun::SecondaryAttack( void )
 	Vector vecAiming = pPlayer->GetAutoaimVector( AUTOAIM_SCALE_DEFAULT );	
 
 	// Bullet spread 50% larger than normal (final result = 9 Degrees for the player, still a bit better than vanilla)
-	pPlayer->FireBullets(sk_plr_num_shotgun_pellets.GetInt() *2, vecSrc, vecAiming, GetBulletSpread() * 1.6f, MAX_TRACE_LENGTH, m_iPrimaryAmmoType, 0, -1, -1, 0, NULL, false, false);
+	pPlayer->FireBullets(sk_plr_num_shotgun_pellets.GetInt() *2, vecSrc, vecAiming, GetBulletSpread() * 1.75f, MAX_TRACE_LENGTH, m_iPrimaryAmmoType, 0, -1, -1, 0, NULL, false, false);
 	pPlayer->ViewPunch( QAngle(random->RandomFloat( -6, 6 ),0,0) );
 
 	pPlayer->SetMuzzleFlashTime( gpGlobals->curtime + 1.0 );
@@ -687,7 +672,7 @@ void CWeaponShotgun::ItemPostFrame( void )
 		SetBodygroup(1,1);
 	}
 
-	if ((m_bNeedPump) && (m_flNextPrimaryAttack <= gpGlobals->curtime))
+	if ((m_bNeedPump) && (m_flNextPrimaryAttack <= gpGlobals->curtime) && (m_iClip1 >= 1))
 	{
 		Pump();
 		return;
@@ -695,7 +680,7 @@ void CWeaponShotgun::ItemPostFrame( void )
 	
 	if (((pOwner->m_nButtons & IN_ATTACK2) | (pOwner->m_nButtons & IN_ATTACK)) && (m_flNextSecondaryAttack > gpGlobals->curtime))
 	{
-		m_flNextPrimaryAttack = gpGlobals->curtime + 1.0f;
+		m_flNextPrimaryAttack = gpGlobals->curtime + 9999.0f;
 	}
 	else if (((pOwner->m_nButtons & IN_ATTACK2) == false) && (pOwner->m_nButtons & IN_ATTACK) == false)
 	{
@@ -839,7 +824,7 @@ CWeaponShotgun::CWeaponShotgun( void )
 	m_bDelayedFire2 = false;
 
 	m_fMinRange1		= 0.0;
-	m_fMaxRange1		= 1440;
+	m_fMaxRange1		= 720;	//25 yards
 	m_fMinRange2		= 0.0;
 	m_fMaxRange2		= 200;
 }
@@ -851,11 +836,18 @@ void CWeaponShotgun::Equip(CBaseCombatCharacter *pOwner)
 {
 	if (pOwner->Classify() == CLASS_PLAYER_ALLY)
 	{
-		m_fMaxRange1 = 2700;
+		// Citizens are more accurate with shotguns
+		m_fMaxRange1 = 1800;	//50 yards
+	}
+	else if (GetOwner() && GetOwner()->Classify() == CLASS_COMBINE && FClassnameIs(GetOwner(), "npc_combine_s"))
+	{
+		// Combine Soldiers need to be very aggressive with this
+		m_fMaxRange1 = 540;		//15 yards
 	}
 	else
 	{
-		m_fMaxRange1 = 1440;
+		// Metrocops need to be able to shoot from longer ranges
+		m_fMaxRange1 = 1440;	//40 yards
 	}
 
 	BaseClass::Equip(pOwner);
@@ -899,10 +891,10 @@ const WeaponProficiencyInfo_t *CWeaponShotgun::GetProficiencyValues()
 {
 	static WeaponProficiencyInfo_t proficiencyTable[] =
 	{
-		{ 1.00, 0.30 },	//poor	20
-		{ 1.00, 0.40 },	//average 15
-		{ 1.00, 0.50 },	//good 12
-		{ 1.00, 0.75 },	//very good	8
+		{ 1.00, 0.25 },	//poor	24
+		{ 1.00, 0.30 },	//average 20
+		{ 1.00, 0.40 },	//good 15
+		{ 1.00, 0.60 },	//very good	10
 		{ 1.00, 1.00 },	//perfect 6
 	};
 

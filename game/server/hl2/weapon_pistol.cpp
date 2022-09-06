@@ -218,7 +218,7 @@ CWeaponPistol::CWeaponPistol( void )
 	m_flAccuracyPenalty = 0.0f;
 
 	m_fMinRange1		= 0;
-	m_fMaxRange1		= 1800;
+	m_fMaxRange1		= 1800;	//50 yards
 	m_fMinRange2		= 240;
 	m_fMaxRange2		= 1000;
 
@@ -547,11 +547,11 @@ const WeaponProficiencyInfo_t *CWeaponPistol::GetProficiencyValues()
 {
 	static WeaponProficiencyInfo_t proficiencyTable[] =
 	{
-		{ 7.0, 1.0 },	//poor 14/28
-		{ 4.0, 1.0 },	//average 8/12
-		{ 3.0, 1.0 },	//good	6/9
-		{ 2.0, 1.0 },	//very good	4/6
-		{ 1.0, 1.0 },	//perfect 2/5
+		{ 7.0, 1.0 },	//poor 14/21
+		{ 25 / 6, 0.75 },	//average 8.3/12.5
+		{ 10 / 3, 0.75 },	//good	6.6/10
+		{ 3, 0.75 },	//very good	6/9
+		{ 1.0, 1.0 },	//perfect 2/3
 	};
 
 	COMPILE_TIME_ASSERT(ARRAYSIZE(proficiencyTable) == WEAPON_PROFICIENCY_PERFECT + 1);

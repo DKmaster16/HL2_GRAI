@@ -37,13 +37,21 @@ ConVar  sk_combine_s_diabolical_damage_scale("sk_combine_s_diabolical_damage_sca
 
 ConVar	sk_combine_s_health( "sk_combine_s_health","0");
 ConVar	sk_combine_s_kick( "sk_combine_s_kick","0");
+ConVar	sk_combine_s_model_scale_min( "sk_combine_s_model_scale_min", "0.92" );
+ConVar	sk_combine_s_model_scale_max( "sk_combine_s_model_scale_max", "1.07" );
 
 ConVar sk_combine_guard_health( "sk_combine_guard_health", "0");
 ConVar sk_combine_guard_kick( "sk_combine_guard_kick", "0");
+ConVar	sk_combine_guard_model_scale_min("sk_combine_guard_model_scale_min", "0.96");
+ConVar	sk_combine_guard_model_scale_max("sk_combine_guard_model_scale_max", "1.07");
 
-ConVar sk_combine_elite_health("sk_combine_elite_health", "0");
-ConVar sk_combine_elite_kick("sk_combine_elite_kick", "0");
- 
+ConVar sk_combine_elite_health( "sk_combine_elite_health", "0" );
+ConVar sk_combine_elite_kick( "sk_combine_elite_kick", "0" );
+ConVar	sk_combine_elite_model_scale_min( "sk_combine_elite_model_scale_min", "1.00" );
+ConVar	sk_combine_elite_model_scale_max( "sk_combine_elite_model_scale_max", "1.10" );
+
+ConVar sk_combine_max_additional_ammo_shots("sk_combine_max_additional_ammo_shots", "8");
+
 // Whether or not the combine guard should spawn health on death
 ConVar combine_guard_spawn_health( "combine_guard_spawn_health", "1" );
 
@@ -71,22 +79,34 @@ void CNPC_CombineS::Spawn( void )
 
 	if( IsElite() )
 	{
+		//	Make them a little bit taller or smaller
+		float mdl_scale = random->RandomFloat( sk_combine_elite_model_scale_min.GetFloat(), sk_combine_elite_model_scale_max.GetFloat() );
+		SetModelScale(mdl_scale);
+
 		// Stronger, tougher.
-		SetHealth( sk_combine_elite_health.GetFloat() );
-		SetMaxHealth( sk_combine_elite_health.GetFloat() );
-		SetKickDamage( sk_combine_elite_kick.GetFloat() );
+		SetHealth( sk_combine_elite_health.GetFloat() * pow(mdl_scale, 4) );
+		SetMaxHealth( sk_combine_elite_health.GetFloat() * pow(mdl_scale, 4) );
+		SetKickDamage( sk_combine_elite_kick.GetFloat() * pow(mdl_scale, 4) );
 	}
 	else if (IsGuard())
 	{
-		SetHealth( sk_combine_guard_health.GetFloat() );
-		SetMaxHealth( sk_combine_guard_health.GetFloat() );
-		SetKickDamage( sk_combine_guard_kick.GetFloat() );
+		//	Make them a little bit taller or smaller
+		float mdl_scale = random->RandomFloat( sk_combine_guard_model_scale_min.GetFloat(), sk_combine_guard_model_scale_max.GetFloat() );
+		SetModelScale(mdl_scale);
+
+		SetHealth( sk_combine_guard_health.GetFloat() * pow(mdl_scale, 4) );
+		SetMaxHealth( sk_combine_guard_health.GetFloat() * pow(mdl_scale, 4) );
+		SetKickDamage( sk_combine_guard_kick.GetFloat() * pow(mdl_scale, 4) );
 	}
 	else
 	{
-		SetHealth(sk_combine_s_health.GetFloat());
-		SetMaxHealth(sk_combine_s_health.GetFloat());
-		SetKickDamage(sk_combine_s_kick.GetFloat());
+		//	Make them a little bit taller or smaller
+		float mdl_scale = random->RandomFloat( sk_combine_s_model_scale_min.GetFloat(), sk_combine_s_model_scale_max.GetFloat() );
+		SetModelScale(mdl_scale);
+
+		SetHealth( sk_combine_s_health.GetFloat() * pow(mdl_scale, 4) );
+		SetMaxHealth( sk_combine_s_health.GetFloat() * pow(mdl_scale, 4) );
+		SetKickDamage( sk_combine_s_kick.GetFloat() * pow(mdl_scale, 4) );
 	}
 
 
@@ -281,6 +301,139 @@ float CNPC_CombineS::GetHitgroupDamageMultiplier(int iHitGroup, const CTakeDamag
 		}
 //	return BaseClass::GetHitgroupDamageMultiplier(iHitGroup, info); // is this necessary?
 	}
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+void CNPC_CombineS::TraceAttack(const CTakeDamageInfo &info, const Vector &vecDir, trace_t *ptr, CDmgAccumulator *pAccumulator)
+{
+	CTakeDamageInfo infoCopy = info;
+
+	if (ptr->hitgroup == HITGROUP_HEAD)
+	{
+		m_bHeadShot = true;
+	}
+
+	if (ptr->hitgroup == HITGROUP_LEFTLEG || ptr->hitgroup == HITGROUP_RIGHTLEG ||
+		ptr->hitgroup == HITGROUP_LEFTARM || ptr->hitgroup == HITGROUP_RIGHTARM)
+	{
+		m_bLimbShot = true;
+	}
+
+	float healthRatio = (float)GetHealth() / (float)GetMaxHealth();
+	/*
+	if (healthRatio > 0.35 && !info.GetAmmoType() == GetAmmoDef()->Index("357") && !m_bLimbShot)
+	{
+		SetBloodColor(BLOOD_COLOR_MECH);
+	}
+	else
+	{
+		SetBloodColor(BLOOD_COLOR_RED);
+	}
+	*/
+	if (m_bHeadShot)
+	{
+		if (healthRatio > 0.35 && info.GetAmmoType() != GetAmmoDef()->Index("357"))
+			SetBloodColor(BLOOD_COLOR_MECH);
+		else
+			SetBloodColor(BLOOD_COLOR_RED);
+	}
+	else if (m_bLimbShot)
+	{
+		SetBloodColor(BLOOD_COLOR_RED);
+	}
+	else
+	{
+		if (healthRatio > 0.5)
+			SetBloodColor(BLOOD_COLOR_MECH);
+		else
+			SetBloodColor(BLOOD_COLOR_RED);
+	}
+	
+	CBasePlayer *pPlayer = ToBasePlayer(info.GetAttacker());
+	if (pPlayer != NULL)
+	{
+		// Attempt to drain player's ammo
+		if (info.GetDamageType() & DMG_BULLET)
+		{
+			CHalfLife2 *pHL2GameRules = static_cast<CHalfLife2 *>(g_pGameRules);
+
+			if (info.GetAmmoType() == GetAmmoDef()->Index("Pistol"))
+			{
+				if (pHL2GameRules->NPC_ShouldDrainPistolAmmo(pPlayer) && m_flAdditionalShots < sk_combine_max_additional_ammo_shots.GetInt())
+				{
+					// Take only one additioanl headshot.
+					if (m_bHeadShot && infoCopy.GetDamage() * sk_combine_s_head.GetFloat() >= (float)GetHealth())
+					{
+						infoCopy.SetDamage(1);
+						pHL2GameRules->NPC_TakenAdditionalShots(1);
+						m_flAdditionalShots += 3;
+					}
+					else if (infoCopy.GetDamage() >= (float)GetHealth())
+					{
+						infoCopy.SetDamage(1);
+						pHL2GameRules->NPC_TakenAdditionalShots(1);
+						m_flAdditionalShots++;
+					}
+				}
+			}
+			else if (info.GetAmmoType() == GetAmmoDef()->Index("AR2"))
+			{
+				if (pHL2GameRules->NPC_ShouldDrainAR2Ammo(pPlayer) && m_flAdditionalShots < sk_combine_max_additional_ammo_shots.GetInt())
+				{
+					// Take only one additioanl headshot.
+					if (m_bHeadShot && infoCopy.GetDamage() * sk_combine_s_head.GetFloat() >= (float)GetHealth())
+					{
+						infoCopy.SetDamage(1);
+						pHL2GameRules->NPC_TakenAdditionalShots(1);
+						m_flAdditionalShots += 4;
+					}
+					else if (infoCopy.GetDamage() >= (float)GetHealth())
+					{
+						infoCopy.SetDamage(1);
+						pHL2GameRules->NPC_TakenAdditionalShots(1);
+						m_flAdditionalShots += 2;
+					}
+				}
+			}
+			else if (info.GetAmmoType() == GetAmmoDef()->Index("SMG1"))
+			{
+				if (pHL2GameRules->NPC_ShouldDrainSMGAmmo(pPlayer) && m_flAdditionalShots < sk_combine_max_additional_ammo_shots.GetInt())
+				{
+					// Take fewer additioanl headshots.
+					if (m_bHeadShot && infoCopy.GetDamage() * sk_combine_s_head.GetFloat() >= (float)GetHealth())
+					{
+						infoCopy.SetDamage(1);
+						pHL2GameRules->NPC_TakenAdditionalShots(1);
+						m_flAdditionalShots += 2;
+					}
+					else if (infoCopy.GetDamage() >= (float)GetHealth())
+					{
+						infoCopy.SetDamage(1);
+						pHL2GameRules->NPC_TakenAdditionalShots(1);
+						m_flAdditionalShots++;
+					}
+				}
+			}
+			else if (info.GetAmmoType() == GetAmmoDef()->Index("357"))
+			{
+				if (pHL2GameRules->NPC_ShouldDrain357Ammo(pPlayer) && m_flAdditionalShots < sk_combine_max_additional_ammo_shots.GetInt()
+					&& !m_bHeadShot && infoCopy.GetDamage() >= (float)GetHealth())
+				{
+					extern ConVar sk_npc_dmg_357;
+					infoCopy.SetDamage(sk_npc_dmg_357.GetFloat() * 0.5);
+					pHL2GameRules->NPC_TakenAdditionalShots(1);
+					m_flAdditionalShots += sk_combine_max_additional_ammo_shots.GetInt();
+				}
+			}
+		}
+	}
+
+	// Reset
+	m_bHeadShot = false;
+	m_bLimbShot = false;
+	BaseClass::TraceAttack(infoCopy, vecDir, ptr, pAccumulator);
 }
 
 

@@ -60,9 +60,9 @@ public:
 		static Vector plrCone = VECTOR_CONE_5DEGREES;		// Standing, moving around, the default
 		static Vector plrRunCone = VECTOR_CONE_7DEGREES;	// Player sprint accuracy
 		static Vector plrJumpCone = VECTOR_CONE_15DEGREES;	// Player jump/midair accuracy
-		static Vector npcCone = VECTOR_CONE_2DEGREES;		// NPC cone when standing still
-		static Vector npcMoveCone = VECTOR_CONE_3DEGREES;	// NPC cone when moving
-		static Vector npcConeMidAir = VECTOR_CONE_4DEGREES;	// NPC cone when rappeling
+		static Vector npcCone = VECTOR_CONE_3DEGREES;		// NPC cone when standing still
+		static Vector npcMoveCone = VECTOR_CONE_4DEGREES;	// NPC cone when moving
+		static Vector npcConeMidAir = VECTOR_CONE_5DEGREES;	// NPC cone when rappeling
 
 		if (GetOwner() && GetOwner()->IsNPC())
 		{
@@ -182,7 +182,11 @@ IMPLEMENT_ACTTABLE(CWeaponSMG1);
 CWeaponSMG1::CWeaponSMG1( )
 {
 	m_fMinRange1		= 0;// No minimum range. 
-	m_fMaxRange1		= 1800;	// was 1500 
+	m_fMaxRange1		= 1620;	// 45 yards 
+
+	m_fMinRange2 = 324;		//9 yards
+	m_fMaxRange2 = 1080;	//30 yards
+
 	m_iFireMode = FIREMODE_FULLAUTO;
 
 	m_bAltFiresUnderwater = false;
@@ -222,11 +226,11 @@ void CWeaponSMG1::Equip( CBaseCombatCharacter *pOwner )
 {
 	if( pOwner->Classify() == CLASS_PLAYER_ALLY )
 	{
-		m_fMaxRange1 = 3600;
+		m_fMaxRange1 = 3600;	//100 yards
 	}
 	else
 	{
-		m_fMaxRange1 = 1800;
+		m_fMaxRange1 = 1800;	//50 yards
 	}
 
 	BaseClass::Equip( pOwner );
@@ -350,10 +354,14 @@ void CWeaponSMG1::Operator_HandleAnimEvent( animevent_t *pEvent, CBaseCombatChar
 
 		if (g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL))
 		{
-			m_flNextGrenadeCheck = gpGlobals->curtime + RandomFloat(2, 3);
+			m_flNextGrenadeCheck = gpGlobals->curtime + 2;
+		}
+		else if (g_pGameRules->IsSkillLevel(SKILL_HARD))
+		{
+			m_flNextGrenadeCheck = gpGlobals->curtime + 6;
 		}
 		else{
-			m_flNextGrenadeCheck = gpGlobals->curtime + 6;// wait six seconds before even looking again to see if a grenade can be thrown.
+			m_flNextGrenadeCheck = gpGlobals->curtime + 10;// wait six seconds before even looking again to see if a grenade can be thrown.
 		}
 
 		m_iClip2--;
@@ -529,7 +537,7 @@ void CWeaponSMG1::SecondaryAttack( void )
 	gamestats->Event_WeaponFired( pPlayer, false, GetClassname() );
 }
 
-#define	COMBINE_MIN_GRENADE_CLEAR_DIST 200
+#define	COMBINE_MIN_GRENADE_CLEAR_DIST 350
 
 //-----------------------------------------------------------------------------
 // Purpose: 
@@ -644,11 +652,11 @@ const WeaponProficiencyInfo_t *CWeaponSMG1::GetProficiencyValues()
 {
 	static WeaponProficiencyInfo_t proficiencyTable[] =
 	{
-		{ 5.00,		0.85	},	//poor	10/15
-		{ 4.00,		0.85	},	//average 8/12
-		{ 3.00,		0.85	},	//good 6/9
-		{ 2.00,		0.85	},	//very good	4/6
-		{ 1.00,		1.00	},	//perfect 2/4
+		{ 100 / 18,	0.75	},	//poor	16.6/22.2
+		{ 25 / 6,	0.75	},	//average	12.5/16.6
+		{ 25 / 9,	0.75	},	//good	8.33/11.1
+		{ 5 / 3,	0.75	},	//very good	5/6.6
+		{ 1.00,		1.00	},	//perfect 3/4
 	};
 
 	COMPILE_TIME_ASSERT( ARRAYSIZE(proficiencyTable) == WEAPON_PROFICIENCY_PERFECT + 1);

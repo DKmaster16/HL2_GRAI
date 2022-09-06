@@ -24,7 +24,7 @@
 
 #define ACTBUSY_SEE_ENTITY_TIMEOUT	1.0f
 
-#define ACTBUSY_COMBAT_PLAYER_MAX_DIST	7200.0f	// NPCs in combat actbusy should try to stay within this distance of the player. (WAS 720 WITH ALYX IN MIND)
+#define ACTBUSY_COMBAT_PLAYER_MAX_DIST	720.0f	// NPCs in combat actbusy should try to stay within this distance of the player.
 
 ConVar	ai_actbusy_search_time( "ai_actbusy_search_time","10.0" );
 ConVar  ai_debug_actbusy( "ai_debug_actbusy", "0", FCVAR_CHEAT, "Used to debug actbusy behavior. Usage:\n\

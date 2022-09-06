@@ -28,16 +28,18 @@
 #include "npc_BaseZombie.h"
 #include "modelentities.h"
 
-#if HL2_EPISODIC
+//#if HL2_EPISODIC
 #include "npc_antlion.h"
-#endif
-
+//#endif
+#include "hl2_gamerules.h"
+#include "ammodef.h"
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
 float GetCurrentGravity( void );
-ConVar	sk_barnacle_health( "sk_barnacle_health","0");
-ConVar	sk_barnacle_bite_dmg("sk_barnacle_bite_dmg", "15");
+ConVar	sk_barnacle_health( "sk_barnacle_health","0" );
+ConVar	sk_barnacle_bite_dmg("sk_barnacle_bite_dmg", "25");
+ConVar	sk_barnacle_max_additional_ammo_shots("sk_barnacle_max_additional_ammo_shots", "4");
 
 static ConVar npc_barnacle_swallow( "npc_barnacle_swallow", "0", 0, "Use prototype swallow code." );
 
@@ -178,11 +180,11 @@ BEGIN_DATADESC( CNPC_Barnacle )
 	DEFINE_INPUTFUNC( FIELD_VOID, "DropTongue", InputDropTongue ),
 	DEFINE_INPUTFUNC( FIELD_INTEGER, "SetDropTongueSpeed", InputSetDropTongueSpeed ),
 
-#ifdef HL2_EPISODIC
+//#ifdef HL2_EPISODIC
 	DEFINE_INPUTFUNC( FIELD_VOID, "LetGo", InputLetGo ),
 	DEFINE_OUTPUT( m_OnGrab,     "OnGrab" ),
 	DEFINE_OUTPUT( m_OnRelease, "OnRelease" ),
-#endif
+//#endif
 
 	// Function pointers
 	DEFINE_THINKFUNC( BarnacleThink ),
@@ -264,11 +266,11 @@ void CNPC_Barnacle::Spawn()
 	SetSolid( SOLID_BBOX );
 	AddSolidFlags( FSOLID_NOT_STANDABLE );
 	CollisionProp()->SetSurroundingBoundsType( USE_GAME_CODE );
-#if HL2_EPISODIC // the episodic barnacle is solid, so it can be sawbladed.
+//#if HL2_EPISODIC // the episodic barnacle is solid, so it can be sawbladed.
 	SetMoveType( MOVETYPE_PUSH );
-#else
-	SetMoveType( MOVETYPE_NONE );
-#endif
+//#else
+//	SetMoveType( MOVETYPE_NONE );
+//#endif
 	SetBloodColor( BLOOD_COLOR_GREEN );
 	m_iHealth			= sk_barnacle_health.GetFloat();
 	m_flFieldOfView		= 0.5;// indicates the width of this monster's forward view cone ( as a dotproduct result )
@@ -281,13 +283,13 @@ void CNPC_Barnacle::Spawn()
 	m_takedamage		= DAMAGE_YES;
 	m_pConstraint		= NULL;
 	m_nShakeCount = 0;
-#if HL2_EPISODIC // the episodic barnacle is solid, so it can be sawbladed.
+//#if HL2_EPISODIC // the episodic barnacle is solid, so it can be sawbladed.
 	IPhysicsObject *pPhys = VPhysicsInitShadow( false, false );
 	if (pPhys)
 	{
 		pPhys->SetMass(500);
 	}
-#endif
+//#endif
 	InitBoneControllers();
 	InitTonguePosition();
 
@@ -303,6 +305,8 @@ void CNPC_Barnacle::Spawn()
 	SetNextThink( gpGlobals->curtime + 0.5f );
 
 	m_flBarnaclePullSpeed = BARNACLE_PULL_SPEED;
+
+	m_flAdditionalShots = 0;
 
 	//Do not have a shadow
 	AddEffects( EF_NOSHADOW );
@@ -380,16 +384,53 @@ int	CNPC_Barnacle::OnTakeDamage_Alive( const CTakeDamageInfo &inputInfo )
 		SetActivity( ACT_SMALL_FLINCH );
 	}
 
-	if( hl2_episodic.GetBool() && info.GetAttacker() && info.GetAttacker()->Classify() == CLASS_PLAYER_ALLY_VITAL )
+	CBasePlayer *pPlayer = ToBasePlayer(info.GetAttacker());
+	if (pPlayer != NULL)
 	{
-		if( FClassnameIs( info.GetAttacker(), "npc_alyx" ) )
+		// Attempt to drain player's ammo
+		if (info.GetDamageType() & DMG_BULLET && info.GetDamage() >= (float)GetHealth())
 		{
-			// Alyx does double damage to barnacles, so that she can save the 
-			// player's life in a more timely fashion. (sjb)
-			info.ScaleDamage( 2.0f );
+			CHalfLife2 *pHL2GameRules = static_cast<CHalfLife2 *>(g_pGameRules);
+
+			if (info.GetAmmoType() == GetAmmoDef()->Index("Pistol"))
+			{
+				if (pHL2GameRules->NPC_ShouldDrainPistolAmmo(pPlayer) && m_flAdditionalShots < sk_barnacle_max_additional_ammo_shots.GetInt())
+				{
+						info.SetDamage(1);
+						pHL2GameRules->NPC_TakenAdditionalShots(1);
+						m_flAdditionalShots++;
+				}
+			}
+			else if (info.GetAmmoType() == GetAmmoDef()->Index("AR2"))
+			{
+				if (pHL2GameRules->NPC_ShouldDrainAR2Ammo(pPlayer) && m_flAdditionalShots < sk_barnacle_max_additional_ammo_shots.GetInt())
+				{
+					info.SetDamage(3);
+					pHL2GameRules->NPC_TakenAdditionalShots(1);
+					m_flAdditionalShots++;
+					m_flAdditionalShots++;
+				}
+			}
+			else if (info.GetAmmoType() == GetAmmoDef()->Index("SMG1"))
+			{
+				if (pHL2GameRules->NPC_ShouldDrainSMGAmmo(pPlayer) && m_flAdditionalShots < sk_barnacle_max_additional_ammo_shots.GetInt())
+				{
+					info.SetDamage(1);
+					pHL2GameRules->NPC_TakenAdditionalShots(1);
+					m_flAdditionalShots++;
+				}
+			}
+			else if (info.GetAmmoType() == GetAmmoDef()->Index("357"))
+			{
+				if (pHL2GameRules->NPC_ShouldDrain357Ammo(pPlayer) && m_flAdditionalShots < sk_barnacle_max_additional_ammo_shots.GetInt())
+				{
+					info.SetDamage(10);
+					pHL2GameRules->NPC_TakenAdditionalShots(1);
+					m_flAdditionalShots = sk_barnacle_max_additional_ammo_shots.GetInt();
+				}
+			}
 		}
 	}
-
 	DropTongue();
 
 	return BaseClass::OnTakeDamage_Alive( info );
@@ -547,8 +588,8 @@ void CNPC_Barnacle::BarnacleThink ( void )
 					TakeDamage( CTakeDamageInfo( this, this, m_iHealth, DMG_ACID ) );
 				}
 //#else
-//			LostPrey( true ); // Remove all evidence
-//			m_flDigestFinish = 0;
+//				LostPrey( true ); // Remove all evidence
+//				m_flDigestFinish = 0;
 //#endif
 			}
 		}
@@ -1049,16 +1090,8 @@ void CNPC_Barnacle::LiftRagdoll( float flBiteZOffset )
 
   		if ( GetEnemy()->Classify() == CLASS_ZOMBIE )
 		{
-			// lifted the prey high enough to see it's a zombie. Spit it out.
-			if ( hl2_episodic.GetBool() )
-			{
 				m_bLiftingPrey = false;
 				SetActivity( (Activity)ACT_BARNACLE_BITE_SMALL_THINGS );
-			}
-			else
-			{
-				SpitPrey();
-			}
 			return;
 		}
 
@@ -1146,8 +1179,7 @@ void CNPC_Barnacle::LiftPhysicsObject( float flBiteZOffset )
 		// If we got a physics prop, wait until the thing has settled down
 		m_bLiftingPrey = false;
 
-		if ( hl2_episodic.GetBool() )
-		{
+//		if ( hl2_episodic.GetBool() )
 			CBounceBomb *pBounce = dynamic_cast<CBounceBomb *>( pVictim );
 
 			if ( pBounce )
@@ -1165,14 +1197,8 @@ void CNPC_Barnacle::LiftPhysicsObject( float flBiteZOffset )
 				// Start the bite animation. The anim event in it will finish the job.
 				SetActivity( (Activity)ACT_BARNACLE_TASTE_SPIT );
 			}
-		}
-		else
-		{
-			// Start the bite animation. The anim event in it will finish the job.
-			SetActivity( (Activity)ACT_BARNACLE_TASTE_SPIT );
-		}
 		
-#ifdef HL2_EPISODIC
+//#ifdef HL2_EPISODIC
 		// if the object is a combatclass, send it a chomp interaction in case it wants to respond to that
 		// in some nonstandard way.
 		CBaseCombatCharacter *pBCC = dynamic_cast<CBaseCombatCharacter *>(pVictim);
@@ -1182,7 +1208,7 @@ void CNPC_Barnacle::LiftPhysicsObject( float flBiteZOffset )
 
 			pBCC->DispatchInteraction( g_interactionBarnacleVictimBite, &tipPos, this );
 		}
-#endif
+//#endif
 	}
 	else
 	{
@@ -1328,10 +1354,10 @@ CRagdollProp *CNPC_Barnacle::AttachRagdollToTongue( CBaseAnimating *pAnimating )
 	CRagdollProp *pRagdoll = CreateServerRagdollAttached( pAnimating, vec3_origin, -1, COLLISION_GROUP_NONE, pTonguePhysObject, m_hTongueTip, 0, vecBonePos, m_iGrabbedBoneIndex, vec3_origin );
 	if ( pRagdoll )
 	{
-#if HL2_EPISODIC
+//#if HL2_EPISODIC
 		PhysEnableEntityCollisions( this, pAnimating );
 		PhysDisableEntityCollisions( this, pRagdoll );
-#endif
+//#endif
 
 		pRagdoll->DisableAutoFade();
 		pRagdoll->SetThink( NULL );
@@ -1356,9 +1382,9 @@ void CNPC_Barnacle::InputDropTongue( inputdata_t &inputdata )
 void CNPC_Barnacle::AttachTongueToTarget( CBaseEntity *pTouchEnt, Vector vecGrabPos )
 {
 
-#if HL2_EPISODIC
+//#if HL2_EPISODIC
 	m_OnGrab.Set( pTouchEnt, this, this );
-#endif
+//#endif
 
 	// Reset this valricue each time we attach prey. If it needs to be reduced, code below will do so.
 	m_flBarnaclePullSpeed = BARNACLE_PULL_SPEED;
@@ -1401,10 +1427,10 @@ void CNPC_Barnacle::AttachTongueToTarget( CBaseEntity *pTouchEnt, Vector vecGrab
 	}
 
 	SetEnemy( pTouchEnt );
-#if HL2_EPISODIC
+//#if HL2_EPISODIC
 	// Disable collision between myself and the obejct I've seized.
 	PhysDisableEntityCollisions( this, pTouchEnt );
-#endif
+//#endif
 
 	// teleporting the player in this way is illegitimate -- try it in third person to see the problem
 	if ( /* pTouchEnt->IsPlayer() || */ pTouchEnt->MyNPCPointer() )
@@ -1578,7 +1604,7 @@ void CNPC_Barnacle::BitePrey( void )
 
 	CBaseCombatCharacter *pVictim = GetEnemyCombatCharacterPointer();
 
-#ifdef HL2_EPISODIC
+//#ifdef HL2_EPISODIC
  	if ( pVictim == NULL )
 	{
 		if ( GetEnemy() )
@@ -1608,7 +1634,7 @@ void CNPC_Barnacle::BitePrey( void )
 		
 		return;
 	}
-#endif
+//#endif
 	
 	Assert( pVictim );
 	if ( !pVictim )
@@ -1874,17 +1900,17 @@ void CNPC_Barnacle::RemoveRagdoll( bool bDestroyRagdoll )
 void CNPC_Barnacle::LostPrey( bool bRemoveRagdoll )
 {
 	
-#if HL2_EPISODIC
+//#if HL2_EPISODIC
 	m_OnRelease.Set( GetEnemy(), this, this );
-#endif
+//#endif
 
 	CBaseEntity * const pEnemy = GetEnemy();
 
  	if ( pEnemy )
 	{
-#if HL2_EPISODIC
+//#if HL2_EPISODIC
 		PhysEnableEntityCollisions( this, pEnemy );
-#endif
+//#endif
 
 		//No one survives being snatched by a barnacle anymore, so leave
 		// this flag set so that their entity gets removed.
@@ -2213,12 +2239,12 @@ bool CNPC_Barnacle::IsPoisonous( CBaseEntity *pVictim )
 
 	if ( FClassnameIs(pVictim,"npc_headcrab_black") )
 		return true;
-#if HL2_EPISODIC
+
 	if ( FClassnameIs(pVictim,"npc_antlion") &&
 		 static_cast<CNPC_Antlion *>(pVictim)->IsWorker()
 		)
 		return true;
-#endif
+	
 	return false;
 }
 
@@ -2387,7 +2413,7 @@ public:
 		if ( pServerEntity == m_pLastEnemy )
 			return true;
 
-#ifdef HL2_EPISODIC
+//#ifdef HL2_EPISODIC
 		CBaseEntity *pEntity = EntityFromEntityHandle( pServerEntity );
 
 		if ( pEntity )
@@ -2416,7 +2442,7 @@ public:
 				return false;
 			}
 		}
-#endif
+//#endif
 
 		return BaseClass::ShouldHitEntity( pServerEntity, contentsMask );
 	}
@@ -2435,9 +2461,9 @@ CBaseEntity *CNPC_Barnacle::TongueTouchEnt ( float *pflLength )
 
 	int iMask = MASK_SOLID_BRUSHONLY;
 
-#ifdef HL2_EPISODIC
+//#ifdef HL2_EPISODIC
 	iMask = MASK_NPCSOLID;
-#endif
+//#endif
 
 	// trace once to hit architecture and see if the tongue needs to change position.
 	CBarnacleTongueFilter tongueFilter( m_hLastSpitEnemy, this, COLLISION_GROUP_NONE );
@@ -2511,7 +2537,7 @@ CBaseEntity *CNPC_Barnacle::TongueTouchEnt ( float *pflLength )
 				}
 
 				// Allow the barnacles to grab stuff while their tongue is lowering
-#ifdef HL2_EPISODIC
+//#ifdef HL2_EPISODIC
 				length = fabs( GetAbsOrigin().z - pTest->WorldSpaceCenter().z );
 				// Pull it up a tad
 				length = MAX(8, length - m_flRestUnitsAboveGround);
@@ -2519,7 +2545,7 @@ CBaseEntity *CNPC_Barnacle::TongueTouchEnt ( float *pflLength )
 				{
 					*pflLength = length;
 				}
-#endif
+//#endif
 
 				return pTest;
 			}
@@ -2539,7 +2565,7 @@ CBaseEntity *CNPC_Barnacle::TongueTouchEnt ( float *pflLength )
 		{
 
 			// Allow the barnacles to grab stuff while their tongue is lowering
-#ifdef HL2_EPISODIC
+//#ifdef HL2_EPISODIC
 			length = fabs( GetAbsOrigin().z - pTest->WorldSpaceCenter().z );
 			// Pull it up a tad
 			length = MAX(8, length - m_flRestUnitsAboveGround);
@@ -2547,7 +2573,7 @@ CBaseEntity *CNPC_Barnacle::TongueTouchEnt ( float *pflLength )
 			{
 				*pflLength = length;
 			}
-#endif
+//#endif
 
 			return pTest;
 		}

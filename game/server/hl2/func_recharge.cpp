@@ -23,8 +23,6 @@
 #include "tier0/memdbgon.h"
 
 static ConVar	sk_suitcharger( "sk_suitcharger","0" );
-static ConVar	sk_suitcharger_kleiner("sk_suitcharger_kleiner", "25");
-static ConVar	sk_suitcharger_plaza( "sk_suitcharger_plaza", "0" );
 static ConVar	sk_suitcharger_citadel( "sk_suitcharger_citadel","0" );
 static ConVar	sk_suitcharger_citadel_maxarmor( "sk_suitcharger_citadel_maxarmor","0" );
 
@@ -451,20 +449,13 @@ void CNewRecharge::SetInitialCharge( void )
 	if ( HasSpawnFlags( SF_KLEINER_RECHARGER ) )
 	{
 		// The charger in Kleiner's lab.
-		m_iMaxJuice = sk_suitcharger_kleiner.GetFloat();
+		m_iMaxJuice =  25.0f;
 		return;
 	}
 
 	if ( HasSpawnFlags( SF_CITADEL_RECHARGER ) )
 	{
 		m_iMaxJuice =  sk_suitcharger_citadel.GetFloat();
-		return;
-	}
-
-	// Higher capacity rechargers on Plaza defense map
-	if (!Q_strnicmp(STRING(gpGlobals->mapname), "d3_c17_07", 14))
-	{
-		m_iMaxJuice = sk_suitcharger_plaza.GetFloat();
 		return;
 	}
 

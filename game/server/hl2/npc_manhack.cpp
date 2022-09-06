@@ -80,7 +80,7 @@
 
 ConVar	sk_manhack_health( "sk_manhack_health","0");
 ConVar	sk_manhack_melee_dmg( "sk_manhack_melee_dmg","0");
-ConVar	sk_manhack_v2( "sk_manhack_v2","1");
+ConVar	sk_manhack_club_dmg_scale( "sk_manhack_club_dmg_scale", "1.25" );
 
 extern void		SpawnBlood(Vector vecSpot, const Vector &vAttackDir, int bloodColor, float flDamage);
 extern float	GetFloorZ(const Vector &origin);
@@ -707,7 +707,7 @@ int	CNPC_Manhack::OnTakeDamage_Alive( const CTakeDamageInfo &info )
 
 		//		-Take 125% damage from club attacks. This makes crowbar duels take two hits.
 		
-		tdInfo.ScaleDamage( 1.25 );
+		tdInfo.ScaleDamage( sk_manhack_club_dmg_scale.GetFloat() );
 
 #define MANHACK_PHYS_SEARCH_SIZE		64
 #define	MANHACK_PHYSICS_SEARCH_RADIUS	128
@@ -1481,10 +1481,10 @@ void CNPC_Manhack::Slice( CBaseEntity *pHitEntity, float flInterval, trace_t &tr
 	}
 	else if ( pHitEntity->IsNPC() && HasPhysicsAttacker( MANHACK_SMASH_TIME ) )
 	{
-		extern ConVar sk_combine_guard_health;
+		extern ConVar sk_combine_elite_health;
 		// NOTE: The else here is essential.
 		// The physics attacker *will* be set even when the manhack is held
-		flDamage = sk_combine_guard_health.GetFloat(); // the highest healthed fleshy enemy
+		flDamage = sk_combine_elite_health.GetFloat(); // the highest healthed fleshy enemy
 	}
 	else if ( dynamic_cast<CBaseProp*>(pHitEntity) || dynamic_cast<CBreakable*>(pHitEntity) )
 	{

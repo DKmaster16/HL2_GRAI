@@ -68,8 +68,11 @@ static ConVar sk_airboat_max_ammo("sk_airboat_max_ammo", "100" );
 static ConVar sk_airboat_recharge_rate("sk_airboat_recharge_rate", "15" );
 ConVar sk_airboat_drain_rate("sk_airboat_drain_rate", "10" );
 ConVar sk_airboat_firingcone("sk_airboat_firingcone", "5.0", 0, "The angle in degrees of the cone in which the shots will be fired");
+ConVar sk_airboat_blast_dmg_scale("sk_airboat_blast_dmg_scale", "0.5");
+ConVar sk_airboat_bullet_dmg_scale("sk_airboat_bullet_dmg_scale", "0.5");
+
 static ConVar hud_airboathint_numentries( "hud_airboathint_numentries", "10", FCVAR_NONE );
-static ConVar airboat_fatal_stress( "airboat_fatal_stress", "2000", FCVAR_NONE, "Amount of stress in kg that would kill the airboat driver." );	// was 5000 kg
+static ConVar airboat_fatal_stress( "airboat_fatal_stress", "500", FCVAR_NONE, "Amount of stress in kg that would kill the airboat driver." );	// was 5000 kg
 extern ConVar autoaim_max_dist;
 
 class CPropAirboat : public CPropVehicleDriveable
@@ -878,10 +881,10 @@ int CPropAirboat::OnTakeDamage( const CTakeDamageInfo &info )
 {
 	// Do scaled up physics damage to the airboat
 	CTakeDamageInfo physDmg = info;
-	physDmg.ScaleDamage( 5 );
+	physDmg.ScaleDamage( 4 );
 	if ( physDmg.GetDamageType() & DMG_BLAST )
 	{
-		physDmg.SetDamageForce( info.GetDamageForce() * 10 );
+		physDmg.SetDamageForce( info.GetDamageForce() * 2 );
 	}
 	VPhysicsTakeDamage( physDmg );
 
@@ -894,6 +897,12 @@ int CPropAirboat::OnTakeDamage( const CTakeDamageInfo &info )
 
 		// Take the damage (strip out the DMG_BLAST)
 		CTakeDamageInfo playerDmg = info;
+
+		if ( playerDmg.GetDamageType() & ( DMG_BULLET ) )
+			playerDmg.ScaleDamage( sk_airboat_bullet_dmg_scale.GetFloat() );
+
+		if ( playerDmg.GetDamageType() & ( DMG_BLAST ) )
+			playerDmg.ScaleDamage( sk_airboat_blast_dmg_scale.GetFloat() );
 
 		// Mark that we're passing it to the player so the base player accepts the damage
 		playerDmg.SetDamageType( info.GetDamageType() | DMG_VEHICLE );

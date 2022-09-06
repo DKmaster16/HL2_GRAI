@@ -68,7 +68,7 @@ int g_iGunshipEffectIndex = -1;
 
 ConVar sk_gunship_burst_size("sk_gunship_burst_size", "15" );							// Number of shots in a burst
 ConVar sk_gunship_max_hits_per_burst("sk_gunship_max_hits_per_burst", "5");				// Maximum number of hits
-ConVar sk_gunship_max_dmg_hits_per_burst("sk_gunship_max_dmg_hits_per_burst", "3");		// Number of hits that deal full damage
+//ConVar sk_gunship_max_dmg_hits_per_burst("sk_gunship_max_dmg_hits_per_burst", "3");		// Number of hits that deal full damage
 ConVar sk_gunship_past_max_damage_scale("sk_gunship_past_max_damage_scale", "0.1");		// Damage scale after we've done max dmg hits
 ConVar sk_gunship_burst_delay("sk_gunship_burst_delay", "2.0f");						// Rest time between bursts
 
@@ -132,7 +132,7 @@ Wedge's notes:
 #define GUNSHIP_BELLYBLAST_TARGET_HEIGHT	1024.0		// Height above targets that the gunship wants to be when bellyblasting
 
 #define GUNSHIP_MISSILE_MAX_RESPONSE_TIME	0.4
-//#define GUNSHIP_MAX_HITS_PER_BURST			5
+#define GUNSHIP_MAX_HITS_PER_BURST			sk_gunship_max_hits_per_burst.GetInt()
 #define GUNSHIP_FLARE_IGNORE_TIME		6.0
 
 //=====================================
@@ -1757,19 +1757,13 @@ void CNPC_CombineGunship::FireCannonRound( void )
 		// Fire directly at the target
 		FireBulletsInfo_t info(1, vecMuzzle, vecToEnemy, VECTOR_CONE_05DEGREES, MAX_COORD_RANGE, m_iAmmoType);
 		info.m_iTracerFreq = 1;
-//		info.m_nFlags = AMMO_DARK_ENERGY;
-		CAmmoDef *pAmmoDef = GetAmmoDef();
 
 		// If we've already hit the player a few times, do less damage.
-//		extern ConVar sk_npc_dmg_gunship_to_plr;
+		extern ConVar sk_npc_dmg_gunship_to_plr;
 
-		if (m_iBurstHits >= sk_gunship_max_dmg_hits_per_burst.GetInt())
+		if (m_iBurstHits >= GUNSHIP_MAX_HITS_PER_BURST)
 		{
-			info.m_iPlayerDamage = pAmmoDef->PlrDamage(m_iAmmoType) * sk_gunship_past_max_damage_scale.GetFloat();
-		}
-		else
-		{
-			info.m_iPlayerDamage = pAmmoDef->PlrDamage(m_iAmmoType);
+			info.m_iPlayerDamage = sk_npc_dmg_gunship_to_plr.GetFloat() * sk_gunship_past_max_damage_scale.GetFloat();
 		}
 
 		FireBullets( info );
@@ -2707,7 +2701,7 @@ void CNPC_CombineGunship::UpdateEnemyTarget( void )
 	chaseAngles[PITCH]	= 0.0f;
 	chaseAngles[ROLL]	= 0.0f;
 
-	bool bMaxHits = (m_iBurstHits >= sk_gunship_max_hits_per_burst.GetInt() || (GetEnemy() && !GetEnemy()->IsAlive()));
+	bool bMaxHits = (m_iBurstHits >= GUNSHIP_MAX_HITS_PER_BURST || (GetEnemy() && !GetEnemy()->IsAlive()));
 
 	if ( bMaxHits )
 	{
@@ -2851,7 +2845,7 @@ void CNPC_CombineGunship::MakeTracer( const Vector &vecTracerSrc, const trace_t 
 
 			flTracerDist = VectorNormalize( vecDir );
 
-			UTIL_Tracer( vecTracerSrc, tr.endpos, 0, TRACER_DONT_USE_ATTACHMENT, 9000, true, "GunshipTracer" );
+			UTIL_Tracer( vecTracerSrc, tr.endpos, 0, TRACER_DONT_USE_ATTACHMENT, 8000, true, "GunshipTracer" );
 		}
 		break;
 
@@ -2986,10 +2980,6 @@ int	CNPC_CombineGunship::OnTakeDamage_Alive( const CTakeDamageInfo &inputInfo )
 		// Take a percentage of our health away
 		// Adjust health for damage
 		int iHealthIncrements = sk_gunship_health_increments.GetInt();
-		if ( g_pGameRules->IsSkillLevel( SKILL_DIABOLICAL ) )
-		{
-			iHealthIncrements = floor( iHealthIncrements * 1.5 );
-		}
 		info.SetDamage( ( GetMaxHealth() / (float)iHealthIncrements ) + 1 );
 		
 		// Find out which "stage" we're at in our health

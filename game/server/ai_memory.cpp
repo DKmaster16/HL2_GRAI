@@ -13,7 +13,7 @@
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
-#define	EMEMORY_POOL_SIZE		  128
+#define	EMEMORY_POOL_SIZE		  64
 #define AI_FREE_KNOWLEDGE_DURATION 1.75
 
 //-----------------------------------------------------------------------------

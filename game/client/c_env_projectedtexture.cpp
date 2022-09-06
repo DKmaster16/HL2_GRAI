@@ -17,8 +17,8 @@
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
-static ConVar mat_slopescaledepthbias_shadowmap( "mat_slopescaledepthbias_shadowmap", "16", FCVAR_CHEAT );
-static ConVar mat_depthbias_shadowmap(	"mat_depthbias_shadowmap", "0.0005", FCVAR_CHEAT  );
+static ConVar mat_slopescaledepthbias_shadowmap( "mat_slopescaledepthbias_shadowmap", "16", FCVAR_CHEAT );	// should be 4?
+static ConVar mat_depthbias_shadowmap(	"mat_depthbias_shadowmap", "0.00001", FCVAR_CHEAT  );
 
 //-----------------------------------------------------------------------------
 // Purpose: 
@@ -172,7 +172,19 @@ void C_EnvProjectedTexture::UpdateLight( bool bForceUpdate )
 	}
 	else
 	{
-		AngleVectors( GetAbsAngles(), &vForward, &vRight, &vUp );
+		// VXP: Fixing targeting
+		Vector vecToTarget;
+		QAngle vecAngles;
+		if (m_hTargetEntity == NULL)
+		{
+			vecAngles = GetAbsAngles();
+		}
+		else
+		{
+			vecToTarget = m_hTargetEntity->GetAbsOrigin() - GetAbsOrigin();
+			VectorAngles(vecToTarget, vecAngles);
+		}
+		AngleVectors(vecAngles, &vForward, &vRight, &vUp);
 	}
 
 	state.m_fHorizontalFOVDegrees = m_flLightFOV;

@@ -160,6 +160,7 @@ envelopePoint_t envFastZombieVolumeFrenzy[] =
 ConVar	sk_zombie_fast_health("sk_zombie_fast_health", "50");
 ConVar  sk_zombie_fast_dmg_one_slash("sk_zombie_fast_dmg_one_slash", "9");
 ConVar  sk_zombie_fast_dmg_both_slash("sk_zombie_fast_dmg_both_slash", "15");
+ConVar	sk_fast_zombie_speed_scale("sk_fast_zombie_speed_scale", "1.0");
 
 //=========================================================
 // animation events
@@ -203,6 +204,7 @@ enum
 	SCHED_FASTZOMBIE_MELEE_ATTACK1,
 	SCHED_FASTZOMBIE_MELEE_ATTACK2,
 	SCHED_FASTZOMBIE_MELEE_ATTACK3,
+	SCHED_FASTZOMBIE_MELEE_ATTACK4,
 	SCHED_FASTZOMBIE_TORSO_MELEE_ATTACK1,
 	SCHED_FASTZOMBIE_SMASH_PROP,
 };
@@ -518,6 +520,10 @@ int CFastZombie::SelectSchedule ( void )
 //-----------------------------------------------------------------------------
 void CFastZombie::PrescheduleThink( void )
 {
+	if (IsAlive())	//&& GetNavigator()->IsGoalActive() && m_flGroundSpeed != 0
+	{
+		m_flPlaybackRate = sk_fast_zombie_speed_scale.GetFloat();
+	}
 	BaseClass::PrescheduleThink();
 
 	if( GetGroundEntity() && GetGroundEntity()->Classify() == CLASS_HEADCRAB )
@@ -1461,7 +1467,11 @@ int CFastZombie::TranslateSchedule( int scheduleType )
 		{
 			return SCHED_FASTZOMBIE_TORSO_MELEE_ATTACK1;
 		}
-		else if (g_pGameRules->IsSkillLevel(SKILL_HARD) || g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL))
+		else if (g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL))
+		{
+			return SCHED_FASTZOMBIE_MELEE_ATTACK4;
+		}
+		else if (g_pGameRules->IsSkillLevel(SKILL_HARD))
 		{
 			return SCHED_FASTZOMBIE_MELEE_ATTACK3;
 		}
@@ -2166,7 +2176,7 @@ AI_BEGIN_CUSTOM_NPC( npc_fastzombie, CFastZombie )
 	)
 
 	//=========================================================
-	// > Melee_Attack1	for easy
+	// > Melee_Attack1	for Easy
 	//=========================================================
 	DEFINE_SCHEDULE
 	(
@@ -2189,7 +2199,7 @@ AI_BEGIN_CUSTOM_NPC( npc_fastzombie, CFastZombie )
 		"		COND_ENEMY_OCCLUDED"
 	);
 	//=========================================================
-	// > Melee_Attack2 for normal
+	// > Melee_Attack2 for Normal
 	//=========================================================
 	DEFINE_SCHEDULE
 		(
@@ -2213,7 +2223,7 @@ AI_BEGIN_CUSTOM_NPC( npc_fastzombie, CFastZombie )
 		);
 
 	//=========================================================
-	// > Melee_Attack3 for hard
+	// > Melee_Attack3 for Hard
 	//=========================================================
 	DEFINE_SCHEDULE
 		(
@@ -2225,10 +2235,34 @@ AI_BEGIN_CUSTOM_NPC( npc_fastzombie, CFastZombie )
 		"		TASK_MELEE_ATTACK1				0"
 		"		TASK_MELEE_ATTACK1				0"
 		"		TASK_SET_FAIL_SCHEDULE			SCHEDULE:SCHED_CHASE_ENEMY"
-		"		TASK_MELEE_ATTACK1				0"
-		"		TASK_MELEE_ATTACK1				0"
 		"		TASK_FASTZOMBIE_VERIFY_ATTACK	0"
 		"		TASK_PLAY_SEQUENCE_FACE_ENEMY	ACTIVITY:ACT_FASTZOMBIE_BIG_SLASH"
+
+		""
+		"	Interrupts"
+		"		COND_NEW_ENEMY"
+		"		COND_ENEMY_DEAD"
+		"		COND_ENEMY_OCCLUDED"
+		);
+
+	//=========================================================
+	// > Melee_Attack3 for Diabolical
+	//=========================================================
+	DEFINE_SCHEDULE
+		(
+		SCHED_FASTZOMBIE_MELEE_ATTACK4,
+
+		"	Tasks"
+		"		TASK_STOP_MOVING				0"
+		"		TASK_FACE_ENEMY					0"
+		"		TASK_MELEE_ATTACK1				0"
+		"		TASK_MELEE_ATTACK1				0"
+		"		TASK_SET_FAIL_SCHEDULE			SCHEDULE:SCHED_CHASE_ENEMY"
+		"		TASK_FASTZOMBIE_VERIFY_ATTACK	0"
+		"		TASK_MELEE_ATTACK1				0"
+		"		TASK_MELEE_ATTACK1				0"
+		//		"		TASK_FASTZOMBIE_VERIFY_ATTACK	0"
+		//		"		TASK_PLAY_SEQUENCE_FACE_ENEMY	ACTIVITY:ACT_FASTZOMBIE_BIG_SLASH"
 
 		""
 		"	Interrupts"

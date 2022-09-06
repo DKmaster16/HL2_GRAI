@@ -40,15 +40,18 @@ ConVar g_debug_bullets("g_debug_bullets", "0", FCVAR_CHEAT, "Debug of bullet sim
 #include "tier0/memdbgon.h"
 
 #define MAX_RICO_DOT_ANGLE 0.5f	//Maximum dot allowed for any ricochet
-#define MIN_RICO_SPEED_PERC 0.1f	//Minimum speed percent allowed for any ricochet
+#define MIN_RICO_SPEED_PERC 0.3f	//Minimum speed percent allowed for any ricochet
 //#define NUM_PENETRATIONS	1		//Dark Energy Bullet penetration
+
+ConVar sk_bullet_glancing_blow_modifier("sk_bullet_glancing_blow_modifier", "0.3");
+ConVar sk_bullet_direct_hit_threshold("sk_bullet_direct_hit_threshold", "0.7");
 
 static void BulletSpeedModifierCallback(ConVar *var, const char *pOldString)
 {
 	if (var->GetFloat() == 0.0f) //To avoid math exception
 		var->Revert();
 }
-ConVar sv_bullet_speed_modifier("sv_bullet_speed_modifier", "700.000000");
+ConVar sv_bullet_speed_modifier("sv_bullet_speed_modifier", "5000.000000");
 
 static void UnrealRicochetCallback(ConVar *var, const char *pOldString)
 {
@@ -73,7 +76,7 @@ static void BulletStopSpeedCallback(ConVar *var, const char *pOldString)
 	else if (BulletManager())
 		BulletManager()->UpdateBulletStopSpeed();
 }
-ConVar sv_bullet_stop_speed("sv_bullet_stop_speed", "200");
+ConVar sv_bullet_stop_speed("sv_bullet_stop_speed", "5000");
 //ConVar sv_bullet_speed_forced("sv_bullet_speed_forced", "0");
 
 
@@ -373,11 +376,11 @@ bool CSimulatedBullet::SimulateBullet(void)
 		}
 	}
 
-	if (sv_bullet_unrealricochet.GetBool()) //Fun bullet ricochet fix
-	{
+//	if (sv_bullet_unrealricochet.GetBool()) //Fun bullet ricochet fix
+//	{
 		delete m_pIgnoreList; //Prevent causing of memory leak
 		m_pIgnoreList = new CTraceFilterSimpleList(COLLISION_GROUP_NONE);
-	}
+//	}
 
 	if (bulletSpeedCheck)
 	{
@@ -453,7 +456,7 @@ bool CSimulatedBullet::EndSolid(trace_t &ptr)
 	m_vecEntryPosition = ptr.endpos;
 
 //#ifndef 0 //CLIENT_DLL
-	int soundEntChannel = (bulletinfo.m_nFlags&FIRE_BULLETS_TEMPORARY_DANGER_SOUND) ? SOUNDENT_CHANNEL_BULLET_IMPACT : SOUNDENT_CHANNEL_UNSPECIFIED;
+	int soundEntChannel = ( SOUNDENT_CHANNEL_BULLET_IMPACT | SOUNDENT_CHANNEL_REPEATED_PHYSICS_DANGER );
 
 	CSoundEnt::InsertSound(SOUND_BULLET_IMPACT, m_vecEntryPosition, 200, 0.5, p_eInfictor, soundEntChannel);
 //#endif
@@ -505,7 +508,7 @@ bool CSimulatedBullet::EndSolid(trace_t &ptr)
 		DesiredDistance = 16.0f; // 16 units in hammer: Plastic can more
 		break;
 	case CHAR_TEX_ANTLION:
-		DesiredDistance = 1.0f; // 1.5 units in hammer
+		DesiredDistance = 1.0f; // Don't penetrate multiple times.
 		break;
 	case CHAR_TEX_BLOODYFLESH:
 		DesiredDistance = 1.0f; // Don't penetrate multiple times.
@@ -530,8 +533,10 @@ bool CSimulatedBullet::EndSolid(trace_t &ptr)
 				DesiredDistance = 0.25f; // maximum half a centimeter.
 			}
 		}
-
-//		DesiredDistance = 0.5f; // maximum half a centimeter.
+		else
+		{
+			DesiredDistance = 0.2f; // maximum half a centimeter.
+		}
 		break;
 	}
 
@@ -586,11 +591,11 @@ bool CSimulatedBullet::EndSolid(trace_t &ptr)
 	{
 		if (flPenetrationDistance > DesiredDistance || ptr.IsDispSurface()) // || ptr.IsDispSurface()
 		{
-			bool bMustDoRico = (GetAmmoDef()->Flags(GetAmmoTypeIndex()) != AMMO_DARK_ENERGY &&
-				fldot > flRicoDotAngle && GetBulletSpeedRatio() > MIN_RICO_SPEED_PERC); // We can't do richochet when bullet has lowest speed
-
-			if ( GetAmmoDef()->Flags(GetAmmoTypeIndex()) & AMMO_DARK_ENERGY )
+			bool bMustDoRico;
+			if (GetAmmoDef()->Flags(GetAmmoTypeIndex()) & AMMO_DARK_ENERGY)
 				bMustDoRico = false;
+
+			bMustDoRico = ( fldot > flRicoDotAngle && GetBulletSpeedRatio() > MIN_RICO_SPEED_PERC); // We can't do richochet when bullet has lowest speed
 
 			if (sv_bullet_unrealricochet.GetBool() && p_eInfictor->IsPlayer()) //Cheat is only for player,yet =)
 				bMustDoRico = true;
@@ -670,6 +675,8 @@ bool CSimulatedBullet::EndSolid(trace_t &ptr)
 	{
 		if (bulletinfo.m_iAmmoType == GetAmmoDef()->Index("AR2"))
 		{
+			CSoundEnt::InsertSound(SOUND_DANGER | SOUND_CONTEXT_REACT_TO_SOURCE, ptr.endpos, 64.0f, 0.1f, p_eInfictor, soundEntChannel);
+
 			CEffectData data;
 
 			data.m_vOrigin = ptr.endpos + (ptr.plane.normal * 1.0f);
@@ -680,20 +687,22 @@ bool CSimulatedBullet::EndSolid(trace_t &ptr)
 		}
 		else if (bulletinfo.m_iAmmoType == GetAmmoDef()->Index("AirboatGun"))
 		{
+			CSoundEnt::InsertSound(SOUND_DANGER | SOUND_CONTEXT_REACT_TO_SOURCE, ptr.endpos, 256.0f, 0.3f, p_eInfictor, soundEntChannel);
 			UTIL_ImpactTrace(&ptr, GetDamageType(), "AirboatGunImpact");
 		}
 		else if (bulletinfo.m_iAmmoType == GetAmmoDef()->Index("HelicopterGun"))
 		{
+			CSoundEnt::InsertSound(SOUND_DANGER | SOUND_CONTEXT_REACT_TO_SOURCE, ptr.endpos, 256.0f, 0.3f, p_eInfictor, soundEntChannel);
 			UTIL_ImpactTrace(&ptr, GetDamageType(), "HelicopterImpact");
 		}
 		else if (bulletinfo.m_iAmmoType == GetAmmoDef()->Index("CombineCannon"))
 		{
-			CSoundEnt::InsertSound(SOUND_DANGER | SOUND_CONTEXT_REACT_TO_SOURCE, ptr.endpos, 120.0f, 0.3f, p_eInfictor, soundEntChannel);
+			CSoundEnt::InsertSound(SOUND_DANGER | SOUND_CONTEXT_REACT_TO_SOURCE, ptr.endpos, 256.0f, 0.5f, p_eInfictor, soundEntChannel);
 			UTIL_ImpactTrace(&ptr, GetDamageType(), "ImpactGunship");
 		}
 		else if (bulletinfo.m_iAmmoType == GetAmmoDef()->Index("StriderMinigun") || bulletinfo.m_iAmmoType == GetAmmoDef()->Index("StriderMinigunDirect"))
 		{
-			CSoundEnt::InsertSound(SOUND_DANGER | SOUND_CONTEXT_REACT_TO_SOURCE, ptr.endpos, 120.0f, 0.3f, p_eInfictor, soundEntChannel);
+			CSoundEnt::InsertSound(SOUND_DANGER | SOUND_CONTEXT_REACT_TO_SOURCE, ptr.endpos, 256.0f, 0.5f, p_eInfictor, soundEntChannel);
 			UTIL_ImpactTrace(&ptr, GetDamageType(), "ImpactStrider");	//ImpactStrider
 /*
 			int s_iImpactEffectTexture = -1;
@@ -726,10 +735,12 @@ bool CSimulatedBullet::EndSolid(trace_t &ptr)
 		}
 		else if (bulletinfo.m_iAmmoType == GetAmmoDef()->Index("GaussEnergy"))
 		{
+			CSoundEnt::InsertSound(SOUND_DANGER | SOUND_CONTEXT_REACT_TO_SOURCE, ptr.endpos, 256.0f, 0.7f, p_eInfictor, soundEntChannel);
 			UTIL_ImpactTrace(&ptr, GetDamageType(), "ImpactGauss");
 		}
 		else
 		{
+			CSoundEnt::InsertSound(SOUND_DANGER | SOUND_CONTEXT_REACT_TO_SOURCE, ptr.endpos, 32.0f, 0.1f, p_eInfictor, soundEntChannel);
 			UTIL_ImpactTrace(&ptr, GetDamageType());
 		}
 	}
@@ -808,23 +819,36 @@ void CSimulatedBullet::EntityImpact(trace_t &ptr)
 		m_hLastHit = ptr.m_pEnt;
 
 		float flMaxDamage = g_pGameRules->GetAmmoDamage(p_eInfictor, ptr.m_pEnt, bulletinfo.m_iAmmoType);
+		float flMinDamage = flMaxDamage * sk_bullet_glancing_blow_modifier.GetFloat();
+		
 		float flMaxForce = bulletinfo.m_flDamageForceScale;
 
 		float flActualDamage = flMaxDamage;
 		float flActualForce = flMaxForce;
 
-		//To make it more reallistic
-		float fldot = m_vecDirShooting.Dot(ptr.plane.normal);
-		//We affecting damage by angle. If we have lower angle of reflection, doing lower damage.
+//		if (GetAmmoDef()->Flags(GetAmmoTypeIndex()) != AMMO_DARK_ENERGY)
+//		{
+			//To make it more reallistic
+			float fldot = m_vecDirShooting.Dot(ptr.plane.normal);
+			//We affecting damage by angle. If we have lower angle of reflection, doing lower damage.
 
-		flActualDamage *= Square(GetBulletSpeedRatio()) * GetBulletMassRatio() * -fldot; //And also affect damage by speed and weight modifications 
-		flActualForce *= GetBulletSpeedRatio() * GetBulletMassRatio() * -fldot;
+			flActualDamage *= Square(GetBulletSpeedRatio()) * GetBulletMassRatio() * -fldot; //And also affect damage by speed and weight modifications 
+			flActualForce *= GetBulletSpeedRatio() * GetBulletMassRatio();
 
-		if (flActualDamage > flMaxDamage && flActualForce > flMaxForce)
-		{
-			flActualDamage = flMaxDamage;
-			flActualForce = flMaxForce;
-		}
+			if (flActualDamage > flMaxDamage)	// Damage overflow prevention
+			{
+				flActualDamage = flMaxDamage;
+				flActualForce = flMaxForce;
+			}
+			else if (flActualDamage < flMinDamage)	// Don't do too little damage or you'll end up with headcrabs surviving 357 rounds
+			{
+				flActualDamage = flMinDamage;		// Players hate loosing 357 rounds to a fast headcrabs
+			}
+			else if (flActualDamage > (flMaxDamage * sk_bullet_direct_hit_threshold.GetFloat()))
+			{
+				flActualDamage = flMaxDamage;
+			}
+//		}
 
 		DevMsg("Hit: %s, Damage: %f, Force: %f \n", ptr.m_pEnt->GetClassname(), flActualDamage, flActualForce);
 

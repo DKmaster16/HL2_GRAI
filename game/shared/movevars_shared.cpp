@@ -24,13 +24,6 @@
 
 float GetCurrentGravity( void )
 {
-#if defined( TF_CLIENT_DLL ) || defined( TF_DLL )
-	if ( TFGameRules() )
-	{
-		return ( sv_gravity.GetFloat() * TFGameRules()->GetGravityMultiplier() );
-	}
-#endif 
-
 	return sv_gravity.GetFloat();
 }
 

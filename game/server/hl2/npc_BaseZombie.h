@@ -289,6 +289,8 @@ protected:
 private:
 	bool m_bIsSlumped;
 
+	// Additional shots to kill
+	float	m_flAdditionalShots;
 };
 
 #endif // NPC_BASEZOMBIE_H

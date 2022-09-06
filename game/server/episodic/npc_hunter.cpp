@@ -127,9 +127,9 @@ ConVar hunter_charge_pct( "hunter_charge_pct", "25" );
 ConVar hunter_charge_test( "hunter_charge_test", "0" );
 
 // Vehicle dodging.
-ConVar hunter_dodge_warning( "hunter_dodge_warning", "1.1" );
+ConVar hunter_dodge_warning( "hunter_dodge_warning", "2.2" );
 ConVar hunter_dodge_warning_width( "hunter_dodge_warning_width", "180" );
-ConVar hunter_dodge_warning_cone( "hunter_dodge_warning_cone", "0.0" );
+ConVar hunter_dodge_warning_cone( "hunter_dodge_warning_cone", "0.5" );
 ConVar hunter_dodge_debug( "hunter_dodge_debug", "0" );
 
 // Jostle vehicles when hit by them
@@ -687,7 +687,7 @@ void CHunterFlechette::FlechetteTouch( CBaseEntity *pOther )
 		}
 
 		CTakeDamageInfo	dmgInfo( this, GetOwnerEntity(), flDamage, DMG_DISSOLVE | DMG_NEVERGIB );
-		CalculateMeleeDamageForce( &dmgInfo, vecNormalizedVel, tr.endpos, 0.7f );
+		CalculateMeleeDamageForce( &dmgInfo, vecNormalizedVel, tr.endpos, 0.35f );	//0.7f
 		dmgInfo.SetDamagePosition( tr.endpos );
 		pOther->DispatchTraceAttack( dmgInfo, vecNormalizedVel, &tr );
 
@@ -1086,20 +1086,20 @@ float CAI_HunterEscortBehavior::gm_flLastDefendSound;
 //-----------------------------------------------------------------------------
 // Hunter PHYSICS DAMAGE TABLE
 //-----------------------------------------------------------------------------
-#define HUNTER_MIN_PHYSICS_DAMAGE 10
+#define HUNTER_MIN_PHYSICS_DAMAGE 15
 
 static impactentry_t s_HunterLinearTable[] =
 {
-	{ 150*150, 75 },
-	{ 350*350, 105 },
-	{ 1000*1000, 300 },
+	{ 150*150, 90 },
+	{ 350*350, 140 },
+	{ 1000*1000, 330 },
 };
 
 static impactentry_t s_HunterAngularTable[] =
 {
-	{ 100*100, 75 },
-	{ 200*200, 105 },
-	{ 300*300, 300 },
+	{ 100*100, 90 },
+	{ 200*200, 140 },
+	{ 300*300, 330 },
 };
 
 impactdamagetable_t s_HunterImpactDamageTable =
@@ -2544,7 +2544,7 @@ void CNPC_Hunter::BuildScheduleTestBits()
 	if ( IsCurSchedule( SCHED_HUNTER_RANGE_ATTACK2, false ) && ( gpGlobals->curtime < m_flShootAllowInterruptTime ) )
 	{
 		ClearCustomInterruptConditions();
-		SetCustomInterruptCondition( COND_HEAVY_DAMAGE );
+//		SetCustomInterruptCondition( COND_HEAVY_DAMAGE );
 	}
 	else if ( IsCurSchedule( SCHED_HUNTER_RANGE_ATTACK2, false ) && ( GetActivity() == ACT_TRANSITION ) )
 	{
@@ -2660,7 +2660,7 @@ bool CNPC_Hunter::ShouldCharge( const Vector &startPos, const Vector &endPos, bo
 		if ( ( distance < Square(HUNTER_CHARGE_MIN) ) || ( distance > Square(HUNTER_CHARGE_MAX) ) )
 			return false;
 	}
-
+	
 	// FIXME: We'd like to exclude small physics objects from this check!
 
 	// We only need to hit the endpos with the edge of our bounding box
@@ -2681,7 +2681,7 @@ bool CNPC_Hunter::ShouldCharge( const Vector &startPos, const Vector &endPos, bo
 
 		NDebugOverlay::BoxDirection( startPos, GetHullMins(), GetHullMaxs() + Vector(enemyDist,0,0), enemyDir, 0, 255, 0, 8, 1.0f );
 	}
-
+	
 	// If we're not blocked, charge
 	if ( IsMoveBlocked( moveTrace ) )
 	{
@@ -2875,7 +2875,7 @@ int CNPC_Hunter::SelectCombatSchedule()
 		}
 
 		// Try to be a flanker.
-		if ( ( NumHuntersInMySquad() > 1 ) && OccupyStrategySlotRange( SQUAD_SLOT_HUNTER_FLANK_FIRST, SQUAD_SLOT_HUNTER_FLANK_LAST ) )
+		if ( ( NumHuntersInMySquad() > 2 ) && OccupyStrategySlotRange( SQUAD_SLOT_HUNTER_FLANK_FIRST, SQUAD_SLOT_HUNTER_FLANK_LAST ) )
 		{
 			return SCHED_HUNTER_FLANK_ENEMY;
 		}
@@ -3009,7 +3009,7 @@ int CNPC_Hunter::SelectSchedule()
 						g_Hunters[i]->m_IgnoreVehicleTimer.Force();
 					}
 				}
-				m_IgnoreVehicleTimer.Set( hunter_dodge_warning.GetFloat() * 3 );
+				m_IgnoreVehicleTimer.Set( hunter_dodge_warning.GetFloat() );	// * 3
 				if ( hunter_dodge_debug.GetBool() )
 				{
 					Msg( "Hunter %d rundown\n", entindex() );
@@ -3021,7 +3021,11 @@ int CNPC_Hunter::SelectSchedule()
 					{
 						return SCHED_HUNTER_RANGE_ATTACK2;
 					}
-					else if ( random->RandomInt( 0, 1 ) )
+					else if ( !g_pGameRules->IsSkillLevel( SKILL_EASY ) && random->RandomInt( 0, 1 ) )
+					{
+						return SCHED_HUNTER_DODGE;
+					}
+					else if ( g_pGameRules->IsSkillLevel( SKILL_EASY ) && random->RandomInt( 0, 1 ) )
 					{
 						return SCHED_HUNTER_CHARGE_ENEMY;
 					}
@@ -3491,7 +3495,7 @@ void CNPC_Hunter::StartTask( const Task_t *pTask )
 			}
 			else
 			{
-				ResetIdealActivity( ACT_MELEE_ATTACK1 );	// Deadly attack
+				ResetIdealActivity( ACT_MELEE_ATTACK1 );	// Double damage attack
 			}
 			
 			break;
@@ -5128,7 +5132,7 @@ CBaseEntity *CNPC_Hunter::MeleeAttack( float flDist, int iDamage, QAngle &qaView
 				Vector vecStart = vecPlayerEyePos - ( vecDir * 64 );
 				Vector vecEnd = vecPlayerEyePos + ( vecDir * ( flLen + 64 ) );
 				
-				NDebugOverlay::HorzArrow( vecStart, vecEnd, 16, 255, 255, 0, 255, false, 10 );
+//				NDebugOverlay::HorzArrow( vecStart, vecEnd, 16, 255, 255, 0, 255, false, 10 );
 				
 				UTIL_TraceLine( vecStart, vecEnd, MASK_SHOT, pPlayer, COLLISION_GROUP_NONE, &tr );
 	
@@ -5285,7 +5289,7 @@ bool CNPC_Hunter::CanShootThrough( const trace_t &tr, const Vector &vecTarget )
 //-----------------------------------------------------------------------------
 int CNPC_Hunter::GetSoundInterests()
 {
-	return SOUND_WORLD | SOUND_COMBAT | SOUND_PLAYER | SOUND_DANGER | SOUND_PHYSICS_DANGER | SOUND_PLAYER_VEHICLE | SOUND_BULLET_IMPACT | SOUND_MOVE_AWAY;
+	return SOUND_WORLD | SOUND_COMBAT | SOUND_PLAYER | SOUND_PHYSICS_DANGER | SOUND_PLAYER_VEHICLE | SOUND_BULLET_IMPACT | SOUND_MOVE_AWAY;	//| SOUND_DANGER
 }
 
 //-----------------------------------------------------------------------------
@@ -5860,7 +5864,7 @@ float CNPC_Hunter::MaxYawSpeed()
 		return 0;
 
 	if ( GetActivity() == ACT_HUNTER_CHARGE_RUN )
-		return 5;
+		return 15;
 
 	if ( GetActivity() == ACT_HUNTER_IDLE_PLANTED )
 		return 0;
@@ -7486,7 +7490,7 @@ AI_BEGIN_CUSTOM_NPC( npc_hunter, CNPC_Hunter )
 		"		COND_ENEMY_DEAD"
 		"		COND_CAN_MELEE_ATTACK1"
 		"		COND_CAN_MELEE_ATTACK2"
-		"		COND_HEAR_DANGER"
+//		"		COND_HEAR_DANGER"
 		"		COND_HEAR_MOVE_AWAY"
 		"		COND_NEW_ENEMY"
 	)
@@ -7508,7 +7512,7 @@ AI_BEGIN_CUSTOM_NPC( npc_hunter, CNPC_Hunter )
 		"		COND_CAN_RANGE_ATTACK2"
 		"		COND_CAN_MELEE_ATTACK1"
 		"		COND_CAN_MELEE_ATTACK2"
-		"		COND_HEAR_DANGER"
+//		"		COND_HEAR_DANGER"
 		"		COND_HEAR_MOVE_AWAY"
 		"		COND_NEW_ENEMY"
 	)
@@ -7633,7 +7637,7 @@ AI_BEGIN_CUSTOM_NPC( npc_hunter, CNPC_Hunter )
 		""
 		"	Interrupts"
 		"		COND_NEW_ENEMY"
-		"		COND_HEAR_DANGER"
+//		"		COND_HEAR_DANGER"
 	)
 
 	//=========================================================
@@ -7650,7 +7654,7 @@ AI_BEGIN_CUSTOM_NPC( npc_hunter, CNPC_Hunter )
 		""
 		"	Interrupts"
 		"		COND_NEW_ENEMY"
-		"		COND_HEAR_DANGER"
+//		"		COND_HEAR_DANGER"
 		"		COND_HAVE_ENEMY_LOS"
 	)
 	

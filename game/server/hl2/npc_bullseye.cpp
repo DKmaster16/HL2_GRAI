@@ -164,7 +164,7 @@ void CNPC_Bullseye::Spawn( void )
 	AddEFlags( EFL_NO_DISSOLVE );
 
 	SetThink( &CNPC_Bullseye::BullseyeThink );
-	SetNextThink( gpGlobals->curtime + 0.1f );
+	SetNextThink( gpGlobals->curtime + 0.003f );
 
 	SetSolid( SOLID_BBOX );
 	AddSolidFlags( FSOLID_NOT_STANDABLE );
@@ -249,7 +249,7 @@ void CNPC_Bullseye::Event_Killed( const CTakeDamageInfo &info )
 	AddSolidFlags( FSOLID_NOT_SOLID );
 	UTIL_SetSize(this, vec3_origin, vec3_origin );
 
-	SetNextThink( gpGlobals->curtime + 0.1f );
+	SetNextThink( gpGlobals->curtime + 0.003f );
 	SetThink( &CBaseEntity::SUB_Remove );
 }
 
@@ -284,6 +284,7 @@ void CNPC_Bullseye::DecalTrace( trace_t *pOldTrace, char const *decalName )
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
+
 void CNPC_Bullseye::ImpactTrace( trace_t *pTrace, int iDamageType, const char *pCustomImpactName )
 {
 	// Get direction of original trace
@@ -411,6 +412,8 @@ void CNPC_Bullseye::TraceAttack( const CTakeDamageInfo &info, const Vector &vecD
 		TraceBleed( info.GetDamage(), vecDir, ptr, info.GetDamageType() );
 	}
 
+	m_OnDamaged.FireOutput( info.GetAttacker(), this);
+
 	BaseClass::TraceAttack( info, vecDir, ptr, pAccumulator );
 }
 
@@ -450,6 +453,33 @@ int CNPC_Bullseye::OnTakeDamage( const CTakeDamageInfo &info )
 		return BaseClass::OnTakeDamage( subInfo );
 	}
 
+	// -----------------------------------
+	//  Fire outputs
+	// -----------------------------------
+	m_OnDamaged.FireOutput( info.GetAttacker(), this);
+
+	if (info.GetAttacker()->IsPlayer())
+	{
+		m_OnDamagedByPlayer.FireOutput(info.GetAttacker(), this);
+
+		// This also counts as being harmed by player's squad.
+		m_OnDamagedByPlayerSquad.FireOutput(info.GetAttacker(), this);
+	}
+	else
+	{
+		// See if the person that injured me is an NPC.
+		CAI_BaseNPC *pAttacker = dynamic_cast<CAI_BaseNPC *>(info.GetAttacker());
+		CBasePlayer *pPlayer = AI_GetSinglePlayer();
+
+		if (pAttacker && pAttacker->IsAlive() && pPlayer)
+		{
+			if (pAttacker->GetSquad() != NULL && pAttacker->IsInPlayerSquad())
+			{
+				m_OnDamagedByPlayerSquad.FireOutput(info.GetAttacker(), this);
+			}
+		}
+	}
+	
 	return BaseClass::OnTakeDamage( info );
 }
 

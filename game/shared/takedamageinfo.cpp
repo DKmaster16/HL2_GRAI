@@ -312,7 +312,7 @@ void CalculateExplosiveDamageForce( CTakeDamageInfo *info, const Vector &vecDir,
 	// This simulates features that usually vary from
 	// person-to-person variables such as bodyweight,
 	// which are all indentical for characters using the same model.
-	flForceScale *= random->RandomFloat( 0.8, 1.2 );
+	flForceScale *= random->RandomFloat( 0.85, 1.15 );
 
 	// Calculate the vector and stuff it into the takedamageinfo
 	Vector vecForce = vecDir;
@@ -345,8 +345,8 @@ void CalculateMeleeDamageForce( CTakeDamageInfo *info, const Vector &vecMeleeDir
 {
 	info->SetDamagePosition( vecForceOrigin );
 
-	// Calculate an impulse large enough to push a 75kg man (4) 3 in/sec per point of damage
-	float flForceScale = info->GetBaseDamage() * ImpulseScale( 75, 3 );
+	// Calculate an impulse large enough to push a 75kg man 4 in/sec per point of damage
+	float flForceScale = info->GetBaseDamage() * ImpulseScale( 75, 4 );
 	Vector vecForce = vecMeleeDir;
 	VectorNormalize( vecForce );
 	vecForce *= flForceScale;

@@ -72,7 +72,7 @@ bool IsInCommentaryMode(void);
 #define ALYX_MIN_ENEMY_HEALTH_TO_CROUCH			20
 #define ALYX_CROUCH_DELAY						5			// Time after crouching before Alyx will crouch again
 
-ConVar sk_alyx_episodic_health("sk_alyx_episodic_health", "100");
+//ConVar sk_alyx_episodic_health("sk_alyx_episodic_health", "80");
 
 //-----------------------------------------------------------------------------
 // Interactions
@@ -337,7 +337,7 @@ void CNPC_Alyx::Spawn()
 
 	AddEFlags(EFL_NO_DISSOLVE | EFL_NO_MEGAPHYSCANNON_RAGDOLL | EFL_NO_PHYSCANNON_INTERACTION);
 
-	m_iHealth = sk_alyx_episodic_health.GetFloat();;
+	m_iHealth = 80;
 	m_bloodColor = DONT_BLEED;
 
 	NPCInit();
@@ -720,7 +720,7 @@ void CNPC_Alyx::GatherConditions()
 {
 	BaseClass::GatherConditions();
 
-	if (HasCondition(COND_HEAR_DANGER))
+	if (HasCondition(COND_HEAR_DANGER) && m_ActBusyBehavior.IsActive() && m_ActBusyBehavior.IsCombatActBusy())
 	{
 		// Don't let Alyx worry about combat sounds if she's panicking 
 		// from danger sounds. This prevents her from running ALERT_FACE_BEST_SOUND
@@ -996,7 +996,7 @@ void CNPC_Alyx::Event_KilledOther(CBaseEntity *pVictim, const CTakeDamageInfo &i
 
 	if (!HasShotgun())
 	{
-		CAI_BaseNPC *pTarget = CreateCustomTarget(pVictim->GetAbsOrigin(), 2.0f);
+		CAI_BaseNPC *pTarget = CreateCustomTarget(pVictim->GetAbsOrigin(), 0.5f);	//2.0f
 
 		AddEntityRelationship(pTarget, IRelationType(pVictim), IRelationPriority(pVictim));
 
@@ -1766,7 +1766,7 @@ int CNPC_Alyx::SelectSchedule(void)
 //-----------------------------------------------------------------------------
 int CNPC_Alyx::SelectScheduleDanger(void)
 {
-	if (HasCondition(COND_HEAR_DANGER))
+	if (HasCondition(COND_HEAR_DANGER) && m_ActBusyBehavior.IsActive() && m_ActBusyBehavior.IsCombatActBusy())
 	{
 		CSound *pSound;
 		pSound = GetBestSound(SOUND_DANGER);
@@ -2323,7 +2323,7 @@ float CNPC_Alyx::GetAttackDamageScale(CBaseEntity *pVictim)
 {
 	if (g_HackOutland10DamageHack && pVictim->Classify() == CLASS_COMBINE)
 	{
-		return 0.5f;	// 0.75f
+		return 0.75f;
 	}
 
 	return BaseClass::GetAttackDamageScale(pVictim);
