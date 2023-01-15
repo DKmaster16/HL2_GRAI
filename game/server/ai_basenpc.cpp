@@ -4652,15 +4652,22 @@ void CAI_BaseNPC::CheckFlinches( void )
 	}
 
 	// If we've taken heavy damage, try to do a full schedule flinch
-	if (HasCondition(COND_HEAVY_DAMAGE) && sk_always_flinch.GetBool() == 0)
+	if (HasCondition(COND_HEAVY_DAMAGE))
  	{
 		// If we've already flinched recently, gesture flinch instead.
-		if (HasMemory(bits_MEMORY_FLINCHED) )
+		if (HasMemory(bits_MEMORY_FLINCHED))
 		{
-			// Clear the heavy damage condition so we don't interrupt schedules
-			// when we play a gesture flinch because we recently did a full flinch.
-			// Prevents the player from stun-locking enemies, even though they don't full flinch.
-			ClearCondition( COND_HEAVY_DAMAGE );
+			if (sk_always_flinch.GetBool() == 1)
+			{
+				Forget(bits_MEMORY_FLINCHED);
+			}
+			else
+			{
+				// Clear the heavy damage condition so we don't interrupt schedules
+				// when we play a gesture flinch because we recently did a full flinch.
+				// Prevents the player from stun-locking enemies, even though they don't full flinch.
+				ClearCondition(COND_HEAVY_DAMAGE);
+			}
 		}
 		else if ( !HasInterruptCondition(COND_HEAVY_DAMAGE) )
 		{

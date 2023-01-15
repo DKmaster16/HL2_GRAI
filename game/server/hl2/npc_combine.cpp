@@ -52,10 +52,12 @@ ConVar sk_combine_elite_speed_scale("sk_combine_elite_speed_scale", "1.2");
 
 #define COMBINE_GRENADE_THROW_SPEED sk_combine_grenade_throw_speed.GetFloat()	// OLD: 650
 #define COMBINE_GRENADE_TIMER		3.5
-#define COMBINE_GRENADE_FLUSH_TIME	30.0		// Don't try to flush an enemy who has been out of sight for longer than this.
+#define COMBINE_GRENADE_FLUSH_TIME	30.0	// Don't try to flush an enemy who has been out of sight for longer than this.
 #define COMBINE_GRENADE_FLUSH_DIST	512.0	// Don't try to flush an enemy who has moved farther than this distance from the last place I saw him.
 
-#define COMBINE_LIMP_HEALTH				50	// OLD: 20
+#define COMBINE_SUPPRESS_FLUSH_TIME	3.0	// Don't try to suppress an enemy who has been out of sight for longer than this.
+
+#define COMBINE_LIMP_HEALTH				20	
 #define	COMBINE_MIN_GRENADE_CLEAR_DIST	300	// 10 yards OLD: 200
 
 #define COMBINE_NUM_DECOYS 5
@@ -69,7 +71,7 @@ ConVar sk_combine_elite_speed_scale("sk_combine_elite_speed_scale", "1.2");
 #define COMBINE_MIN_CROUCH_DISTANCE		360.0
 #define COMBINE_SEE_ENEMY_TIME_INVALID	-1
 #define COMBINE_DECOY_RADIUS	360
-#define COMBINE_FEAR_ANTLION_DIST_SQR	Square(360)
+#define COMBINE_FEAR_ANTLION_DIST_SQR	Square(120)
 #define COMBINE_FEAR_ZOMBIE_DIST_SQR	Square(60)
 #define COMBINE_LARGER_BURST_RANGE	(12.0f * 21.0f) // If an enemy is 21 feet away, soldiers fire larger continuous bursts.
 #define COMBINE_SINGLE_FIRE_RANGE	(36.0f * 21.0f) // If an enemy is 21 yards away, soldiers fire in single mode.
@@ -204,7 +206,6 @@ DEFINE_FIELD( m_iLastAnimEventHandled, FIELD_INTEGER ),
 DEFINE_FIELD( m_fIsElite, FIELD_BOOLEAN ),
 DEFINE_FIELD( m_fIsGuard, FIELD_BOOLEAN ),
 DEFINE_FIELD( m_vecAltFireTarget, FIELD_VECTOR ),
-//DEFINE_FIELD( m_vecSuppressTarget, FIELD_VECTOR ),
 
 
 DEFINE_KEYFIELD( m_iTacticalVariant, FIELD_INTEGER, "tacticalvariant" ),
@@ -297,7 +298,7 @@ void CNPC_Combine::InputStopPatrolling( inputdata_t &inputdata )
 //-----------------------------------------------------------------------------
 void CNPC_Combine::InputAssault( inputdata_t &inputdata )
 {
-	m_AssaultBehavior.SetParameters( AllocPooledString(inputdata.value.String()), CUE_ENTITY_INPUT, RALLY_POINT_SELECT_DEFAULT );	// CUE_DONT_WAIT
+	m_AssaultBehavior.SetParameters( AllocPooledString(inputdata.value.String()), CUE_DONT_WAIT, RALLY_POINT_SELECT_DEFAULT );
 }
 
 //-----------------------------------------------------------------------------
@@ -309,7 +310,7 @@ void CNPC_Combine::InputHitByBugbait( inputdata_t &inputdata )
 }
 
 //-----------------------------------------------------------------------------
-// Purpose: Headshot zombies
+// Purpose: Headshot zombies or suppress enemies
 //-----------------------------------------------------------------------------
 #define COMBINE_HEADSHOT_FREQUENCY	1 // one in this many shots at a zombie will be aimed at the zombie's head
 Vector CNPC_Combine::GetActualShootPosition( const Vector &shootOrigin )
@@ -317,6 +318,13 @@ Vector CNPC_Combine::GetActualShootPosition( const Vector &shootOrigin )
 	if (GetEnemy() && GetEnemy()->Classify() == CLASS_ZOMBIE && random->RandomInt(1, COMBINE_HEADSHOT_FREQUENCY) == 1)
 	{
 		return GetEnemy()->HeadTarget(shootOrigin);
+	}
+
+	CBaseEntity *pEnemy = GetEnemy();
+
+	if ( CanSuppressEnemy() && IsCurSchedule( SCHED_COMBINE_SUPPRESS ) )
+	{
+		return GetEnemies()->LastSeenPosition(pEnemy) + (pEnemy->GetViewOffset()*0.75);
 	}
 
 	return BaseClass::GetActualShootPosition(shootOrigin);
@@ -1040,7 +1048,7 @@ void CNPC_Combine::StartTask( const Task_t *pTask )
 				SetActivity(ACT_IDLE);
 
 				// Wait two seconds 
-				SetWait( 2.0 );
+//				SetWait( 2.0 );
 			}
 			break;
 		}	
@@ -1123,7 +1131,12 @@ void CNPC_Combine::StartTask( const Task_t *pTask )
 
 					if( pCombine )
 					{
-						pCombine->m_flNextGrenadeCheck = gpGlobals->curtime + 2;
+						if (g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL))
+							pCombine->m_flNextGrenadeCheck = gpGlobals->curtime + 2;// wait two seconds on diabolical skill level
+						else if (g_pGameRules->IsSkillLevel(SKILL_HARD))
+							pCombine->m_flNextGrenadeCheck = gpGlobals->curtime + 4;// wait four seconds on hard skill level
+						else
+							pCombine->m_flNextGrenadeCheck = gpGlobals->curtime + 6;// wait six seconds before even looking again to see if a grenade can be thrown.
 					}
 
 					pSquadmate = m_pSquad->GetNextMember( &iter );
@@ -1133,6 +1146,32 @@ void CNPC_Combine::StartTask( const Task_t *pTask )
 			TaskComplete();
 			break;
 		}
+
+	// TODO: Implement
+	case TASK_COMBINE_DEFER_SQUAD_SUPPRESSION:
+	{
+		if (m_pSquad)
+		{
+			// iterate my squad and stop everyone from throwing grenades for a little while.
+			AISquadIter_t iter;
+
+			CAI_BaseNPC *pSquadmate = m_pSquad ? m_pSquad->GetFirstMember(&iter) : NULL;
+			while (pSquadmate)
+			{
+				CNPC_Combine *pCombine = dynamic_cast<CNPC_Combine*>(pSquadmate);
+
+				if (pCombine)
+				{
+						pCombine->m_flNextSuppressCheck = gpGlobals->curtime + 2;
+				}
+
+				pSquadmate = m_pSquad->GetNextMember(&iter);
+			}
+		}
+
+		TaskComplete();
+		break;
+	}
 
 	case TASK_FACE_IDEAL:
 	case TASK_FACE_ENEMY:
@@ -1193,12 +1232,13 @@ void CNPC_Combine::StartTask( const Task_t *pTask )
 	case TASK_RANGE_ATTACK1:
 	{
 		m_flShotDelay = GetActiveWeapon()->GetFireRate();
-			if (GetAbsOrigin().DistTo(GetEnemy()->GetAbsOrigin()) <= COMBINE_LARGER_BURST_RANGE || IsCurSchedule ( SCHED_COMBINE_SUPPRESS ) )
+		if (GetAbsOrigin().DistTo(GetEnemy()->GetAbsOrigin()) <= COMBINE_LARGER_BURST_RANGE || 
+			IsCurSchedule(SCHED_COMBINE_SUPPRESS) || IsCurSchedule(SCHED_COMBINE_SIGNAL_SUPPRESS))
 			{
 				if (!HasShotgun() || HasShotgun() && IsCurSchedule(SCHED_COMBINE_SUPPRESS))
 				{
 					// Longer burst
-					m_nShots = GetActiveWeapon()->GetRandomBurst() * 3;
+					m_nShots = GetActiveWeapon()->GetRandomBurst() * 4;
 				}
 					m_flNextAttack = gpGlobals->curtime + m_flShotDelay - 0.1;	// was - 0.1
 			}
@@ -1950,13 +1990,7 @@ int CNPC_Combine::SelectCombatSchedule()
 		float flDistSq = GetEnemy()->WorldSpaceCenter().DistToSqr( WorldSpaceCenter() );
 		if ( flDistSq > Square(3000)) //m_iNumEnemies < 3 &&
 			return SCHED_ESTABLISH_LINE_OF_FIRE;
-/*
-		if (CanSuppressEnemy(true) && OccupyStrategySlot(SQUAD_SLOT_ATTACK_OCCLUDER) && !(GetEnemy()->GetFlags() & FL_NOTARGET))	// && !(GetEnemy()->GetFlags() & FL_NOTARGET)
-		{
-			// Suppressive fire!
-			return SCHED_COMBINE_SIGNAL_SUPPRESS;
-		}
-*/
+
 			// Otherwise tuck in.
 			Remember(bits_MEMORY_INCOVER);
 			return SCHED_COMBINE_WAIT_IN_COVER;
@@ -1989,41 +2023,6 @@ int CNPC_Combine::SelectCombatSchedule()
 	return SCHED_NONE;
 }
 
-//-----------------------------------------------------------------------------
-//-----------------------------------------------------------------------------
-
-/*Disposition_t CNPC_Combine::IRelationType(CBaseEntity *pTarget)
-{
-	Disposition_t disposition = BaseClass::IRelationType(pTarget);
-
-	if (pTarget == NULL)
-		return disposition;
-
-	if (pTarget->Classify() == CLASS_ANTLION)
-	{
-		if (disposition == D_HT)
-		{
-			// If Soldier hates this antlion (default relationship), make him fear it, if it is very close.
-			if (GetAbsOrigin().DistToSqr(pTarget->GetAbsOrigin()) < COMBINE_FEAR_ANTLION_DIST_SQR)
-			{
-				disposition = D_FR;
-			}
-
-			// Fall through...
-		}
-	}
-	else if (pTarget->Classify() == CLASS_ZOMBIE && disposition == D_HT && GetActiveWeapon())
-	{
-		if (GetAbsOrigin().DistToSqr(pTarget->GetAbsOrigin()) < COMBINE_FEAR_ZOMBIE_DIST_SQR)
-		{
-			// Be afraid of a zombie that's near if I'm not allowed to dodge. This will make soldier back away.
-			return D_FR;
-		}
-	}
-
-	return disposition;
-}
-*/
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------
 /*
@@ -2391,7 +2390,6 @@ int CNPC_Combine::SelectScheduleAttack()
 					return SCHED_COMBINE_FLANK_ENEMY;
 			}
 		}
-		return SCHED_TAKE_COVER_FROM_ENEMY;
 	}
 
 	// When fighting against the player who's wielding a mega-physcannon, 
@@ -2486,13 +2484,19 @@ int CNPC_Combine::SelectScheduleAttack()
 		{
 			return SCHED_RANGE_ATTACK2;
 		}
+
+		// One guy will suppress the enemy, letting others flank
+		if ( CanSuppressEnemy() && flTime <= COMBINE_SUPPRESS_FLUSH_TIME && OccupyStrategySlot(SQUAD_SLOT_ATTACK_OCCLUDER2) )
+		{
+			return SCHED_COMBINE_SUPPRESS;
+		}
 	}
 
 	if ( HasCondition( COND_WEAPON_SIGHT_OCCLUDED ) )
 	{
 		// If they are hiding behind something (that we can destroy?), start shooting at it.
 		CBaseEntity *pBlocker = GetEnemyOccluder();
-		if ( pBlocker && OccupyStrategySlotRange( SQUAD_SLOT_ATTACK_OCCLUDER1, SQUAD_SLOT_ATTACK_OCCLUDER2 ) ) //&& pBlocker->GetHealth() > 0
+		if ( pBlocker && pBlocker->GetHealth() > 0 && OccupyStrategySlot( SQUAD_SLOT_ATTACK_OCCLUDER1 ) ) //&& pBlocker->GetHealth() > 0
 		{
 			return SCHED_SHOOT_ENEMY_COVER;
 		}
@@ -3146,11 +3150,39 @@ void CNPC_Combine::HandleAnimEvent( animevent_t *pEvent )
 //---------------------------------------------------------
 Disposition_t CNPC_Combine::IRelationType(CBaseEntity *pTarget)
 {
+	Disposition_t disposition = BaseClass::IRelationType(pTarget);
+
+	if (pTarget == NULL)
+		return disposition;
+
 	if (pTarget->ClassMatches("npc_bullseye"))
 		return D_NU;
 
-	return BaseClass::IRelationType(pTarget);
+	if (pTarget->Classify() == CLASS_ANTLION)
+	{
+		if (disposition == D_HT)
+		{
+			// If Soldier hates this antlion (default relationship), make him fear it, if it is very close.
+			if (GetAbsOrigin().DistToSqr(pTarget->GetAbsOrigin()) < COMBINE_FEAR_ANTLION_DIST_SQR)
+			{
+				disposition = D_FR;
+			}
+
+			// Fall through...
+		}
+	}
+	else if (pTarget->Classify() == CLASS_ZOMBIE && disposition == D_HT && GetActiveWeapon())
+	{
+		if (GetAbsOrigin().DistToSqr(pTarget->GetAbsOrigin()) < COMBINE_FEAR_ZOMBIE_DIST_SQR)
+		{
+			// Be afraid of a zombie that's near. This will make soldier back away.
+			return D_FR;
+		}
+	}
+
+	return disposition;
 }
+
 
 //---------------------------------------------------------
 //---------------------------------------------------------
@@ -3453,7 +3485,7 @@ bool CNPC_Combine::CanThrowGrenade( const Vector &vecTarget )
 	if( flDist > 1024 || flDist < 128 )
 	{
 		// Too close or too far!
-		m_flNextGrenadeCheck = gpGlobals->curtime + 0.25; // one full second.
+		m_flNextGrenadeCheck = gpGlobals->curtime + 1; // one full second.
 		return false;
 	}
 
@@ -3482,10 +3514,10 @@ bool CNPC_Combine::CanThrowGrenade( const Vector &vecTarget )
 		if (m_pSquad->SquadMemberInRange( vecTarget, COMBINE_MIN_GRENADE_CLEAR_DIST ))
 		{
 			// crap, I might blow my own guy up. Don't throw a grenade and don't check again for a while.
-			m_flNextGrenadeCheck = gpGlobals->curtime + 0.25; // quorter of a second.
+			m_flNextGrenadeCheck = gpGlobals->curtime + 1; // quorter of a second.
 
 			// Tell my squad members to clear out so I can get a grenade in
-			CSoundEnt::InsertSound( SOUND_MOVE_AWAY | SOUND_CONTEXT_COMBINE_ONLY, vecTarget, COMBINE_MIN_GRENADE_CLEAR_DIST, 0.1 );
+			CSoundEnt::InsertSound( SOUND_MOVE_AWAY | SOUND_CONTEXT_COMBINE_ONLY, vecTarget, COMBINE_MIN_GRENADE_CLEAR_DIST, 0.1, this );
 			return false;
 		}
 	}
@@ -3533,13 +3565,13 @@ bool CNPC_Combine::CheckCanThrowGrenade( const Vector &vecTarget )
 		m_vecTossVelocity = vecToss;
 
 		// don't check again for a while.
-		m_flNextGrenadeCheck = gpGlobals->curtime + 0.25; // 1/4 second.
+		m_flNextGrenadeCheck = gpGlobals->curtime + 0.5; // 1/2 second.
 		return true;
 	}
 	else
 	{
 		// don't check again for a while.
-		m_flNextGrenadeCheck = gpGlobals->curtime + 0.25; // 1/4 second.
+		m_flNextGrenadeCheck = gpGlobals->curtime + 0.5; // 1/2 second.
 		return false;
 	}
 }
@@ -3636,10 +3668,10 @@ bool CNPC_Combine::CanAltFireEnemy( bool bUseFreeKnowledge )
 		if (m_pSquad->SquadMemberInRange(vecTarget, COMBINE_MIN_GRENADE_CLEAR_DIST))
 		{
 			// crap, I might blow my own guy up. Don't throw a grenade and don't check again for a while.
-			m_flNextGrenadeCheck = gpGlobals->curtime + 0.25f; // 1/4 second.
+			m_flNextGrenadeCheck = gpGlobals->curtime + 1.0f; // 1 second.
 
 			// Tell my squad members to clear out so I can get a grenade in
-			CSoundEnt::InsertSound(SOUND_MOVE_AWAY | SOUND_CONTEXT_COMBINE_ONLY, vecTarget, COMBINE_MIN_GRENADE_CLEAR_DIST, 0.1);
+			CSoundEnt::InsertSound(SOUND_MOVE_AWAY | SOUND_CONTEXT_COMBINE_ONLY, vecTarget, COMBINE_MIN_GRENADE_CLEAR_DIST, 0.1, this);
 			return false;
 		}
 	}
@@ -3647,7 +3679,7 @@ bool CNPC_Combine::CanAltFireEnemy( bool bUseFreeKnowledge )
 
 	// Check again later
 	m_vecAltFireTarget = vec3_origin;
-	m_flNextGrenadeCheck = gpGlobals->curtime + 0.25f;	// OLD: 1.0f
+	m_flNextGrenadeCheck = gpGlobals->curtime + 0.5f;	// OLD: 1.0f
 	return false;
 }
 
@@ -3687,56 +3719,42 @@ bool CNPC_Combine::CanGrenadeEnemy( bool bUseFreeKnowledge )
 // Check if we are suppressing a valid target and if there is enough space
 // infront of our weapon. Prevents soldiers from suppressing melee enemies or
 // shooting against a wall in front of them.
-//
-// FIXME: Doing proper suppression against the player crashes the game.
 //-----------------------------------------------------------------------------
-#if 0
+#if 1
 bool CNPC_Combine::CanSuppressEnemy(bool bUseFreeKnowledge)
 {
-	if (gpGlobals->curtime < m_flNextSuppressCheck)
+	if (IsGuard())
 		return false;
 
-	if (IsCrouching())
+	if (gpGlobals->curtime < m_flNextSuppressCheck)
 		return false;
 
 	if (!GetEnemy())
 		return false;
 
-	if (m_iNumEnemies > 2)
+	if (HasCondition(COND_WEAPON_BLOCKED_BY_FRIEND))
 		return false;
 
 	CBaseEntity *pEnemy = GetEnemy();
 
-	if (pEnemy->IsPlayer())
+//	if (pEnemy->IsPlayer())
+//		return false;
+
+	if (!pEnemy->IsPlayer() && (!pEnemy->IsNPC()))
+		return false;
+	
+	if ( pEnemy->Classify() == CLASS_ANTLION || pEnemy->Classify() == CLASS_ZOMBIE || pEnemy->Classify() == CLASS_HEADCRAB)
 		return false;
 
-	if (!pEnemy->IsPlayer() && (!pEnemy->IsNPC()) || !pEnemy->MyNPCPointer()->IsPlayerAlly())
-		return false;
+	Vector vecTarget = GetEnemies()->LastSeenPosition(pEnemy) + (pEnemy->GetViewOffset()*0.75);
 
-	Vector vecTarget;
-
-	// Determine what point we're shooting at
-	if (bUseFreeKnowledge)
-	{
-		vecTarget = GetEnemies()->LastKnownPosition(pEnemy) + (pEnemy->GetViewOffset()*0.75);// approximates the chest
-	}
-	else
-	{
-		vecTarget = GetEnemies()->LastSeenPosition(pEnemy) + (pEnemy->GetViewOffset()*0.75);// approximates the chest
-	}
-
-	// Trace a hull about the size of the bullet spread 
+	// Trace a hull
 	trace_t tr;
 
-	Vector mins(-12, -12, -12);
-	Vector maxs(12, 12, 12);
+	Vector mins(-1, -1, -1);
+	Vector maxs(1, 1, 1);
 
 	Vector vShootPosition = EyePosition();
-
-	if (GetActiveWeapon())
-	{
-		GetActiveWeapon()->GetAttachment("muzzle", vShootPosition); // still shoots at the wall he's hugging, GetAttachment right hand instead?
-	}
 
 	// Trace a hull about the size of the bullet.
 	UTIL_TraceHull(vShootPosition, vecTarget, mins, maxs, MASK_SHOT, this, COLLISION_GROUP_NONE, &tr);
@@ -3744,19 +3762,15 @@ bool CNPC_Combine::CanSuppressEnemy(bool bUseFreeKnowledge)
 	float flLength = (vShootPosition - vecTarget).Length();
 
 	flLength *= tr.fraction;
-
-	//If the bullet can travel at least 75% of the distance to the enemy then let the NPC shoot it.
-	if (tr.fraction >= 0.75 && flLength > 128.0f)
+	//If the bullet can travel 90% of the distance to the player then let the NPC shoot it. 
+	if (tr.fraction >= 0.90 && (!tr.m_pEnt || !tr.m_pEnt->IsWorld()))	// Thanks to Mapbase //&& flLength > 128.0f
 	{
 		// Target is valid
-		m_vecSuppressTarget = vecTarget;
 		return true;
 	}
 
-
 	// Check again later
-	m_vecSuppressTarget = vec3_origin;
-	m_flNextSuppressCheck = gpGlobals->curtime + 1.0f;
+	m_flNextSuppressCheck = gpGlobals->curtime + 0.5f;
 	return false;
 }
 #endif
@@ -4142,6 +4156,7 @@ DECLARE_TASK( TASK_COMBINE_FACE_TOSS_DIR )
 DECLARE_TASK( TASK_COMBINE_IGNORE_ATTACKS )
 DECLARE_TASK( TASK_COMBINE_SIGNAL_BEST_SOUND )
 DECLARE_TASK( TASK_COMBINE_DEFER_SQUAD_GRENADES )
+DECLARE_TASK( TASK_COMBINE_DEFER_SQUAD_SUPPRESSION )
 DECLARE_TASK( TASK_COMBINE_CHASE_ENEMY_CONTINUOUSLY )
 DECLARE_TASK( TASK_COMBINE_DIE_INSTANTLY )
 DECLARE_TASK( TASK_COMBINE_PLAY_SEQUENCE_FACE_ALTFIRE_TARGET )
@@ -4280,6 +4295,7 @@ DEFINE_SCHEDULE
  //		"		TASK_COMBINE_MOVE_AND_AIM		0"
  "		TASK_WAIT_FOR_MOVEMENT			0"
  "		TASK_COMBINE_IGNORE_ATTACKS		0.0"
+ "		TASK_COMBINE_DEFER_SQUAD_SUPPRESSION	0" // Don't let anyone suppress for a while
  ""
  "	Interrupts "
  "		COND_NEW_ENEMY"
@@ -4309,6 +4325,7 @@ DEFINE_SCHEDULE
  "		TASK_RUN_PATH					0"
  "		TASK_WAIT_FOR_MOVEMENT			0"
  "		TASK_COMBINE_IGNORE_ATTACKS		0.0"
+ "		TASK_COMBINE_DEFER_SQUAD_SUPPRESSION	0" // Don't let anyone suppress for a while
  "		TASK_SET_SCHEDULE				SCHEDULE:SCHED_COMBAT_FACE"
  "	"
  "	Interrupts "
@@ -4344,6 +4361,7 @@ DEFINE_SCHEDULE
  "		TASK_RUN_PATH							0"
  "		TASK_WAIT_FOR_MOVEMENT					0"
  "		TASK_COMBINE_IGNORE_ATTACKS				0.0"
+ "		TASK_COMBINE_DEFER_SQUAD_SUPPRESSION	0" // Don't let anyone suppress for a while
  "		TASK_SET_SCHEDULE				SCHEDULE:SCHED_COMBAT_FACE"
  ""
  "	Interrupts"
@@ -4379,6 +4397,7 @@ DEFINE_SCHEDULE
  "		TASK_COMBINE_SET_STANDING		1"
  "		TASK_RUN_PATH					0"
  "		TASK_WAIT_FOR_MOVEMENT			0"
+ "		TASK_COMBINE_DEFER_SQUAD_SUPPRESSION	0" // Don't let anyone suppress for a while
  ""
  "	Interrupts "
  "		COND_NEW_ENEMY"
@@ -4456,8 +4475,6 @@ DEFINE_SCHEDULE
 
  //=========================================================
  // SCHED_COMBINE_SIGNAL_SUPPRESS
- //	don't stop shooting until the clip is
- //	empty or combine gets hurt.
  //=========================================================
  DEFINE_SCHEDULE
  (
@@ -4469,6 +4486,7 @@ DEFINE_SCHEDULE
  "		TASK_PLAY_SEQUENCE_FACE_ENEMY	ACTIVITY:ACT_SIGNAL_GROUP"
  "		TASK_COMBINE_SET_STANDING		0"
  "		TASK_RANGE_ATTACK1				0"
+ "		TASK_COMBINE_DEFER_SQUAD_SUPPRESSION	0" // Don't suppress for a while
  ""
  "	Interrupts"
  "		COND_ENEMY_DEAD"
@@ -4493,12 +4511,14 @@ DEFINE_SCHEDULE
  "		TASK_STOP_MOVING			0"
  "		TASK_FACE_ENEMY				0"
  "		TASK_COMBINE_SET_STANDING	0"
+ "		TASK_WAIT					0.3"
  "		TASK_RANGE_ATTACK1			0"
+ "		TASK_COMBINE_DEFER_SQUAD_SUPPRESSION	0" // Don't suppress for a while
  ""
  "	Interrupts"
  "		COND_ENEMY_DEAD"
-// "		COND_LIGHT_DAMAGE"
-// "		COND_HEAVY_DAMAGE"
+ "		COND_REPEATED_DAMAGE"
+ "		COND_HEAVY_DAMAGE"
  "		COND_NO_PRIMARY_AMMO"
  "		COND_HEAR_DANGER"
  "		COND_HEAR_MOVE_AWAY"

@@ -1025,11 +1025,11 @@ int CNPC_BaseZombie::OnTakeDamage_Alive( const CTakeDamageInfo &inputInfo )
 		if (info.GetDamageType() & DMG_BULLET)
 		{
 			if (info.GetDamageType() & DMG_BUCKSHOT)
-				fl_ForceMultiplier = 6.0f;
+				fl_ForceMultiplier = 4.0f;
 			else if (info.GetDamageType() & DMG_SNIPER)
-				fl_ForceMultiplier = 0.5f;
+				fl_ForceMultiplier = 0.35f;
 			else
-				fl_ForceMultiplier = 3.0f;
+				fl_ForceMultiplier = 2.0f;
 		}
 
 		switch( release )

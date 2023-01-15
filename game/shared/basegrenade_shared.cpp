@@ -166,7 +166,7 @@ void CBaseGrenade::Explode( trace_t *pTrace, int bitsDamageType )
 	}
 
 #if !defined( CLIENT_DLL )
-	CSoundEnt::InsertSound ( SOUND_COMBAT, GetAbsOrigin(), BASEGRENADE_EXPLOSION_VOLUME, 3.0 );
+	CSoundEnt::InsertSound ( SOUND_COMBAT, GetAbsOrigin(), BASEGRENADE_EXPLOSION_VOLUME, 3.0, GetThrower() );
 #endif
 
 	// Use the thrower's position as the reported position

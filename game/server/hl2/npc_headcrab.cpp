@@ -1829,16 +1829,6 @@ int CBaseHeadcrab::OnTakeDamage_Alive( const CTakeDamageInfo &inputInfo )
 					m_flAdditionalShots++;
 				}
 			}
-			else if (info.GetAmmoType() == GetAmmoDef()->Index("AR2"))
-			{
-				if (pHL2GameRules->NPC_ShouldDrainAR2Ammo(pPlayer) && m_flAdditionalShots < sk_headcrab_max_additional_ammo_shots.GetInt())
-				{
-					info.SetDamage(3);
-					pHL2GameRules->NPC_TakenAdditionalShots(1);
-					m_flAdditionalShots++;
-					m_flAdditionalShots++;
-				}
-			}
 			else if (info.GetAmmoType() == GetAmmoDef()->Index("SMG1"))
 			{
 				if (pHL2GameRules->NPC_ShouldDrainSMGAmmo(pPlayer) && m_flAdditionalShots < sk_headcrab_max_additional_ammo_shots.GetInt())

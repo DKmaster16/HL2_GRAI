@@ -89,15 +89,39 @@ ConVar	sk_allow_autoaim( "sk_allow_autoaim", "0", FCVAR_REPLICATED | FCVAR_ARCHI
 
 // Autoaim scale
 ConVar	sk_autoaim_scale1( "sk_autoaim_scale1", "1.0", FCVAR_REPLICATED );
-ConVar	sk_autoaim_scale2( "sk_autoaim_scale2", "0.2", FCVAR_REPLICATED );
-//ConVar	sk_autoaim_scale3( "sk_autoaim_scale3", "0.0", FCVAR_REPLICATED ); NOT CURRENTLY OFFERED ON SKILL 3
-//ConVar	sk_autoaim_scale4( "sk_autoaim_scale4", "0.0", FCVAR_REPLICATED ); NOT CURRENTLY OFFERED ON SKILL 3
+ConVar	sk_autoaim_scale2( "sk_autoaim_scale2", "0.5", FCVAR_REPLICATED );
+//ConVar	sk_autoaim_scale3( "sk_autoaim_scale3", "0.0", FCVAR_REPLICATED );
+//ConVar	sk_autoaim_scale4( "sk_autoaim_scale4", "0.0", FCVAR_REPLICATED );
 
 // Quantity scale for ammo received by the player.
 ConVar	sk_ammo_qty_scale1 ( "sk_ammo_qty_scale1", "1.20", FCVAR_REPLICATED );
 ConVar	sk_ammo_qty_scale2 ( "sk_ammo_qty_scale2", "1.00", FCVAR_REPLICATED );
 ConVar	sk_ammo_qty_scale3 ( "sk_ammo_qty_scale3", "0.60", FCVAR_REPLICATED );
 ConVar	sk_ammo_qty_scale4 ( "sk_ammo_qty_scale4", "0.60", FCVAR_REPLICATED );
+
+// Ammo balance settings
+ConVar	sk_ammobal_min_pistol("sk_ammobal_min_pistol", "40", FCVAR_REPLICATED);
+ConVar	sk_ammobal_max_pistol("sk_ammobal_max_pistol", "70", FCVAR_REPLICATED);
+ConVar	sk_ammobal_min_smg("sk_ammobal_min_smg", "80", FCVAR_REPLICATED);
+ConVar	sk_ammobal_max_smg("sk_ammobal_max_smg", "120", FCVAR_REPLICATED);
+ConVar	sk_ammobal_min_ar2("sk_ammobal_min_ar2", "20", FCVAR_REPLICATED);
+ConVar	sk_ammobal_max_ar2("sk_ammobal_max_ar2", "60", FCVAR_REPLICATED);
+ConVar	sk_ammobal_min_shotgun("sk_ammobal_min_shotgun", "10", FCVAR_REPLICATED);
+ConVar	sk_ammobal_max_shotgun("sk_ammobal_max_shotgun", "14", FCVAR_REPLICATED);
+ConVar	sk_ammobal_min_357("sk_ammobal_min_357", "8", FCVAR_REPLICATED);
+ConVar	sk_ammobal_max_357("sk_ammobal_max_357", "12", FCVAR_REPLICATED);
+
+// Ammo sizes
+ConVar sk_size_ammo_pistol("sk_size_ammo_pistol", "20");
+ConVar sk_size_ammo_pistol_large("sk_size_ammo_pistol_large", "100");
+ConVar sk_size_ammo_smg1("sk_size_ammo_smg1", "20");
+ConVar sk_size_ammo_smg1_large("sk_size_ammo_smg1_large", "20");
+ConVar sk_size_ammo_ar2("sk_size_ammo_ar2", "20");
+ConVar sk_size_ammo_ar2_large("sk_size_ammo_ar2_large", "20");
+ConVar sk_size_ammo_buckshot("sk_size_ammo_buckshot", "20");
+ConVar sk_size_ammo_357("sk_size_ammo_357", "6");
+ConVar sk_size_ammo_357_large("sk_size_ammo_357_large", "12");
+ConVar sk_size_ammo_crossbow("sk_size_ammo_crossbow", "6");
 
 ConVar	sk_plr_health_drop_time		( "sk_plr_health_drop_time", "10", FCVAR_REPLICATED );
 ConVar	sk_plr_grenade_drop_time	( "sk_plr_grenade_drop_time", "10", FCVAR_REPLICATED );
@@ -193,8 +217,8 @@ ConVar	sk_npc_dmg_strider_to_plr_direct	("sk_npc_dmg_strider_to_plr_direct", "0"
 
 // Combine Heavy Cannon
 #ifdef HL2_EPISODIC
-ConVar	sk_heavy_cannon_damage			("sk_heavy_cannon_damage", "0", FCVAR_REPLICATED);
-ConVar	sk_heavy_cannon_damage_to_plr	("sk_heavy_cannon_damage_to_plr", "0", FCVAR_REPLICATED);
+ConVar	sk_heavy_cannon_damage			("sk_heavy_cannon_damage", "100", FCVAR_REPLICATED);
+ConVar	sk_heavy_cannon_damage_to_plr	("sk_heavy_cannon_damage_to_plr", "40", FCVAR_REPLICATED);
 #endif
 //-----------------------------------------------------------------------------
 // Purpose: 
@@ -204,7 +228,7 @@ ConVar	sk_heavy_cannon_damage_to_plr	("sk_heavy_cannon_damage_to_plr", "0", FCVA
 int CHalfLife2::Damage_GetTimeBased( void )
 {
 //#ifdef HL2_EPISODIC
-	int iDamage = ( DMG_PARALYZE | DMG_NERVEGAS | DMG_POISON | DMG_RADIATION | DMG_DROWNRECOVER | DMG_ACID | DMG_SLOWBURN );
+	int iDamage = ( DMG_PARALYZE | DMG_NERVEGAS | DMG_POISON | DMG_ACID | DMG_RADIATION | DMG_DROWNRECOVER | DMG_SLOWBURN );
 	return iDamage;
 //#else
 //	return BaseClass::Damage_GetTimeBased();
@@ -219,7 +243,7 @@ int CHalfLife2::Damage_GetTimeBased( void )
 bool CHalfLife2::Damage_IsTimeBased( int iDmgType )
 {
 	// Damage types that are time-based.
-	return ( ( iDmgType & ( DMG_PARALYZE | DMG_NERVEGAS | DMG_POISON | DMG_RADIATION | DMG_DROWNRECOVER | DMG_ACID | DMG_SLOWBURN ) ) != 0 );
+	return ( ( iDmgType & ( DMG_PARALYZE | DMG_NERVEGAS | DMG_POISON | DMG_ACID | DMG_RADIATION | DMG_DROWNRECOVER | DMG_SLOWBURN ) ) != 0 );
 //	return BaseClass::Damage_IsTimeBased( iDmgType );
 
 }
@@ -265,6 +289,7 @@ ConVar  alyx_darkness_force( "alyx_darkness_force", "0", FCVAR_CHEAT | FCVAR_REP
 		
 		m_flLastHealthDropTime = 0.0f;
 		m_flLastGrenadeDropTime = 0.0f;
+		m_flAdditionalShots = 0.0f;
 	}
 
 	//-----------------------------------------------------------------------------
@@ -588,16 +613,16 @@ ConVar  alyx_darkness_force( "alyx_darkness_force", "0", FCVAR_CHEAT | FCVAR_REP
 		CBaseCombatCharacter::SetDefaultRelationship(CLASS_COMBINE,			CLASS_PLAYER,			D_HT, 0);			
 		CBaseCombatCharacter::SetDefaultRelationship(CLASS_COMBINE,			CLASS_ANTLION,			D_HT, 0);
 		CBaseCombatCharacter::SetDefaultRelationship(CLASS_COMBINE,			CLASS_BARNACLE,			D_FR, 0);
-		CBaseCombatCharacter::SetDefaultRelationship(CLASS_COMBINE,			CLASS_BULLSEYE,			D_NU, 0);
+		CBaseCombatCharacter::SetDefaultRelationship(CLASS_COMBINE,			CLASS_BULLSEYE,			D_NU, -1);
 		//CBaseCombatCharacter::SetDefaultRelationship(CLASS_COMBINE,			CLASS_BULLSQUID,		D_HT, 0);
-		CBaseCombatCharacter::SetDefaultRelationship(CLASS_COMBINE,			CLASS_CITIZEN_PASSIVE,	D_NU, 0);	
+		CBaseCombatCharacter::SetDefaultRelationship(CLASS_COMBINE,			CLASS_CITIZEN_PASSIVE,	D_NU, -2);	
 		CBaseCombatCharacter::SetDefaultRelationship(CLASS_COMBINE,			CLASS_CITIZEN_REBEL,	D_HT, 0);
 		CBaseCombatCharacter::SetDefaultRelationship(CLASS_COMBINE,			CLASS_COMBINE,			D_LI, 0);
 		CBaseCombatCharacter::SetDefaultRelationship(CLASS_COMBINE,			CLASS_COMBINE_GUNSHIP,	D_LI, 0);
 		CBaseCombatCharacter::SetDefaultRelationship(CLASS_COMBINE,			CLASS_COMBINE_HUNTER,	D_LI, 0);
 		CBaseCombatCharacter::SetDefaultRelationship(CLASS_COMBINE,			CLASS_CONSCRIPT,		D_HT, 0);
 		CBaseCombatCharacter::SetDefaultRelationship(CLASS_COMBINE,			CLASS_FLARE,			D_NU, 0);
-		CBaseCombatCharacter::SetDefaultRelationship(CLASS_COMBINE,			CLASS_HEADCRAB,			D_HT, 0);
+		CBaseCombatCharacter::SetDefaultRelationship(CLASS_COMBINE,			CLASS_HEADCRAB,			D_HT, 1);
 		//CBaseCombatCharacter::SetDefaultRelationship(CLASS_COMBINE,			CLASS_HOUNDEYE,			D_HT, 0);
 		CBaseCombatCharacter::SetDefaultRelationship(CLASS_COMBINE,			CLASS_MANHACK,			D_NU, 0);
 		CBaseCombatCharacter::SetDefaultRelationship(CLASS_COMBINE,			CLASS_METROPOLICE,		D_NU, 0);
@@ -610,7 +635,7 @@ ConVar  alyx_darkness_force( "alyx_darkness_force", "0", FCVAR_CHEAT | FCVAR_REP
 		CBaseCombatCharacter::SetDefaultRelationship(CLASS_COMBINE,			CLASS_PROTOSNIPER,		D_NU, 0);
 		CBaseCombatCharacter::SetDefaultRelationship(CLASS_COMBINE,			CLASS_EARTH_FAUNA,		D_NU, 0);
 		CBaseCombatCharacter::SetDefaultRelationship(CLASS_COMBINE,			CLASS_PLAYER_ALLY,		D_HT, 0);
-		CBaseCombatCharacter::SetDefaultRelationship(CLASS_COMBINE,			CLASS_PLAYER_ALLY_VITAL,D_HT, 0);
+		CBaseCombatCharacter::SetDefaultRelationship(CLASS_COMBINE,			CLASS_PLAYER_ALLY_VITAL,D_HT, -1);
 		CBaseCombatCharacter::SetDefaultRelationship(CLASS_COMBINE,			CLASS_HACKED_ROLLERMINE,D_HT, 0);
 
 		// ------------------------------------------------------------
@@ -1042,7 +1067,7 @@ ConVar  alyx_darkness_force( "alyx_darkness_force", "0", FCVAR_CHEAT | FCVAR_REP
 		//CBaseCombatCharacter::SetDefaultRelationship(CLASS_PLAYER_ALLY_VITAL,	CLASS_BULLSQUID,		D_HT, 0);
 		CBaseCombatCharacter::SetDefaultRelationship(CLASS_PLAYER_ALLY_VITAL,	CLASS_CITIZEN_PASSIVE,	D_NU, 0);	
 		CBaseCombatCharacter::SetDefaultRelationship(CLASS_PLAYER_ALLY_VITAL,	CLASS_CITIZEN_REBEL,	D_NU, 0);
-		CBaseCombatCharacter::SetDefaultRelationship(CLASS_PLAYER_ALLY_VITAL,	CLASS_COMBINE,			D_HT, 0);
+		CBaseCombatCharacter::SetDefaultRelationship(CLASS_PLAYER_ALLY_VITAL,	CLASS_COMBINE,			D_FR, 0);	// D_HT
 		CBaseCombatCharacter::SetDefaultRelationship(CLASS_PLAYER_ALLY_VITAL,	CLASS_COMBINE_GUNSHIP,	D_NU, 0);
 		CBaseCombatCharacter::SetDefaultRelationship(CLASS_PLAYER_ALLY_VITAL,	CLASS_COMBINE_HUNTER,	D_FR, 0);
 		CBaseCombatCharacter::SetDefaultRelationship(CLASS_PLAYER_ALLY_VITAL,	CLASS_CONSCRIPT,		D_NU, 0);
@@ -1362,7 +1387,7 @@ ConVar  alyx_darkness_force( "alyx_darkness_force", "0", FCVAR_CHEAT | FCVAR_REP
 	{
 		float flDamage = 0.0f;
 		CAmmoDef *pAmmoDef = GetAmmoDef();
-
+		
 		if (pAmmoDef->DamageType(nAmmoType) & DMG_BULLET )
 		{
 			// If this damage is from a SNIPER, we do damage based on what the bullet
@@ -1388,7 +1413,6 @@ ConVar  alyx_darkness_force( "alyx_darkness_force", "0", FCVAR_CHEAT | FCVAR_REP
 				flDamage = pAmmoDef->NPCDamage(nAmmoType);
 			}
 		}
-
 		else
 		{
 			flDamage = BaseClass::GetAmmoDamage( pAttacker, pVictim, nAmmoType );
@@ -1452,6 +1476,118 @@ ConVar  alyx_darkness_force( "alyx_darkness_force", "0", FCVAR_CHEAT | FCVAR_REP
   		return true;
   	}
 	//-----------------------------------------------------------------------------
+	// Purpose: Whether or not the game should start draining this ammo type
+	// Output : Returns true on success, false on failure.
+	//-----------------------------------------------------------------------------
+	bool CHalfLife2::NPC_ShouldDrainPistolAmmo(CBasePlayer *pRecipient)
+	{
+		int iAmmoTypePistol = GetAmmoDef()->Index("Pistol");
+
+		// Does the player have too much ammo for the following ammo types?
+		int iCount = ((CBasePlayer*)pRecipient)->GetAmmoCount(iAmmoTypePistol);
+
+		// Every additional shot fired counts as two in ammobalancing
+		if ((iCount - m_flAdditionalShots) > sk_ammobal_max_pistol.GetInt())
+		{
+			return true;
+		}
+		else if (iCount > sk_ammobal_min_pistol.GetInt())
+		{
+			if (iCount - m_flAdditionalShots > RandomInt(sk_ammobal_min_pistol.GetInt(), sk_ammobal_max_pistol.GetInt()))
+			return true;
+		}
+		return false;
+	}
+
+	//-----------------------------------------------------------------------------
+
+	bool CHalfLife2::NPC_ShouldDrainSMGAmmo(CBasePlayer *pRecipient)
+	{
+		int iAmmoTypeSMG = GetAmmoDef()->Index("SMG1");
+
+		// Does the player have too much ammo for the following ammo types?
+		int iCount = ((CBasePlayer*)pRecipient)->GetAmmoCount(iAmmoTypeSMG);
+
+		// Every additional shot fired counts as two in ammobalancing
+		if ((iCount - m_flAdditionalShots) > sk_ammobal_max_smg.GetInt())
+		{
+			return true;
+		}
+		else if (iCount > sk_ammobal_min_smg.GetInt())
+		{
+			if (iCount - m_flAdditionalShots > RandomInt(sk_ammobal_min_smg.GetInt(), sk_ammobal_max_smg.GetInt()))
+				return true;
+		}
+		return false;
+	}
+
+	//-----------------------------------------------------------------------------
+
+	bool CHalfLife2::NPC_ShouldDrainAR2Ammo(CBasePlayer *pRecipient)
+	{
+		int iAmmoTypeAR2 = GetAmmoDef()->Index("AR2");
+
+		// Does the player have too much ammo for the following ammo types?
+		int iCount = ((CBasePlayer*)pRecipient)->GetAmmoCount(iAmmoTypeAR2);
+
+		// Every additional shot fired counts as two in ammobalancing
+		if ((iCount - m_flAdditionalShots) > sk_ammobal_max_ar2.GetInt())
+		{
+			return true;
+		}
+		else if (iCount > sk_ammobal_min_ar2.GetInt())
+		{
+			if (iCount - m_flAdditionalShots > RandomInt(sk_ammobal_min_ar2.GetInt(), sk_ammobal_max_ar2.GetInt()))
+				return true;
+		}
+		return false;
+	}
+
+	//-----------------------------------------------------------------------------
+
+	bool CHalfLife2::NPC_ShouldDrainShotgunAmmo(CBasePlayer *pRecipient)
+	{
+		int iAmmoTypeShotgun = GetAmmoDef()->Index("Shotgun");
+
+		// Does the player have too much ammo for the following ammo types?
+		int iCount = ((CBasePlayer*)pRecipient)->GetAmmoCount(iAmmoTypeShotgun);
+
+		// Every additional shot fired counts as two in ammobalancing
+		if ((iCount - m_flAdditionalShots) > sk_ammobal_max_shotgun.GetInt())
+		{
+			return true;
+		}
+		else if (iCount > sk_ammobal_min_shotgun.GetInt())
+		{
+			if (iCount - m_flAdditionalShots > RandomInt(sk_ammobal_min_shotgun.GetInt(), sk_ammobal_max_shotgun.GetInt()))
+				return true;
+		}
+		return false;
+	}
+
+	//-----------------------------------------------------------------------------
+
+	bool CHalfLife2::NPC_ShouldDrain357Ammo(CBasePlayer *pRecipient)
+	{
+		int iAmmoType357 = GetAmmoDef()->Index("357");
+
+		// Does the player have too much ammo for the following ammo types?
+		int iCount = ((CBasePlayer*)pRecipient)->GetAmmoCount(iAmmoType357);
+
+		// Every additional shot fired counts as two in ammobalancing
+		if ((iCount - m_flAdditionalShots) > sk_ammobal_max_357.GetInt())
+		{
+			return true;
+		}
+		else if (iCount > sk_ammobal_min_357.GetInt())
+		{
+			if (iCount - m_flAdditionalShots > RandomInt(sk_ammobal_min_357.GetInt(), sk_ammobal_max_357.GetInt()))
+				return true;
+		}
+		return false;
+	}
+
+	//-----------------------------------------------------------------------------
 	// Purpose: Whether or not the NPC should drop a health vial
 	// Output : Returns true on success, false on failure.
 	//-----------------------------------------------------------------------------
@@ -1489,6 +1625,18 @@ ConVar  alyx_darkness_force( "alyx_darkness_force", "0", FCVAR_CHEAT | FCVAR_REP
 
 		return false;
 	}
+
+	//-----------------------------------------------------------------------------
+	// Purpose: Update the additional shots counter for reduced damage
+	//-----------------------------------------------------------------------------
+	void CHalfLife2::NPC_TakenAdditionalShots( float NumShots)
+	{
+		if (NumShots == 0)
+			m_flAdditionalShots = 0;
+		else
+			m_flAdditionalShots = m_flAdditionalShots + NumShots;
+	}
+
 
 	//-----------------------------------------------------------------------------
 	// Purpose: Update the drop counter for health
@@ -1732,6 +1880,7 @@ float CHalfLife2::GetAutoAimScale( CBasePlayer *pPlayer )
 	case SKILL_MEDIUM:
 		return sk_autoaim_scale2.GetFloat();
 
+
 	default:
 		return 0.0f;
 	}
@@ -1820,7 +1969,7 @@ bool CHalfLife2::ShouldBurningPropsEmitLight()
 #define BULLET_MASS_GRAINS_TO_KG(grains)	lbs2kg(BULLET_MASS_GRAINS_TO_LB(grains))
 
 // exaggerate all of the forces, but use real numbers to keep them consistent (3.5 old value) 
-#define BULLET_IMPULSE_EXAGGERATION			1.0
+#define BULLET_IMPULSE_EXAGGERATION			2
 // convert a velocity in ft/sec and a mass in grains to an impulse in kg in/s
 #define BULLET_IMPULSE(grains, ftpersec)	((ftpersec)*12*BULLET_MASS_GRAINS_TO_KG(grains)*BULLET_IMPULSE_EXAGGERATION)
 #define BULLET_SPEED(ftpersec) (0.12*ftpersec)	// inches per centisecond
@@ -1835,28 +1984,28 @@ CAmmoDef *GetAmmoDef()
 	{
 		bInitted = true;
 
-		def.AddAmmoType("AR2",				DMG_BULLET,					TRACER_LINE_AND_WHIZ,	"sk_plr_dmg_ar2",			"sk_npc_dmg_ar2",			"sk_max_ar2",			BULLET_SPEED(750),	BULLET_MASS(520), BULLET_DIAMETER(3), BULLET_IMPULSE(520, 750), AMMO_DARK_ENERGY);
-		def.AddAmmoType("AlyxGun",			DMG_BULLET,					TRACER_LINE,			"sk_plr_dmg_alyxgun",		"sk_npc_dmg_alyxgun",		"sk_max_alyxgun",		BULLET_SPEED(1200),	BULLET_MASS(180), BULLET_DIAMETER(.45), BULLET_IMPULSE(180, 1200), 0);
-		def.AddAmmoType("Pistol",			DMG_BULLET,					TRACER_LINE_AND_WHIZ,	"sk_plr_dmg_pistol",		"sk_npc_dmg_pistol",		"sk_max_pistol",		BULLET_SPEED(1325),	BULLET_MASS(124), BULLET_DIAMETER(.355), BULLET_IMPULSE(124, 1320), 0);
+		def.AddAmmoType("AR2",				DMG_BULLET,					TRACER_LINE_AND_WHIZ,	"sk_plr_dmg_ar2",			"sk_npc_dmg_ar2",			"sk_max_ar2",			BULLET_SPEED(667),	BULLET_MASS(520), BULLET_DIAMETER(3), BULLET_IMPULSE(520, 750), AMMO_DARK_ENERGY);
+		def.AddAmmoType("AlyxGun",			DMG_BULLET,					TRACER_LINE,			"sk_plr_dmg_alyxgun",		"sk_npc_dmg_alyxgun",		"sk_max_alyxgun",		BULLET_SPEED(1200),	BULLET_MASS(165), BULLET_DIAMETER(.45), BULLET_IMPULSE(165, 1200), 0);
+		def.AddAmmoType("Pistol",			DMG_BULLET,					TRACER_LINE_AND_WHIZ,	"sk_plr_dmg_pistol",		"sk_npc_dmg_pistol",		"sk_max_pistol",		BULLET_SPEED(1325),	BULLET_MASS(124), BULLET_DIAMETER(.355), BULLET_IMPULSE(124, 1325), 0);
 		def.AddAmmoType("SMG1",				DMG_BULLET,					TRACER_LINE_AND_WHIZ,	"sk_plr_dmg_smg1",			"sk_npc_dmg_smg1",			"sk_max_smg1",			BULLET_SPEED(2380),	BULLET_MASS(26), BULLET_DIAMETER(.18), BULLET_IMPULSE(26, 2380), 0);
-		def.AddAmmoType("357",				DMG_BULLET,					TRACER_LINE_AND_WHIZ,	"sk_plr_dmg_357",			"sk_npc_dmg_357",			"sk_max_357",			BULLET_SPEED(1475),	BULLET_MASS(180), BULLET_DIAMETER(.357), BULLET_IMPULSE(180, 1475), 0 );	
-		def.AddAmmoType("XBowBolt",			DMG_BULLET,					TRACER_LINE,			"sk_plr_dmg_crossbow",		"sk_npc_dmg_crossbow",		"sk_max_crossbow",		BULLET_SPEED(208),	BULLET_MASS(1316), BULLET_DIAMETER(1), BULLET_IMPULSE(1316, 208), 0 );		//5264
+		def.AddAmmoType("357",				DMG_BULLET,					TRACER_LINE_AND_WHIZ,	"sk_plr_dmg_357",			"sk_npc_dmg_357",			"sk_max_357",			BULLET_SPEED(1550),	BULLET_MASS(158), BULLET_DIAMETER(.357), BULLET_IMPULSE(158, 1550), 0 );	
+		def.AddAmmoType("XBowBolt",			DMG_BULLET,					TRACER_LINE,			"sk_plr_dmg_crossbow",		"sk_npc_dmg_crossbow",		"sk_max_crossbow",		BULLET_SPEED(208),	BULLET_MASS(1316), BULLET_DIAMETER(1), BULLET_IMPULSE(524, 208), 0 );		//5264
 		def.AddAmmoType("Slug",				DMG_BULLET,					TRACER_LINE_AND_WHIZ,	"sk_plr_dmg_slug",			"sk_npc_dmg_slug",			"sk_max_slug",			BULLET_SPEED(1600),	BULLET_MASS(438), BULLET_DIAMETER(.729), BULLET_IMPULSE(438, 1600), 0 );	
 		def.AddAmmoType("Buckshot",			DMG_BULLET | DMG_BUCKSHOT,	TRACER_LINE,			"sk_plr_dmg_buckshot",		"sk_npc_dmg_buckshot",		"sk_max_buckshot",		BULLET_SPEED(1325),	BULLET_MASS(53.8), BULLET_DIAMETER(.33), BULLET_IMPULSE(53.8, 1325), 0 );
 		def.AddAmmoType("RPG_Round",		DMG_BURN,					TRACER_NONE,			"sk_plr_dmg_rpg_round",		"sk_npc_dmg_rpg_round",		"sk_max_rpg_round",		0, 0, 0, 0, 0 );
 		def.AddAmmoType("SMG1_Grenade",		DMG_BURN,					TRACER_NONE,			"sk_plr_dmg_smg1_grenade",	"sk_npc_dmg_smg1_grenade",	"sk_max_smg1_grenade",	0, 0, 0, 0, 0 );
-		def.AddAmmoType("SniperRound",		DMG_BULLET | DMG_SNIPER,	TRACER_NONE,			"sk_plr_dmg_sniper_round",	"sk_npc_dmg_sniper_round",	"sk_max_sniper_round",	BULLET_SPEED(750), BULLET_MASS(5200), BULLET_DIAMETER(1), BULLET_IMPULSE(5200, 750), AMMO_DARK_ENERGY );
-		def.AddAmmoType("SniperPenetratedRound", DMG_BULLET | DMG_SNIPER, TRACER_NONE,			"sk_dmg_sniper_penetrate_plr", "sk_dmg_sniper_penetrate_npc", "sk_max_sniper_round", BULLET_SPEED(750), BULLET_MASS(1040), BULLET_DIAMETER(1), BULLET_IMPULSE(1040, 750), AMMO_DARK_ENERGY );
+		def.AddAmmoType("SniperRound",		DMG_BULLET | DMG_SNIPER,	TRACER_NONE,			"sk_plr_dmg_sniper_round",	"sk_npc_dmg_sniper_round",	"sk_max_sniper_round",	BULLET_SPEED(667), BULLET_MASS(5200), BULLET_DIAMETER(1), BULLET_IMPULSE(5200, 750), AMMO_DARK_ENERGY );
+		def.AddAmmoType("SniperPenetratedRound", DMG_BULLET | DMG_SNIPER, TRACER_NONE,			"sk_dmg_sniper_penetrate_plr", "sk_dmg_sniper_penetrate_npc", "sk_max_sniper_round", BULLET_SPEED(667), BULLET_MASS(1040), BULLET_DIAMETER(1), BULLET_IMPULSE(1040, 750), AMMO_DARK_ENERGY );
 		def.AddAmmoType("Grenade",			DMG_BURN,					TRACER_NONE,			"sk_plr_dmg_grenade",		"sk_npc_dmg_grenade",		"sk_max_grenade",	0, 0, 0, 0, 0 );
 		def.AddAmmoType("Thumper",			DMG_SONIC,					TRACER_NONE,			10, 10, 2, 0, 0, 0, 0, 0 );
 		def.AddAmmoType("Gravity",			DMG_CLUB,					TRACER_NONE,			0,	0, 8, 0, 0, 0, 0, 0 );
 		def.AddAmmoType("Battery",			DMG_CLUB,					TRACER_NONE,			NULL, NULL, NULL, 0, 0, 0, 0, 0 );
 		def.AddAmmoType("GaussEnergy",		DMG_SHOCK,					TRACER_NONE,			"sk_jeep_gauss_damage",		"sk_jeep_gauss_damage", "sk_max_gauss_round",		BULLET_SPEED(6500),	BULLET_MASS(650), BULLET_DIAMETER(3), BULLET_IMPULSE(650, 8000), 0 ); // hit like a 10kg weight at 400 in/s
-		def.AddAmmoType("CombineCannon",	DMG_BULLET,					TRACER_LINE,			"sk_npc_dmg_gunship_to_plr", "sk_npc_dmg_gunship", NULL, BULLET_SPEED(750),	BULLET_MASS(5200), BULLET_DIAMETER(10), 2.0 * 750 * 12, AMMO_FORCE_DROP_IF_CARRIED | AMMO_TRACE_HULL | AMMO_DARK_ENERGY ); // hit like a 2.0kg weight at 750 ft/s
-		def.AddAmmoType("AirboatGun",		DMG_AIRBOAT,				TRACER_LINE,			"sk_plr_dmg_airboat",		"sk_npc_dmg_airboat",		NULL,			BULLET_SPEED(750), BULLET_MASS(150),	BULLET_DIAMETER(6), BULLET_IMPULSE(2080, 750),  AMMO_DARK_ENERGY );
-		def.AddAmmoType("StriderMinigun",	DMG_BULLET,					TRACER_LINE,			"sk_npc_dmg_strider_to_plr", "sk_npc_dmg_strider", "sk_npc_dmg_strider", BULLET_SPEED(750), BULLET_MASS(5200),	BULLET_DIAMETER(15), 1.0 * 750 * 12, AMMO_FORCE_DROP_IF_CARRIED | AMMO_TRACE_HULL | AMMO_DARK_ENERGY ); // hit like a 1.0kg weight at 750 ft/s
-		def.AddAmmoType("StriderMinigunDirect", DMG_BULLET,				TRACER_LINE,			"sk_npc_dmg_strider_to_plr_direct", "sk_npc_dmg_strider_direct", "sk_npc_dmg_strider_direct", BULLET_SPEED(750),  BULLET_MASS(5200), BULLET_DIAMETER(6), 0.25 * 750 * 12, AMMO_FORCE_DROP_IF_CARRIED | AMMO_TRACE_HULL | AMMO_DARK_ENERGY ); // hit like a 0.2kg weight at 750 ft/s
-		def.AddAmmoType("HelicopterGun",	DMG_BULLET,					TRACER_LINE_AND_WHIZ,	"sk_npc_dmg_helicopter_to_plr", "sk_npc_dmg_helicopter",	"sk_max_smg1",	BULLET_SPEED(750), BULLET_MASS(150),	BULLET_DIAMETER(1), BULLET_IMPULSE(2080, 750), AMMO_FORCE_DROP_IF_CARRIED | AMMO_TRACE_HULL | AMMO_INTERPRET_PLRDAMAGE_AS_DAMAGE_TO_PLAYER | AMMO_DARK_ENERGY);
+		def.AddAmmoType("CombineCannon",	DMG_BULLET,					TRACER_LINE,			"sk_npc_dmg_gunship_to_plr", "sk_npc_dmg_gunship", NULL, BULLET_SPEED(667),	BULLET_MASS(5200), BULLET_DIAMETER(10), 2.0 * 750 * 12, AMMO_FORCE_DROP_IF_CARRIED | AMMO_TRACE_HULL | AMMO_DARK_ENERGY ); // hit like a 2.0kg weight at 750 ft/s
+		def.AddAmmoType("AirboatGun",		DMG_AIRBOAT,				TRACER_LINE,			"sk_plr_dmg_airboat",		"sk_npc_dmg_airboat",		NULL,			BULLET_SPEED(667), BULLET_MASS(150),	BULLET_DIAMETER(6), BULLET_IMPULSE(2080, 750),  AMMO_DARK_ENERGY );
+		def.AddAmmoType("StriderMinigun",	DMG_BULLET,					TRACER_LINE,			"sk_npc_dmg_strider_to_plr", "sk_npc_dmg_strider", "sk_npc_dmg_strider", BULLET_SPEED(667), BULLET_MASS(5200),	BULLET_DIAMETER(15), 1.0 * 750 * 12, AMMO_FORCE_DROP_IF_CARRIED | AMMO_TRACE_HULL | AMMO_DARK_ENERGY ); // hit like a 1.0kg weight at 750 ft/s
+		def.AddAmmoType("StriderMinigunDirect", DMG_BULLET,				TRACER_LINE,			"sk_npc_dmg_strider_to_plr_direct", "sk_npc_dmg_strider_direct", "sk_npc_dmg_strider_direct", BULLET_SPEED(667),  BULLET_MASS(5200), BULLET_DIAMETER(6), 0.25 * 750 * 12, AMMO_FORCE_DROP_IF_CARRIED | AMMO_TRACE_HULL | AMMO_DARK_ENERGY ); // hit like a 0.2kg weight at 750 ft/s
+		def.AddAmmoType("HelicopterGun",	DMG_BULLET,					TRACER_LINE_AND_WHIZ,	"sk_npc_dmg_helicopter_to_plr", "sk_npc_dmg_helicopter",	"sk_max_smg1",	BULLET_SPEED(667), BULLET_MASS(150),	BULLET_DIAMETER(1), BULLET_IMPULSE(2080, 750), AMMO_FORCE_DROP_IF_CARRIED | AMMO_TRACE_HULL | AMMO_INTERPRET_PLRDAMAGE_AS_DAMAGE_TO_PLAYER | AMMO_DARK_ENERGY);
 		def.AddAmmoType("AR2AltFire",		DMG_DISSOLVE,				TRACER_NONE,			0, 0, "sk_max_ar2_altfire", 0, 0, 0, 0, 0 );
 		def.AddAmmoType("Grenade",			DMG_BURN,					TRACER_NONE,			"sk_plr_dmg_grenade",		"sk_npc_dmg_grenade",		"sk_max_grenade",	0, 0, 0, 0, 0 );
 #ifdef HL2_EPISODIC

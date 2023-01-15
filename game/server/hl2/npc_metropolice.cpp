@@ -55,6 +55,8 @@
 #define VEHICLE_PREDICT_ACCELERATION		333.0f
 #define VEHICLE_PREDICT_MAX_SPEED			600.0f
 
+#define	METROPOLICE_SUPPRESS_TIME	10.0f
+
 #define	METROPOLICE_MAX_WARNINGS	3
 
 #define	METROPOLICE_BODYGROUP_MANHACK	1
@@ -213,6 +215,8 @@ DEFINE_FIELD(m_nIdleChatterType, FIELD_INTEGER),
 
 DEFINE_FIELD(m_bSimpleCops, FIELD_BOOLEAN),
 DEFINE_FIELD(m_flLastHitYaw, FIELD_FLOAT),
+
+DEFINE_FIELD(m_flNextSuppressCheck, FIELD_TIME),
 
 DEFINE_FIELD(m_bPlayerTooClose, FIELD_BOOLEAN),
 DEFINE_FIELD(m_bKeepFacingPlayer, FIELD_BOOLEAN),
@@ -1211,6 +1215,26 @@ CBaseEntity *CNPC_MetroPolice::GetShootTarget()
 	return pVehicle ? pVehicle : pEnemy;
 }
 
+//-----------------------------------------------------------------------------
+// Purpose: Headshot zombies or suppress enemies
+//-----------------------------------------------------------------------------
+#define COMBINE_HEADSHOT_FREQUENCY	2 // one in this many shots at a zombie will be aimed at the zombie's head
+Vector CNPC_MetroPolice::GetActualShootPosition(const Vector &shootOrigin)
+{
+	if (GetEnemy() && GetEnemy()->Classify() == CLASS_ZOMBIE && random->RandomInt(1, COMBINE_HEADSHOT_FREQUENCY) == 1)
+	{
+		return GetEnemy()->HeadTarget(shootOrigin);
+	}
+
+	CBaseEntity *pEnemy = GetEnemy();
+
+	if (GetEnemy() && IsCurSchedule(SCHED_SHOOT_ENEMY_COVER))
+	{
+		return GetEnemies()->LastSeenPosition(pEnemy) + (pEnemy->GetViewOffset()*0.75);
+	}
+
+	return BaseClass::GetActualShootPosition(shootOrigin);
+}
 
 //-----------------------------------------------------------------------------
 // Set up the shot regulator based on the equipped weapon
@@ -3533,6 +3557,26 @@ int CNPC_MetroPolice::SelectCombatSchedule()
 		}
 	}
 
+	if (GetEnemy() && !HasCondition(COND_SEE_ENEMY))
+	{
+		// We don't see our enemy. If it hasn't been long since I last saw him,
+		// and he's pretty close to the last place I saw him, throw a grenade in 
+		// to flush him out. A wee bit of cheating here...
+
+		float flTime;
+//		float flDist;
+
+		flTime = gpGlobals->curtime - GetEnemies()->LastTimeSeen(GetEnemy());
+//		flDist = (GetEnemy()->GetAbsOrigin() - GetEnemies()->LastSeenPosition(GetEnemy())).Length();
+
+		// One guy will suppress the enemy, letting others flank
+		if (CanSuppressEnemy(false) && flTime <= METROPOLICE_SUPPRESS_TIME && OccupyStrategySlotRange(SQUAD_SLOT_POLICE_COVERING_FIRE1, SQUAD_SLOT_POLICE_COVERING_FIRE2))
+		{
+			m_Sentences.Speak("METROPOLICE_SHOOT_COVER");
+			return SCHED_SHOOT_ENEMY_COVER;
+		}
+	}
+
 	if (HasCondition(COND_ENEMY_OCCLUDED))
 	{
 		if (GetEnemy() && !(GetEnemy()->GetFlags() & FL_NOTARGET))
@@ -4044,10 +4088,9 @@ void CNPC_MetroPolice::TraceAttack(const CTakeDamageInfo &info, const Vector &ve
 					}
 					else if (subInfo.GetDamage() >= (float)GetHealth())
 					{
-						subInfo.SetDamage(1);
+						subInfo.SetDamage(3);
 						pHL2GameRules->NPC_TakenAdditionalShots(1);
-						m_flAdditionalShots++;
-						m_flAdditionalShots++;
+						m_flAdditionalShots += 3;
 					}
 				}
 			}
@@ -5177,6 +5220,55 @@ bool CNPC_MetroPolice::CanDeployManhack(void)
 
 	return true;
 }
+
+//-----------------------------------------------------------------------------
+// Check if we are suppressing a valid target and if there is enough space
+// infront of our weapon. Prevents soldiers from suppressing melee enemies or
+// shooting against a wall in front of them.
+//-----------------------------------------------------------------------------
+#if 1
+bool CNPC_MetroPolice::CanSuppressEnemy(bool bUseFreeKnowledge)
+{
+	if (gpGlobals->curtime < m_flNextSuppressCheck)
+		return false;
+
+	if (!GetEnemy())
+		return false;
+
+	if (HasCondition(COND_WEAPON_BLOCKED_BY_FRIEND))
+		return false;
+
+	CBaseEntity *pEnemy = GetEnemy();
+
+	if (!pEnemy->IsPlayer() && (!pEnemy->IsNPC()))
+		return false;
+
+	Vector vecTarget = GetEnemies()->LastSeenPosition(pEnemy) + (pEnemy->GetViewOffset()*0.75);
+
+	// Trace a hull
+	trace_t tr;
+
+	Vector mins(-1, -1, -1);
+	Vector maxs(1, 1, 1);
+
+	Vector vShootPosition = EyePosition();
+
+	// Trace a hull about the size of the bullet.
+	UTIL_TraceHull(vShootPosition, vecTarget, mins, maxs, MASK_SHOT, this, COLLISION_GROUP_NONE, &tr);
+
+	//If the bullet can travel at least 75% of the distance to the enemy then let the NPC shoot it.
+	if (tr.fraction >= 0.5)
+	{
+		// Target is valid
+		return true;
+	}
+
+	// Check again later
+	m_flNextSuppressCheck = gpGlobals->curtime + 0.5f;
+	return false;
+}
+#endif
+
 
 //-----------------------------------------------------------------------------
 // Purpose: Allows for modification of the interrupt mask for the current schedule.

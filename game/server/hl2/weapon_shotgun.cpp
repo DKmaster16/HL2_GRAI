@@ -193,10 +193,11 @@ void CWeaponShotgun::FireNPCPrimaryAttack( CBaseCombatCharacter *pOperator, bool
 	if ( !npc->IsMoving() && FClassnameIs(GetOwner(), "npc_combine_s") || (GetOwner()->Classify() == CLASS_PLAYER_ALLY_VITAL) )
 	{
 		// Shotgunner stands still while shooting, that means he has to do a pump animation after each shot, so we let him fire double barreled shot.
-		pOperator->FireBullets(sk_plr_num_shotgun_pellets.GetInt() * 2, vecShootOrigin, vecShootDir, GetBulletSpread()*1.75f, MAX_TRACE_LENGTH, m_iPrimaryAmmoType, 0);
+		pOperator->FireBullets(sk_plr_num_shotgun_pellets.GetInt(), vecShootOrigin, vecShootDir, GetBulletSpread()*1.75f, MAX_TRACE_LENGTH, m_iPrimaryAmmoType, 0);
 		WeaponSound(WPN_DOUBLE);
 		m_iClip1 = m_iClip1 - 2;
 		WeaponSound(SPECIAL1);
+		pOperator->FireBullets(sk_plr_num_shotgun_pellets.GetInt(), vecShootOrigin, vecShootDir, GetBulletSpread()*1.75f, MAX_TRACE_LENGTH, m_iPrimaryAmmoType, 0);
 	}
 	else
 	{
@@ -525,7 +526,7 @@ void CWeaponShotgun::PrimaryAttack( void )
 	pPlayer->FireBullets( sk_plr_num_shotgun_pellets.GetInt() - 1, vecSrc, vecAiming, GetBulletSpread(), MAX_TRACE_LENGTH, m_iPrimaryAmmoType, 0, -1, -1, 0, NULL, true, true );
 	pPlayer->FireBullets( 1, vecSrc, vecAiming, GetBulletSpread() * 1.75f, MAX_TRACE_LENGTH, m_iPrimaryAmmoType, 0);
 	
-	pPlayer->ViewPunch( QAngle( random->RandomFloat( -3, -2 ), random->RandomFloat( -3, 3 ), 0 ) );	// (-2, -1) (-2, 2)
+	pPlayer->ViewPunch( QAngle( random->RandomFloat( -3, -1 ), random->RandomFloat( -2, 2 ), 0 ) );	// (-2, -1) (-2, 2)
 
 	CSoundEnt::InsertSound( SOUND_COMBAT, GetAbsOrigin(), SOUNDENT_VOLUME_SHOTGUN, 0.2, GetOwner() );
 
@@ -580,14 +581,14 @@ void CWeaponShotgun::SecondaryAttack( void )
 	Vector vecSrc	 = pPlayer->Weapon_ShootPosition();
 	Vector vecAiming = pPlayer->GetAutoaimVector( AUTOAIM_SCALE_DEFAULT );	
 
-	// Bullet spread 50% larger than normal (final result = 9 Degrees for the player, still a bit better than vanilla)
-	pPlayer->FireBullets(sk_plr_num_shotgun_pellets.GetInt() *2, vecSrc, vecAiming, GetBulletSpread() * 1.75f, MAX_TRACE_LENGTH, m_iPrimaryAmmoType, 0, -1, -1, 0, NULL, false, false);
+	// Bullet spread 75% larger than normal (final result = 10.5 Degrees for the player, tiny bit more than vanilla)
+	pPlayer->FireBullets(sk_plr_num_shotgun_pellets.GetInt() * 2, vecSrc, vecAiming, GetBulletSpread() * 1.75f, MAX_TRACE_LENGTH, m_iPrimaryAmmoType, 0, -1, -1, 0, NULL, false, false);
 	pPlayer->ViewPunch( QAngle(random->RandomFloat( -6, 6 ),0,0) );
 
 	pPlayer->SetMuzzleFlashTime( gpGlobals->curtime + 1.0 );
 
-	CSoundEnt::InsertSound( SOUND_COMBAT, GetAbsOrigin(), SOUNDENT_VOLUME_SHOTGUN, 0.2 );
-
+	CSoundEnt::InsertSound( SOUND_COMBAT, GetAbsOrigin(), SOUNDENT_VOLUME_SHOTGUN, 0.2, GetOwner() );
+	
 	if (!m_iClip1 && pPlayer->GetAmmoCount(m_iPrimaryAmmoType) <= 0)
 	{
 		// HEV suit - indicate out of ammo condition

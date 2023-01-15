@@ -47,7 +47,7 @@ public:
 	bool			CheckCanThrowGrenade( const Vector &vecTarget );
 	virtual	bool	CanGrenadeEnemy( bool bUseFreeKnowledge = true );
 	virtual bool	CanAltFireEnemy( bool bUseFreeKnowledge );
-//	virtual bool	CanSuppressEnemy(bool bUseFreeKnowledge);
+	virtual bool	CanSuppressEnemy( bool bUseFreeKnowledge = true );	// Added suppressive fire feature
 	bool			FindDecoyObject(void);
 	int				GetGrenadeConditions( float flDot, float flDist );
 	int				RangeAttack2Conditions( float flDot, float flDist ); // For innate grenade attack
@@ -225,6 +225,7 @@ private:
 		TASK_COMBINE_IGNORE_ATTACKS,
 		TASK_COMBINE_SIGNAL_BEST_SOUND,
 		TASK_COMBINE_DEFER_SQUAD_GRENADES,
+		TASK_COMBINE_DEFER_SQUAD_SUPPRESSION,
 		TASK_COMBINE_CHASE_ENEMY_CONTINUOUSLY,
 		TASK_COMBINE_DIE_INSTANTLY,
 		TASK_COMBINE_PLAY_SEQUENCE_FACE_ALTFIRE_TARGET,
@@ -293,7 +294,7 @@ private:
 	float			m_flNextPainSoundTime;
 	float			m_flNextAlertSoundTime;
 	float			m_flNextGrenadeCheck;
-	float			m_flNextSuppressCheck;
+	float			m_flNextSuppressCheck;	// Added suppressive fire feature
 	float			m_flNextLostSoundTime;
 	float			m_flAlertPatrolTime;		// When to stop doing alert patrol
 	float			m_flNextAltFireTime;		// Next time to begin considering alt-fire attack.
@@ -301,7 +302,7 @@ private:
 //	float			m_flDangerCheck;
 	float			m_flDangerSignalTime;
 	
-	int						m_iNumEnemies;
+//	int						m_iNumEnemies;
 
 	int				m_nShots;
 	float			m_flShotDelay;
@@ -326,7 +327,7 @@ public:
 	bool			m_fIsElite;
 	bool			m_fIsGuard;
 	Vector			m_vecAltFireTarget;
-//	Vector			m_vecSuppressTarget;
+	Vector			m_vecSuppressTarget;
 
 
 	int				m_iTacticalVariant;

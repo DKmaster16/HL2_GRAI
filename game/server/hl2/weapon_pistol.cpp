@@ -29,6 +29,7 @@
 #define	PISTOL_ACCURACY_MAXIMUM_PENALTY_TIME	1.0f	// Maximum penalty to deal out
 
 ConVar	pistol_use_new_accuracy( "pistol_use_new_accuracy", "1" );
+ConVar	sk_pistol_burstdmg( "sk_pistol_burstdmg", "1" );
 
 //-----------------------------------------------------------------------------
 // CWeaponPistol
@@ -185,6 +186,8 @@ BEGIN_DATADESC( CWeaponPistol )
 	DEFINE_FIELD( m_nNumShotsFired,			FIELD_INTEGER ),
 	DEFINE_FIELD( m_iBurstSize,				FIELD_INTEGER ),
 	DEFINE_FIELD( m_iFireMode,				FIELD_INTEGER ),
+//	DEFINE_FIELD( m_SemiAmmo,			FIELD_INTEGER ),
+//	DEFINE_FIELD( m_BurstAmmo,		FIELD_INTEGER ),
 
 END_DATADESC()
 
@@ -297,25 +300,26 @@ void CWeaponPistol::PrimaryAttack( void )
 	}
 
 	m_flLastAttackTime = gpGlobals->curtime;
-	CSoundEnt::InsertSound( SOUND_COMBAT, GetAbsOrigin(), SOUNDENT_VOLUME_PISTOL, 0.2, GetOwner() );
+	CSoundEnt::InsertSound( SOUND_COMBAT|SOUND_CONTEXT_GUNFIRE, GetAbsOrigin(), SOUNDENT_VOLUME_PISTOL, 0.2, GetOwner() );
 
 	CBasePlayer *pOwner = ToBasePlayer( GetOwner() );
 
-	BaseClass::PrimaryAttack();
+//	BaseClass::PrimaryAttack();
 
 	switch (m_iFireMode)
 	{
 	case FIREMODE_SEMI:
+		BaseClass::PrimaryAttack();
 		m_flSoonestPrimaryAttack = gpGlobals->curtime + PISTOL_FASTEST_REFIRE_TIME;
 		break;
 
 	case FIREMODE_3RNDBURST:
-		m_iBurstSize = GetBurstSize() - 1;	// We fire first round immediately
+		m_iBurstSize = GetBurstSize();	// We will fire those rounds in the BurstFireRemaining
 		WeaponSound(SINGLE_NPC);
 		m_flNextPrimaryAttack = 9999.9f;	// Release the trigger before firing next burst
 		m_flNextSecondaryAttack = gpGlobals->curtime + GetBurstCycleRate();
 		m_flSoonestPrimaryAttack = gpGlobals->curtime + GetBurstCycleRate();
-		m_fNextBurstShot = gpGlobals->curtime + GetFireRate();
+		m_fNextBurstShot = gpGlobals->curtime;	// We fire first round immediately
 		break;
 	}
 
@@ -382,7 +386,7 @@ void CWeaponPistol::BurstFireRemaining(void)
 			BaseClass::PrimaryAttack();
 			Vector vecSrc = pPlayer->Weapon_ShootPosition();
 			Vector vecAiming = pPlayer->GetAutoaimVector(AUTOAIM_SCALE_DEFAULT);
-			pPlayer->FireBullets(1, vecSrc, vecAiming, GetBulletSpread(), MAX_TRACE_LENGTH, m_iPrimaryAmmoType, 1);
+			pPlayer->FireBullets(1, vecSrc, vecAiming, GetBulletSpread(), MAX_TRACE_LENGTH, m_iPrimaryAmmoType, 1, -1, -1, sk_pistol_burstdmg.GetFloat());
 //			pPlayer->DoMuzzleFlash();
 			--m_iClip1;
 			--m_iBurstSize;
@@ -547,9 +551,9 @@ const WeaponProficiencyInfo_t *CWeaponPistol::GetProficiencyValues()
 {
 	static WeaponProficiencyInfo_t proficiencyTable[] =
 	{
-		{ 7.0, 1.0 },	//poor 14/21
+		{ 7.0, 1.0 },		//poor 14/21
 		{ 25 / 6, 0.75 },	//average 8.3/12.5
-		{ 10 / 3, 0.75 },	//good	6.6/10
+		{ 10 / 3, 0.75 },	//good	6.7/10
 		{ 3, 0.75 },	//very good	6/9
 		{ 1.0, 1.0 },	//perfect 2/3
 	};

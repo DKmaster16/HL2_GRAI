@@ -132,8 +132,9 @@ static const char *pMoanSounds[] =
 //-----------------------------------------------------------------------------
 // Skill settings.
 //-----------------------------------------------------------------------------
-ConVar sk_zombie_poison_health( "sk_zombie_poison_health", "0");
-ConVar sk_zombie_poison_dmg_spit( "sk_zombie_poison_dmg_spit","0");
+ConVar sk_zombie_poison_health( "sk_zombie_poison_health", "0" );
+ConVar sk_zombie_poison_dmg_spit( "sk_zombie_poison_dmg_spit","0" );
+ConVar sk_poison_zombie_speed_scale( "sk_poison_zombie_speed_scale", "1.0" );
 
 class CNPC_PoisonZombie : public CAI_BlendingHost<CNPC_BaseZombie>
 {
@@ -823,6 +824,11 @@ void CNPC_PoisonZombie::EvacuateNest( bool bExplosion, float flDamage, CBaseEnti
 //-----------------------------------------------------------------------------
 void CNPC_PoisonZombie::PrescheduleThink( void )
 {
+	if (IsAlive())	//&& GetNavigator()->IsGoalActive() && m_flGroundSpeed != 0
+	{
+		m_flPlaybackRate = sk_poison_zombie_speed_scale.GetFloat();
+	}
+
 	if ( HasCondition( COND_NEW_ENEMY ) )
 	{
 		m_flNextCrabThrowTime = gpGlobals->curtime + random->RandomInt( ZOMBIE_THROW_FIRST_MIN_DELAY, ZOMBIE_THROW_FIRST_MAX_DELAY );

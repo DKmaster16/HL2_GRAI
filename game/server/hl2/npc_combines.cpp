@@ -322,16 +322,7 @@ void CNPC_CombineS::TraceAttack(const CTakeDamageInfo &info, const Vector &vecDi
 	}
 
 	float healthRatio = (float)GetHealth() / (float)GetMaxHealth();
-	/*
-	if (healthRatio > 0.35 && !info.GetAmmoType() == GetAmmoDef()->Index("357") && !m_bLimbShot)
-	{
-		SetBloodColor(BLOOD_COLOR_MECH);
-	}
-	else
-	{
-		SetBloodColor(BLOOD_COLOR_RED);
-	}
-	*/
+
 	if (m_bHeadShot)
 	{
 		if (healthRatio > 0.35 && info.GetAmmoType() != GetAmmoDef()->Index("357"))
@@ -387,13 +378,13 @@ void CNPC_CombineS::TraceAttack(const CTakeDamageInfo &info, const Vector &vecDi
 					{
 						infoCopy.SetDamage(1);
 						pHL2GameRules->NPC_TakenAdditionalShots(1);
-						m_flAdditionalShots += 4;
+						m_flAdditionalShots += sk_combine_max_additional_ammo_shots.GetInt();
 					}
 					else if (infoCopy.GetDamage() >= (float)GetHealth())
 					{
 						infoCopy.SetDamage(1);
 						pHL2GameRules->NPC_TakenAdditionalShots(1);
-						m_flAdditionalShots += 2;
+						m_flAdditionalShots += 3;
 					}
 				}
 			}

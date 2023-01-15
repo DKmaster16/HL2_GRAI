@@ -585,6 +585,10 @@ int CWeaponSMG1::WeaponRangeAttack2Condition()
 	//  Get target vector
 	// --------------------------------------
 	Vector vecTarget;
+
+	Vector forward, right;
+	AngleVectors(npcOwner->GetLocalAngles(), &forward, &right, NULL);
+
 	if (random->RandomInt(0,1))
 	{
 		// magically know where they are
@@ -595,6 +599,11 @@ int CWeaponSMG1::WeaponRangeAttack2Condition()
 		// toss it to where you last saw them
 		vecTarget = vecEnemyLKP;
 	}
+
+	// toss a little bit to the left or right, not right down on the enemy's bean (head). 
+	vecTarget += right * (random->RandomFloat(-8, 8) + random->RandomFloat(-16, 16));
+	vecTarget += forward * (random->RandomFloat(-8, 8) + random->RandomFloat(-16, 16));
+
 	// vecTarget = m_vecEnemyLKP + (pEnemy->BodyTarget( GetLocalOrigin() ) - pEnemy->GetLocalOrigin());
 	// estimate position
 	// vecTarget = vecTarget + pEnemy->m_vecVelocity * 2;
@@ -629,8 +638,24 @@ int CWeaponSMG1::WeaponRangeAttack2Condition()
 	// FIXME: speed is based on difficulty...
 
 	Vector vecToss = VecCheckThrow( this, npcOwner->GetLocalOrigin() + Vector(0,0,60), vecTarget, 600.0, 0.5 );
+
+/*	trace_t tr;
+
+	Vector mins(-4, -4, -4);
+	Vector maxs(4, 4, 4);
+
+	Vector vShootPosition = EyePosition();
+
+	// Trace a hull about the size of the grenade.
+	UTIL_TraceHull(vShootPosition, vecTarget, mins, maxs, MASK_SHOT, this, COLLISION_GROUP_NONE, &tr);
+
+	float flLength = (vShootPosition - vecTarget).Length();
+
+	flLength *= tr.fraction;*/
+	// && tr.fraction >= 0.7
 	if ( vecToss != vec3_origin )
 	{
+		// Target is valid
 		m_vecTossVelocity = vecToss;
 
 		// don't check again for a while.
@@ -652,10 +677,10 @@ const WeaponProficiencyInfo_t *CWeaponSMG1::GetProficiencyValues()
 {
 	static WeaponProficiencyInfo_t proficiencyTable[] =
 	{
-		{ 100 / 18,	0.75	},	//poor	16.6/22.2
-		{ 25 / 6,	0.75	},	//average	12.5/16.6
-		{ 25 / 9,	0.75	},	//good	8.33/11.1
-		{ 5 / 3,	0.75	},	//very good	5/6.6
+		{ 100 / 18,	0.65	},	//poor	16.6/22.2
+		{ 25 / 6,	0.65	},	//average	12.5/16.6
+		{ 25 / 9,	0.65	},	//good	8.33/11.1
+		{ 5 / 3,	0.65	},	//very good	5/6.6
 		{ 1.00,		1.00	},	//perfect 3/4
 	};
 

@@ -84,6 +84,10 @@ public:
 	// Can't move and shoot when the enemy is an airboat
 	virtual bool ShouldMoveAndShoot();
 
+	virtual bool	CanSuppressEnemy(bool bUseFreeKnowledge);	// Added suppressive fire feature
+
+	Vector 			GetActualShootPosition(const Vector &shootOrigin);
+
 	// TraceAttack
 	virtual void TraceAttack( const CTakeDamageInfo &info, const Vector &vecDir, trace_t *ptr, CDmgAccumulator *pAccumulator );
 
@@ -436,6 +440,8 @@ private:
 	float			m_flLastPhysicsFlinchTime;
 	float			m_flLastDamageFlinchTime;
 	
+	float			m_flNextSuppressCheck;	// Added suppressive fire feature
+
 	// Sentences
 	float			m_flNextPainSoundTime;
 	float			m_flNextLostSoundTime;

@@ -683,7 +683,7 @@ void CWeaponCrossbow::FireBolt( void )
 	WeaponSound( SINGLE );
 	WeaponSound( SPECIAL2 );
 
-	CSoundEnt::InsertSound( SOUND_COMBAT, GetAbsOrigin(), 200, 0.2 );
+	CSoundEnt::InsertSound( SOUND_COMBAT, GetAbsOrigin(), 200, 0.2, pOwner );
 
 	SendWeaponAnim( ACT_VM_PRIMARYATTACK );
 

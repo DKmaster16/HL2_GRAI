@@ -1766,7 +1766,7 @@ int CNPC_Alyx::SelectSchedule(void)
 //-----------------------------------------------------------------------------
 int CNPC_Alyx::SelectScheduleDanger(void)
 {
-	if (HasCondition(COND_HEAR_DANGER) && m_ActBusyBehavior.IsActive() && m_ActBusyBehavior.IsCombatActBusy())
+	if (HasCondition(COND_HEAR_DANGER))
 	{
 		CSound *pSound;
 		pSound = GetBestSound(SOUND_DANGER);

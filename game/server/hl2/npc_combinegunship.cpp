@@ -941,7 +941,7 @@ void CNPC_CombineGunship::StartGroundAttack( void )
 
 	Vector	endpos = GetGroundAttackHitPosition();
 	
-	CSoundEnt::InsertSound ( SOUND_DANGER, endpos, 1024, 0.5f );
+	CSoundEnt::InsertSound ( SOUND_DANGER, endpos, 1024, 0.5f, this );
 
 	if ( hl2_episodic.GetBool() == true )
 	{

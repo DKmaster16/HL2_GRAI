@@ -1449,7 +1449,7 @@ bool CAI_ActBusyBehavior::QueryHearSound( CSound *pSound )
 	// player fires shots at their feet.
 	if ( pSound->IsSoundType( SOUND_COMBAT ) || pSound->IsSoundType( SOUND_BULLET_IMPACT ) )
 	{
-		if ( GetOuter()->IRelationType( pSound->m_hOwner ) == D_LI )
+		if ( pSound->m_hOwner && GetOuter()->IRelationType( pSound->m_hOwner ) == D_LI )
 			return false;
 	}
 

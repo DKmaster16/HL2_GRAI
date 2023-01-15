@@ -58,7 +58,7 @@ ConVar	sk_antlion_buckshot_damage_scale("sk_antlion_buckshot_damage_scale", "1.3
 // workers
 #define ANTLION_WORKERS_BURST() (true)
 #define ANTLION_WORKER_BURST_IS_POISONOUS() (true)
-#endif
+
 ConVar  sk_antlion_worker_burst_damage( "sk_antlion_worker_burst_damage", "50", FCVAR_NONE, "How much damage is inflicted by an antlion worker's death explosion." );
 ConVar	sk_antlion_worker_health( "sk_antlion_worker_health", "0", FCVAR_NONE, "Hitpoints of an antlion worker. If 0, will use base antlion hitpoints."   );
 ConVar  sk_antlion_worker_spit_speed( "sk_antlion_worker_spit_speed", "0", FCVAR_NONE, "Speed at which an antlion spit grenade travels." );
@@ -67,7 +67,7 @@ ConVar  sk_antlion_worker_spit_interval_max("sk_antlion_worker_spit_interval_max
 
 // This must agree with the AntlionWorkerBurstRadius() function!
 ConVar  sk_antlion_worker_burst_radius( "sk_antlion_worker_burst_radius", "160", FCVAR_NONE, "Effect radius of an antlion worker's death explosion."  );
-
+#endif
 
 ConVar  g_test_new_antlion_jump( "g_test_new_antlion_jump", "1", FCVAR_ARCHIVE );
 ConVar	antlion_easycrush( "antlion_easycrush", "1" );
@@ -2465,6 +2465,7 @@ int CNPC_Antlion::SelectSchedule( void )
 					SetNextAttack( gpGlobals->curtime + random->RandomFloat( 2.0f, 4.0f ) );
 					return SCHED_ANTLION_TAKE_COVER_FROM_ENEMY;
 				}
+#ifdef HL2_EPISODIC
 
 				// Range attack if we're able
 				if ( HasCondition( COND_CAN_RANGE_ATTACK1 ) )
@@ -2481,7 +2482,9 @@ int CNPC_Antlion::SelectSchedule( void )
 						return SCHED_ANTLION_WORKER_RANGE_ATTACK1;
 					}
 				}
-				
+
+#endif
+
 				// Back up, we're too near an enemy or can't see them
 				if ( HasCondition( COND_TOO_CLOSE_TO_ATTACK ) || HasCondition( COND_ENEMY_OCCLUDED ) )
 					return SCHED_ESTABLISH_LINE_OF_FIRE;
@@ -4044,9 +4047,6 @@ bool CNPC_Antlion::ShouldGib( const CTakeDamageInfo &info )
 #endif
 
 	if ( info.GetDamageType() & (DMG_ALWAYSGIB|DMG_BLAST) )
-		return true;
-	
-	if ( info.GetDamageType() & (DMG_BUCKSHOT) && m_nSustainedDamage > sk_antlion_health.GetFloat() * 0.2 )
 		return true;
 
 	if ( m_iHealth < -20 )

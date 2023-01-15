@@ -121,7 +121,7 @@ void CNPC_Barney::Spawn( void )
 {
 	Precache();
 
-	m_iHealth = sk_barney_health.GetFloat();
+	m_iHealth = 80;
 
 	m_iszIdleExpression = MAKE_STRING("scenes/Expressions/BarneyIdle.vcd");
 	m_iszAlertExpression = MAKE_STRING("scenes/Expressions/BarneyAlert.vcd");

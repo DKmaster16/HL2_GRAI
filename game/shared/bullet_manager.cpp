@@ -76,7 +76,7 @@ static void BulletStopSpeedCallback(ConVar *var, const char *pOldString)
 	else if (BulletManager())
 		BulletManager()->UpdateBulletStopSpeed();
 }
-ConVar sv_bullet_stop_speed("sv_bullet_stop_speed", "5000");
+ConVar sv_bullet_stop_speed("sv_bullet_stop_speed", "700");
 //ConVar sv_bullet_speed_forced("sv_bullet_speed_forced", "0");
 
 
@@ -167,7 +167,7 @@ CSimulatedBullet::CSimulatedBullet(FireBulletsInfo_t info, Vector newdir, CBaseE
 
 	// Basic information about the bullet (pInfictor->IsNPC() && sv_bullet_speed_forced.GetInt() > 0) 
 	m_flInitialBulletSpeed = m_flBulletSpeed = GetAmmoDef()->GetAmmoOfIndex(bulletinfo.m_iAmmoType)->bulletSpeed;
-	m_flBulletSpeed = m_flInitialBulletSpeed + RandomFloat(-25, 25);
+	m_flBulletSpeed = m_flInitialBulletSpeed + random->RandomFloat(-25, 25);
 	m_flInitialBulletMass = m_flBulletMass = GetAmmoDef()->GetAmmoOfIndex(bulletinfo.m_iAmmoType)->bulletMass;
 	m_flBulletDiameter = GetAmmoDef()->GetAmmoOfIndex(bulletinfo.m_iAmmoType)->bulletDiameter;
 	m_vecDirShooting = newdir;
@@ -818,7 +818,17 @@ void CSimulatedBullet::EntityImpact(trace_t &ptr)
 
 		m_hLastHit = ptr.m_pEnt;
 
-		float flMaxDamage = g_pGameRules->GetAmmoDamage(p_eInfictor, ptr.m_pEnt, bulletinfo.m_iAmmoType);
+		float flMaxDamage;
+
+		if ( bulletinfo.m_flDamage == 0 )
+		{
+			flMaxDamage = g_pGameRules->GetAmmoDamage(p_eInfictor, ptr.m_pEnt, bulletinfo.m_iAmmoType);
+		}
+		else
+		{
+			flMaxDamage = bulletinfo.m_flDamage;
+		}
+
 		float flMinDamage = flMaxDamage * sk_bullet_glancing_blow_modifier.GetFloat();
 		
 		float flMaxForce = bulletinfo.m_flDamageForceScale;
@@ -861,7 +871,7 @@ void CSimulatedBullet::EntityImpact(trace_t &ptr)
 		ptr.m_pEnt->DispatchTraceAttack(dmgInfo, bulletinfo.m_vecDirShooting, &ptr);
 
 #ifdef GAME_DLL
-		ApplyMultiDamage(); //It's requried
+		ApplyMultiDamage(); //It's required
 
 		if (GetAmmoDef()->Flags(GetAmmoTypeIndex()) & AMMO_FORCE_DROP_IF_CARRIED)
 		{
