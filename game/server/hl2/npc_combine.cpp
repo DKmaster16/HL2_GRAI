@@ -913,7 +913,7 @@ void CNPC_Combine::StartTask( const Task_t *pTask )
 		break;
 
 	case TASK_COMBINE_SIGNAL_BEST_SOUND:
-		if (g_pGameRules->IsSkillLevel(SKILL_EASY) && gpGlobals->curtime > m_flDangerSignalTime && IsInSquad() && GetSquad()->NumMembers() > 2)
+		if (g_pGameRules->IsSkillLevel(SKILL_EASY) | g_pGameRules->IsSkillLevel(SKILL_STORY) && gpGlobals->curtime > m_flDangerSignalTime && IsInSquad() && GetSquad()->NumMembers() > 2)
 		{
 			CBasePlayer *pPlayer = AI_GetSinglePlayer();
 
@@ -3687,8 +3687,8 @@ bool CNPC_Combine::CanAltFireEnemy( bool bUseFreeKnowledge )
 //-----------------------------------------------------------------------------
 bool CNPC_Combine::CanGrenadeEnemy( bool bUseFreeKnowledge )
 {
-	if( IsElite() && g_pGameRules->IsSkillLevel(SKILL_EASY) )
-		return false;
+//	if (IsElite() && g_pGameRules->IsSkillLevel(SKILL_EASY || SKILL_STORY))
+//		return false;
 
 	CBaseEntity *pEnemy = GetEnemy();
 

@@ -2396,7 +2396,7 @@ void CNPC_BaseZombie::BecomeTorso( const Vector &vecTorsoForce, const Vector &ve
 
 	if ( !m_fIsHeadless )
 	{
-		if (!g_pGameRules->IsSkillLevel(SKILL_EASY))
+		if (!g_pGameRules->IsSkillLevel(SKILL_EASY) || g_pGameRules->IsSkillLevel(SKILL_STORY))
 		{
 			m_iMaxHealth = ZOMBIE_TORSO_HEALTH_FACTOR * m_iMaxHealth;
 		}

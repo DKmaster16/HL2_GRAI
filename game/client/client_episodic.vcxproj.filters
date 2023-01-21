@@ -46,6 +46,9 @@
     <Filter Include="VPC Scripts">
       <UniqueIdentifier>{A40EE377-781A-C6B9-0C7C-B3BE118D248E}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\GameUI">
+      <UniqueIdentifier>{fb9b742f-a7be-4f6b-a78d-f8097201c582}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\..\lib\public\bitmap.lib">
@@ -1895,6 +1898,9 @@
     <ClInclude Include="worldlight.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="gameui\optionssubdifficulty.h">
+      <Filter>Source Files\GameUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mp3player.cpp">
@@ -3420,6 +3426,9 @@
     </ClCompile>
     <ClCompile Include="worldlight.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gameui\optionssubdifficulty.cpp">
+      <Filter>Source Files\GameUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -159,7 +159,7 @@ protected:
 	float			m_flLastSawPlayerAt;	// Time at which we last saw the player
 	EHANDLE			m_hLastPlayerInVehicle;
 	EHANDLE			m_hSeagull;
-	bool			m_bHasPoop;
+//	bool			m_bHasPoop;
 
 	CNetworkVar( bool, m_bHeadlightIsOn );
 };

@@ -1019,7 +1019,8 @@ void CNPC_Strider::GatherConditions()
 
 		if( m_hPlayersMissile )
 		{
-			if ( !m_pMinigun->IsShooting() && GetEnemy() && GetEnemy()->IsPlayer() && g_pGameRules->IsSkillLevel(SKILL_EASY) )
+			if (!m_pMinigun->IsShooting() && GetEnemy() && GetEnemy()->IsPlayer() 
+				&& g_pGameRules->IsSkillLevel(SKILL_EASY) | g_pGameRules->IsSkillLevel(SKILL_STORY))
 			{
 				// If the missile is closer to the player than I am, stay suppressed. This is essentially
 				// allowing the missile to strike me if it was fired off before I started shooting. 

@@ -1475,13 +1475,13 @@ int CFastZombie::TranslateSchedule( int scheduleType )
 		{
 			return SCHED_FASTZOMBIE_MELEE_ATTACK3;
 		}
-		else if (g_pGameRules->IsSkillLevel(SKILL_EASY))
+		else if (g_pGameRules->IsSkillLevel(SKILL_MEDIUM))
 		{
-			return SCHED_FASTZOMBIE_MELEE_ATTACK1;
+			return SCHED_FASTZOMBIE_MELEE_ATTACK2;
 		}
 		else
 		{
-			return SCHED_FASTZOMBIE_MELEE_ATTACK2;
+			return SCHED_FASTZOMBIE_MELEE_ATTACK1; // EASY, STORY
 		}
 		break;
 

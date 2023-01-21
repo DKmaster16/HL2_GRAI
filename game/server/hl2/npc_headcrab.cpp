@@ -625,7 +625,7 @@ void CBaseHeadcrab::HandleAnimEvent( animevent_t *pEvent )
 			{
 				JumpAttack( false, m_vecCommittedJumpPos );
 			}
-			else if (g_pGameRules->IsSkillLevel(SKILL_EASY))
+			else if (g_pGameRules->IsSkillLevel(SKILL_EASY) || g_pGameRules->IsSkillLevel(SKILL_STORY))
 			{
 				TelegraphSound();
 
@@ -634,7 +634,7 @@ void CBaseHeadcrab::HandleAnimEvent( animevent_t *pEvent )
 				GetVectors(NULL, &right, NULL);
 
 				m_vecCommittedJumpPos = pEnemy->EyePosition();
-				m_vecCommittedJumpPos += right * random->RandomFloat(-80, 80);
+				m_vecCommittedJumpPos += right * random->RandomFloat(-60, 60);
 				
 				m_bCommittedToJump = true;
 			}
@@ -673,7 +673,7 @@ void CBaseHeadcrab::HandleAnimEvent( animevent_t *pEvent )
 		
 		if ( pEnemy )
 		{
-			if (g_pGameRules->IsSkillLevel(SKILL_EASY))
+			if (g_pGameRules->IsSkillLevel(SKILL_EASY) || g_pGameRules->IsSkillLevel(SKILL_STORY))
 			{
 				TelegraphSound();
 
@@ -682,7 +682,7 @@ void CBaseHeadcrab::HandleAnimEvent( animevent_t *pEvent )
 				GetVectors(NULL, &right, NULL);
 
 				m_vecCommittedJumpPos = pEnemy->EyePosition();
-				m_vecCommittedJumpPos += right * random->RandomFloat(-80, 80);
+				m_vecCommittedJumpPos += right * random->RandomFloat(-60, 60);
 
 				m_bCommittedToJump = true;
 			}
@@ -836,7 +836,7 @@ void CBaseHeadcrab::RunTask( const Task_t *pTask )
 					m_bAttackFailed = false;
 					m_flNextAttack = gpGlobals->curtime + 1.2f;
 				}
-				else if (g_pGameRules->IsSkillLevel(SKILL_EASY))
+				else if (g_pGameRules->IsSkillLevel(SKILL_EASY) || g_pGameRules->IsSkillLevel(SKILL_STORY))
 				{
 					m_flNextAttack = gpGlobals->curtime + 0.75f;
 				}
@@ -1560,7 +1560,7 @@ void CBaseHeadcrab::StartTask( const Task_t *pTask )
 #endif
 			// Just pop up into the air like you're trying to get at the
 			// enemy, even though it's known you can't reach them.
-			if (g_pGameRules->IsSkillLevel(SKILL_EASY))
+			if (g_pGameRules->IsSkillLevel(SKILL_EASY) || g_pGameRules->IsSkillLevel(SKILL_STORY))
 			{
 				CBaseEntity *pEnemy = GetEnemy();
 
@@ -1569,7 +1569,7 @@ void CBaseHeadcrab::StartTask( const Task_t *pTask )
 				GetVectors(NULL, &right, NULL);
 
 				m_vecCommittedJumpPos = pEnemy->EyePosition();
-				m_vecCommittedJumpPos += right * random->RandomFloat(-80, 80);
+				m_vecCommittedJumpPos += right * random->RandomFloat(-60, 60);
 
 				m_bCommittedToJump = true;
 
@@ -1930,7 +1930,7 @@ int CBaseHeadcrab::TranslateSchedule( int scheduleType )
 
 		case SCHED_WAKE_ANGRY:
 		{
-			if ( g_pGameRules->IsSkillLevel(SKILL_EASY) )
+			if ( g_pGameRules->IsSkillLevel(SKILL_EASY) || g_pGameRules->IsSkillLevel(SKILL_STORY) )
 				return SCHED_HEADCRAB_WAKE_ANGRY;
 			else
 				return SCHED_HEADCRAB_WAKE_ANGRY_NO_DISPLAY;

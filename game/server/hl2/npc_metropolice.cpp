@@ -3488,11 +3488,11 @@ int CNPC_MetroPolice::SelectCombatSchedule()
 			{
 				// Stop chasing the player now that we've taken a swing at them
 				m_flChasePlayerTime = 0;
-				if ((g_pGameRules->IsSkillLevel(SKILL_HARD) || g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL)))
+				if (g_pGameRules->IsSkillLevel(SKILL_HARD) || g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL))
 				{
 					m_BatonSwingTimer.Set(0.4, 0.7);
 				}
-				else if (g_pGameRules->IsSkillLevel(SKILL_EASY))
+				else if (g_pGameRules->IsSkillLevel(SKILL_EASY) || g_pGameRules->IsSkillLevel(SKILL_STORY))
 				{
 					m_BatonSwingTimer.Set(1.0, 1.75);
 				}

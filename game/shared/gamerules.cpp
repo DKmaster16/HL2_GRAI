@@ -34,8 +34,9 @@
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
-//ConVar skill("skill", "1");
-ConVar sk_diabolical("sk_diabolical", "0");
+ConVar difficulty( "difficulty", "2",  FCVAR_REPLICATED | FCVAR_ARCHIVE | FCVAR_USERINFO, "Difficulty level", true, 0, true, 4 );
+
+//ConVar sk_diabolical("sk_diabolical", "0");
 ConVar g_Language( "g_Language", "0", FCVAR_REPLICATED );
 ConVar sk_autoaim_mode( "sk_autoaim_mode", "1", FCVAR_ARCHIVE | FCVAR_REPLICATED );
 
@@ -268,28 +269,19 @@ void CGameRules::RefreshSkillData ( bool forceUpdate )
 	char	szExec[256];
 #endif 
 
-	ConVarRef skill( "skill" );
-
-//	ConVarRef skill_lvl( "skill_lvl" );
-
-	if (sk_diabolical.GetBool())
-		g_skill = 4;
-	else
-		g_skill = skill.GetInt();
-
-	SetSkillLevel(g_skill);
+	SetSkillLevel(difficulty.GetInt());
 #ifdef HL2_DLL
 	// HL2 current only uses one skill config file that represents MEDIUM skill level and
 	// synthesizes EASY and HARD. (sjb)
 //	Q_snprintf( szExec,sizeof(szExec), "exec skill_manifest.cfg\n" );
 
-	if (g_pGameRules->IsSkillLevel(SKILL_EASY))
+	if (g_pGameRules->IsSkillLevel(SKILL_STORY))
+	{
+		Q_snprintf(szExec, sizeof(szExec), "exec skill_0.cfg\n");
+	}
+	else if (g_pGameRules->IsSkillLevel(SKILL_EASY))
 	{
 		Q_snprintf(szExec, sizeof(szExec), "exec skill_1.cfg\n");
-	}
-	else if (g_pGameRules->IsSkillLevel(SKILL_MEDIUM))
-	{
-		Q_snprintf(szExec, sizeof(szExec), "exec skill_2.cfg\n");
 	}
 	else if (g_pGameRules->IsSkillLevel(SKILL_HARD))
 	{
@@ -299,7 +291,10 @@ void CGameRules::RefreshSkillData ( bool forceUpdate )
 	{
 		Q_snprintf(szExec, sizeof(szExec), "exec skill_4.cfg\n");
 	}
-
+	else
+	{
+		Q_snprintf(szExec, sizeof(szExec), "exec skill_2.cfg\n");
+	}
 
 	engine->ServerCommand( szExec );
 	engine->ServerExecute();
@@ -596,18 +591,12 @@ void CGameRules::FrameUpdatePostEntityThink()
 	Think();
 }
 
-// Hook into the convar from the engine
-ConVar skill( "skill", "1" );
+ConVar skill("skill", "2");
 
 void CGameRules::Think()
 {
-	if (sk_diabolical.GetBool())
-		g_skill = 4;
-	else
-		g_skill = skill.GetInt();
-
 	GetVoiceGameMgr()->Update( gpGlobals->frametime );
-	SetSkillLevel(g_skill);
+	SetSkillLevel(difficulty.GetInt());
 
 	if ( log_verbose_enable.GetBool() )
 	{

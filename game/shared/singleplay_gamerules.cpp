@@ -310,7 +310,7 @@ bool CSingleplayRules::Damage_ShouldNotBleed( int iDmgType )
 	//=========================================================
 	bool CSingleplayRules::AllowAutoTargetCrosshair( void )
 	{
-		return ( IsSkillLevel(SKILL_EASY) );
+		return ( IsSkillLevel(SKILL_STORY) );
 	}
 
 	//=========================================================

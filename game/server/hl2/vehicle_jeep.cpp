@@ -132,7 +132,7 @@ BEGIN_DATADESC( CPropJeep )
 	DEFINE_FIELD( m_flLastSawPlayerAt, FIELD_TIME ),
 	DEFINE_FIELD( m_hLastPlayerInVehicle, FIELD_EHANDLE ),
 	DEFINE_FIELD( m_hSeagull, FIELD_EHANDLE ),
-	DEFINE_FIELD( m_bHasPoop, FIELD_BOOLEAN ),
+//	DEFINE_FIELD( m_bHasPoop, FIELD_BOOLEAN ),
 
 	DEFINE_INPUTFUNC( FIELD_VOID, "ShowHudHint", InputShowHudHint ),
 	DEFINE_INPUTFUNC( FIELD_VOID, "StartRemoveTauCannon", InputStartRemoveTauCannon ),
@@ -555,11 +555,12 @@ bool CPropJeep::CheckWater( void )
 	m_WaterData.m_bBodyInWater = ( UTIL_PointContents( vecEnginePoint ) & MASK_WATER ) ? true : false;
 	if ( m_WaterData.m_bBodyInWater )
 	{
-		if ( m_bHasPoop )
-		{
-			RemoveAllDecals();
-			m_bHasPoop = false;
-		}
+		RemoveAllDecals();
+//		if ( m_bHasPoop )
+//		{
+//			RemoveAllDecals();
+//			m_bHasPoop = false;
+//		}
 
 		if ( !m_VehiclePhysics.IsEngineDisabled() )
 		{
@@ -1651,7 +1652,7 @@ void CPropJeep::AddSeagullPoop( const Vector &vecOrigin )
 		UTIL_DecalTrace( &tr, "BirdPoop" );
 	}
 
-	m_bHasPoop = true;
+//	m_bHasPoop = true;
 }
 
 //-----------------------------------------------------------------------------

@@ -2974,7 +2974,7 @@ int CNPC_Antlion::MeleeAttack2Conditions( float flDot, float flDist )
 	if ( m_flPounceTime > gpGlobals->curtime )
 		return 0;
 
-	if (g_pGameRules->IsSkillLevel(SKILL_EASY) && GetEnemy()->IsPlayer())
+	if (g_pGameRules->IsSkillLevel(SKILL_EASY) | g_pGameRules->IsSkillLevel(SKILL_STORY) && GetEnemy()->IsPlayer())
 	{
 		if ( flDist > ANTLION_MELEE2_RANGE_MAX )
 		{

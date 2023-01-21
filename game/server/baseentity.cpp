@@ -945,6 +945,8 @@ void CBaseEntity::DrawDebugGeometryOverlays(void)
 		CBasePlayer *pPlayer = AI_GetSinglePlayer();
 		float radius = GetAutoAimRadius();
 
+		radius *= g_pGameRules->GetAutoAimScale(pPlayer);
+
 		QAngle angles = pPlayer->EyeAngles();
 		AngleVectors( angles, NULL, &vecRight, &vecUp );
 

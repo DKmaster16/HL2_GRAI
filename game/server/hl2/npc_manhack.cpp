@@ -3198,7 +3198,7 @@ void CNPC_Manhack::StopBurst( bool bInterruptSchedule /*= false*/ )
 	ShowHostile( false );
 
 	// Stop our burst timers
-	if (g_pGameRules->IsSkillLevel(SKILL_EASY))
+	if (g_pGameRules->IsSkillLevel(SKILL_EASY) || g_pGameRules->IsSkillLevel(SKILL_STORY))
 	{
 		m_flNextBurstTime = gpGlobals->curtime + 2.0f; 
 	}
@@ -3206,7 +3206,7 @@ void CNPC_Manhack::StopBurst( bool bInterruptSchedule /*= false*/ )
 	{
 		m_flNextBurstTime = gpGlobals->curtime + 1.25f;
 	}
-	else // Unspecified = HARD
+	else // Unspecified = HARD, DIABOLICAL
 	{
 		m_flNextBurstTime = gpGlobals->curtime + 0.5f;
 	}

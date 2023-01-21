@@ -24,6 +24,9 @@
 #include "filesystem.h"
 #include "matsys_controls/matsyscontrols.h"
 
+//#include "overrideui_rootpanel.h"
+//#include "Override_Interface.h"
+#include "Igraidifficultypanel.h"
 #ifdef SIXENSE
 #include "sixense/in_sixense.h"
 #endif
@@ -36,6 +39,7 @@ using namespace vgui;
 
 void MP3Player_Create( vgui::VPANEL parent );
 void MP3Player_Destroy();
+void OverrideGameUI();
 
 #include <vgui/IInputInternal.h>
 vgui::IInputInternal *g_InputInternal = NULL;
@@ -200,6 +204,14 @@ void VGui_CreateGlobalPanels( void )
 #if defined( TRACK_BLOCKING_IO )
 	VPANEL gameDLLPanel = enginevgui->GetPanel( PANEL_GAMEDLL );
 #endif
+	VPANEL gameParent = enginevgui->GetPanel( PANEL_GAMEUIDLL );
+	mypanel->Create(gameParent);
+
+//	VPANEL GameUiDll = enginevgui->GetPanel(PANEL_GAMEUIDLL);
+//	mypanel->Create(GameUiDll);
+//	OverrideUI->Create(NULL);
+//	OverrideGameUI();
+
 	// Part of game
 	internalCenterPrint->Create( gameToolParent );
 	loadingdisc->Create( gameToolParent );
@@ -225,6 +237,8 @@ void VGui_CreateGlobalPanels( void )
 void VGui_Shutdown()
 {
 	VGUI_DestroyClientDLLRootPanel();
+	
+	mypanel->Destroy();
 
 #ifndef _X360
 	MP3Player_Destroy();

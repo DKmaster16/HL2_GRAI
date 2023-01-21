@@ -1137,19 +1137,6 @@ int CBasePlayer::OnTakeDamage( const CTakeDamageInfo &inputInfo )
 	{
 		flBonus *= sk_armor_bonus_blast_scale.GetFloat();
 		flRatio *= sk_armor_ratio_blast_scale.GetFloat();
-		/*
-		if (g_pGameRules->IsSkillLevel(SKILL_EASY))
-		{
-			// Armor takes 2.22 times less damage from explotions compared to diabolical. Bring it up to
-			// a bit lower than diabolical armor damage levels to encourage dodging missiles, bombs and grenades
-			flBonus *= 2;	
-		}
-		else if (g_pGameRules->IsSkillLevel(SKILL_MEDIUM))
-		{
-			// Armor takes 1.67 times less damage from explotions compared to diabolical. Do the same drill
-			flBonus *= 1.33;
-		}
-		*/	// At the end, blasts deal same armor damage to armor on Normal and Hard, Diabolical damage is still a bit higher
 	}
 
 	if (bitsDamage & DMG_SLASH)
@@ -6943,7 +6930,7 @@ bool CBasePlayer::ShouldAutoaim( void )
 		return false;
 
 	// autoaiming is only for easy and medium skill
-	return ( IsX360() || !g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL));
+	return ( IsX360() || !g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL) && !g_pGameRules->IsSkillLevel(SKILL_HARD));
 }
 
 //-----------------------------------------------------------------------------

@@ -509,6 +509,7 @@ exit 1
     <ClInclude Include="glow_overlay.h" />
     <ClInclude Include="..\..\game\shared\hintmessage.h" />
     <ClInclude Include="..\..\game\shared\hintsystem.h" />
+    <ClInclude Include="Igraidifficultypanel.h" />
     <ClInclude Include="history_resource.h" />
     <ClInclude Include="hltvcamera.h" />
     <ClInclude Include="hud.h" />
@@ -558,6 +559,7 @@ exit 1
     <ClInclude Include="movehelper_client.h" />
     <ClInclude Include="mumble.h" />
     <ClInclude Include="networkstringtable_clientdll.h" />
+    <ClInclude Include="optionssubdifficulty.h" />
     <ClInclude Include="panelmetaclassmgr.h" />
     <ClInclude Include="particle_collision.h" />
     <ClInclude Include="particle_iterators.h" />
@@ -888,7 +890,9 @@ exit 1
     <ClInclude Include="worldlight.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="graidifficultypanel.cpp" />
     <ClCompile Include="mp3player.cpp" />
+    <ClCompile Include="optionssubdifficulty.cpp" />
     <ClCompile Include="replay\cdll_replay.cpp" />
     <ClCompile Include="replay\replaycamera.cpp" />
     <ClCompile Include="achievement_notification_panel.cpp" />

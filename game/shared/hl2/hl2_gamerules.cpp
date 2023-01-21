@@ -74,26 +74,30 @@ ConVar  physcannon_mega_enabled( "physcannon_mega_enabled", "0", FCVAR_CHEAT | F
 ConVar	sv_robust_explosions( "sv_robust_explosions","1", FCVAR_REPLICATED );
 
 // Damage scale for damage inflicted by the player on each skill level.
+//ConVar	sk_dmg_inflict_scale0( "sk_dmg_inflict_scale0", "2.80", FCVAR_REPLICATED);
 ConVar	sk_dmg_inflict_scale1( "sk_dmg_inflict_scale1", "1.40", FCVAR_REPLICATED );
-ConVar	sk_dmg_inflict_scale2( "sk_dmg_inflict_scale2", "1.40", FCVAR_REPLICATED );
-ConVar	sk_dmg_inflict_scale3( "sk_dmg_inflict_scale3", "1.00", FCVAR_REPLICATED );
-ConVar	sk_dmg_inflict_scale4( "sk_dmg_inflict_scale4", "1.00", FCVAR_REPLICATED );
+ConVar	sk_dmg_inflict_scale2( "sk_dmg_inflict_scale2", "1.00", FCVAR_REPLICATED );
+ConVar	sk_dmg_inflict_scale3( "sk_dmg_inflict_scale3", "0.85", FCVAR_REPLICATED );
+//ConVar	sk_dmg_inflict_scale4( "sk_dmg_inflict_scale4", "0.75", FCVAR_REPLICATED );
 
 // Damage scale for damage taken by the player on each skill level.
-ConVar	sk_dmg_take_scale1("sk_dmg_take_scale1", "0.5", FCVAR_REPLICATED);
-ConVar	sk_dmg_take_scale2( "sk_dmg_take_scale2", "1.0", FCVAR_REPLICATED );
-ConVar	sk_dmg_take_scale3( "sk_dmg_take_scale3", "1.5", FCVAR_REPLICATED );
-ConVar	sk_dmg_take_scale4( "sk_dmg_take_scale4", "2.0", FCVAR_REPLICATED );
+//ConVar	sk_dmg_take_scale0( "sk_dmg_take_scale0", "0.25", FCVAR_REPLICATED);
+ConVar	sk_dmg_take_scale1( "sk_dmg_take_scale1", "0.75", FCVAR_REPLICATED );
+ConVar	sk_dmg_take_scale2( "sk_dmg_take_scale2", "1.00", FCVAR_REPLICATED );
+ConVar	sk_dmg_take_scale3( "sk_dmg_take_scale3", "1.50", FCVAR_REPLICATED );
+//ConVar	sk_dmg_take_scale4( "sk_dmg_take_scale4", "2.00", FCVAR_REPLICATED );
 
-ConVar	sk_allow_autoaim( "sk_allow_autoaim", "0", FCVAR_REPLICATED | FCVAR_ARCHIVE_XBOX );
+ConVar	sk_allow_autoaim( "sk_allow_autoaim", "0", FCVAR_REPLICATED | FCVAR_ARCHIVE_XBOX | FCVAR_ARCHIVE | FCVAR_USERINFO );
 
 // Autoaim scale
+ConVar	sk_autoaim_scale0( "sk_autoaim_scale0", "1.5", FCVAR_REPLICATED );
 ConVar	sk_autoaim_scale1( "sk_autoaim_scale1", "1.0", FCVAR_REPLICATED );
 ConVar	sk_autoaim_scale2( "sk_autoaim_scale2", "0.5", FCVAR_REPLICATED );
 //ConVar	sk_autoaim_scale3( "sk_autoaim_scale3", "0.0", FCVAR_REPLICATED );
 //ConVar	sk_autoaim_scale4( "sk_autoaim_scale4", "0.0", FCVAR_REPLICATED );
 
 // Quantity scale for ammo received by the player.
+ConVar	sk_ammo_qty_scale0 ( "sk_ammo_qty_scale1", "1.50", FCVAR_REPLICATED );
 ConVar	sk_ammo_qty_scale1 ( "sk_ammo_qty_scale1", "1.20", FCVAR_REPLICATED );
 ConVar	sk_ammo_qty_scale2 ( "sk_ammo_qty_scale2", "1.00", FCVAR_REPLICATED );
 ConVar	sk_ammo_qty_scale3 ( "sk_ammo_qty_scale3", "0.60", FCVAR_REPLICATED );
@@ -143,11 +147,6 @@ ConVar	sk_plr_dmg_smg1				("sk_plr_dmg_smg1", "0", FCVAR_REPLICATED);
 ConVar	sk_npc_dmg_smg1				("sk_npc_dmg_smg1", "0", FCVAR_REPLICATED);
 ConVar	sk_max_smg1					("sk_max_smg1", "0", FCVAR_REPLICATED);
 
-// FIXME: remove these
-//ConVar	sk_plr_dmg_flare_round	( "sk_plr_dmg_flare_round","0", FCVAR_REPLICATED);
-//ConVar	sk_npc_dmg_flare_round	( "sk_npc_dmg_flare_round","0", FCVAR_REPLICATED);
-//ConVar	sk_max_flare_round		( "sk_max_flare_round","0", FCVAR_REPLICATED);
-
 ConVar	sk_plr_dmg_slug("sk_plr_dmg_slug", "0", FCVAR_REPLICATED);
 ConVar	sk_npc_dmg_slug("sk_npc_dmg_slug", "0", FCVAR_REPLICATED);
 ConVar	sk_max_slug("sk_max_slug", "0", FCVAR_REPLICATED);
@@ -165,13 +164,6 @@ ConVar	sk_plr_dmg_sniper_round	( "sk_plr_dmg_sniper_round","0", FCVAR_REPLICATED
 ConVar	sk_npc_dmg_sniper_round	( "sk_npc_dmg_sniper_round","0", FCVAR_REPLICATED);
 ConVar	sk_max_sniper_round		( "sk_max_sniper_round","0", FCVAR_REPLICATED);
 
-//ConVar	sk_max_slam				( "sk_max_slam","0", FCVAR_REPLICATED);
-//ConVar	sk_max_tripwire			( "sk_max_tripwire","0", FCVAR_REPLICATED);
-
-//ConVar	sk_plr_dmg_molotov		( "sk_plr_dmg_molotov","0", FCVAR_REPLICATED);
-//ConVar	sk_npc_dmg_molotov		( "sk_npc_dmg_molotov","0", FCVAR_REPLICATED);
-//ConVar	sk_max_molotov			( "sk_max_molotov","0", FCVAR_REPLICATED);
-
 ConVar	sk_plr_dmg_grenade		( "sk_plr_dmg_grenade","0", FCVAR_REPLICATED);
 ConVar	sk_npc_dmg_grenade		( "sk_npc_dmg_grenade","0", FCVAR_REPLICATED);
 ConVar	sk_max_grenade			( "sk_max_grenade","0", FCVAR_REPLICATED);
@@ -180,10 +172,6 @@ ConVar	sk_max_grenade			( "sk_max_grenade","0", FCVAR_REPLICATED);
 ConVar	sk_max_hopwire			( "sk_max_hopwire", "3", FCVAR_REPLICATED);
 ConVar	sk_max_striderbuster	( "sk_max_striderbuster", "3", FCVAR_REPLICATED);
 #endif
-
-//ConVar sk_plr_dmg_brickbat	( "sk_plr_dmg_brickbat","0", FCVAR_REPLICATED);
-//ConVar sk_npc_dmg_brickbat	( "sk_npc_dmg_brickbat","0", FCVAR_REPLICATED);
-//ConVar sk_max_brickbat		( "sk_max_brickbat","0", FCVAR_REPLICATED);
 
 ConVar	sk_plr_dmg_smg1_grenade	( "sk_plr_dmg_smg1_grenade","0", FCVAR_REPLICATED);
 ConVar	sk_npc_dmg_smg1_grenade	( "sk_npc_dmg_smg1_grenade","0", FCVAR_REPLICATED);
@@ -1778,53 +1766,34 @@ void CHalfLife2::AdjustPlayerDamageTaken( CTakeDamageInfo *pInfo )
 		// Skill level doesn't affect these types of damage.
 		return;
 	}
-
-	switch( GetSkillLevel() )
-	{
-	case SKILL_EASY:
-		pInfo->ScaleDamage( sk_dmg_take_scale1.GetFloat() );
-		break;
-
-	case SKILL_MEDIUM:
-		pInfo->ScaleDamage( sk_dmg_take_scale2.GetFloat() );
-		break;
-
-	case SKILL_HARD:
-		pInfo->ScaleDamage( sk_dmg_take_scale3.GetFloat() );
-		break;
-
-	case SKILL_DIABOLICAL:
-		pInfo->ScaleDamage( sk_dmg_take_scale4.GetFloat() );
-		break;
-	}
+	ConVarRef skill("skill");
+	
+	// Skill acts as a combat modifier, while the actual difficulty is handling entity cvars 
+	if (skill.GetInt() == SKILL_EASY)
+		pInfo->ScaleDamage(sk_dmg_take_scale1.GetFloat());
+	else if (skill.GetInt() == SKILL_MEDIUM)
+		pInfo->ScaleDamage(sk_dmg_take_scale2.GetFloat());
+	else if (skill.GetInt() == SKILL_HARD)
+		pInfo->ScaleDamage(sk_dmg_take_scale3.GetFloat());
+	else
+		pInfo->ScaleDamage(0.0f);
 }
 
 //---------------------------------------------------------
 //---------------------------------------------------------
 float CHalfLife2::AdjustPlayerDamageInflicted( float damage )
 {
-	switch( GetSkillLevel() ) 
-	{
-	case SKILL_EASY:
+	ConVarRef skill("skill");
+
+	// Skill acts as a combat modifier, while the actual difficulty is handling entity cvars 
+	if (skill.GetInt() == SKILL_EASY)
 		return damage * sk_dmg_inflict_scale1.GetFloat();
-		break;
-
-	case SKILL_MEDIUM:
+	else if (skill.GetInt() == SKILL_MEDIUM)
 		return damage * sk_dmg_inflict_scale2.GetFloat();
-		break;
-
-	case SKILL_HARD:
+	else if (skill.GetInt() == SKILL_HARD)
 		return damage * sk_dmg_inflict_scale3.GetFloat();
-		break;
-
-	case SKILL_DIABOLICAL:
-		return damage * sk_dmg_inflict_scale4.GetFloat();
-		break;
-
-	default:
-		return damage;
-		break;
-	}
+	else
+		return 0.0f;
 }
 #endif//CLIENT_DLL
 
@@ -1872,18 +1841,16 @@ float CHalfLife2::GetAutoAimScale( CBasePlayer *pPlayer )
 #ifdef _X360
 	return 1.0f;
 #else
-	switch( GetSkillLevel() )
-	{
-	case SKILL_EASY:
+	float skill = GetSkillLevel();
+
+	if (skill == SKILL_STORY)
+		return sk_autoaim_scale0.GetFloat();
+	else if (skill == SKILL_EASY)
 		return sk_autoaim_scale1.GetFloat();
-
-	case SKILL_MEDIUM:
+	else if (skill == SKILL_MEDIUM)
 		return sk_autoaim_scale2.GetFloat();
-
-
-	default:
+	else
 		return 0.0f;
-	}
 #endif
 }
 
@@ -1891,23 +1858,20 @@ float CHalfLife2::GetAutoAimScale( CBasePlayer *pPlayer )
 //---------------------------------------------------------
 float CHalfLife2::GetAmmoQuantityScale( int iAmmoIndex )
 {
-	switch( GetSkillLevel() )
-	{
-	case SKILL_EASY:
+	float skill = GetSkillLevel();
+
+	if (skill == SKILL_STORY)
+		return sk_ammo_qty_scale0.GetFloat();
+	else if (skill == SKILL_EASY)
 		return sk_ammo_qty_scale1.GetFloat();
-
-	case SKILL_MEDIUM:
+	else if (skill == SKILL_MEDIUM)
 		return sk_ammo_qty_scale2.GetFloat();
-
-	case SKILL_HARD:
+	else if (skill == SKILL_HARD)
 		return sk_ammo_qty_scale3.GetFloat();
-
-	case SKILL_DIABOLICAL:
+	else if (skill == SKILL_DIABOLICAL)
 		return sk_ammo_qty_scale4.GetFloat();
-
-	default:
+	else
 		return 0.0f;
-	}
 }
 
 void CHalfLife2::LevelInitPreEntity()

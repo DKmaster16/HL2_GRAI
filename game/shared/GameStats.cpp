@@ -75,7 +75,7 @@ static inline char const *SafeString( char const *pStr )
 
 static CBaseGameStats s_GameStats_Singleton;
 CBaseGameStats *gamestats = &s_GameStats_Singleton; //start out pointing at the basic version which does nothing by default
-extern ConVar skill;
+extern ConVar difficulty;
 void OverWriteCharsWeHate( char *pStr );
 
 bool StatsTrackingIsFullyEnabled( void );
@@ -281,7 +281,7 @@ void CBaseGameStats::Event_LevelInit( void )
 
 		SetHDRStatistic( gamestatsuploader->IsHDREnabled() );
 
-		SetSkillStatistic( skill.GetInt() );
+		SetSkillStatistic( difficulty.GetInt() );
 		SetSteamStatistic( filesystem->IsSteam() );
 		SetCyberCafeStatistic( gamestatsuploader->IsCyberCafeUser() );
 	}
@@ -1362,7 +1362,7 @@ void CBaseGameStats::SetCaptionsStatistic( bool bClosedCaptionsEnabled )
 
 void CBaseGameStats::SetSkillStatistic( int iSkillSetting )
 {
-	int skill = clamp( iSkillSetting, 0, 4 );	// was int skill = clamp( iSkillSetting, 1, 3 ) - 1;
+	int skill = clamp( iSkillSetting, 0, 4 ) - 1;	// was int skill = clamp( iSkillSetting, 1, 3 ) - 1;
 
 	if( CBGSDriver.m_bInLevel )
 	{
