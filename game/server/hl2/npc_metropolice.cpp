@@ -505,11 +505,11 @@ void CNPC_MetroPolice::PrescheduleThink(void)
 	{
 		if (HasBaton())
 		{
-			m_flPlaybackRate = sk_metrocop_stunstick_speed_scale.GetFloat();
+			m_flPlaybackRate *= sk_metrocop_stunstick_speed_scale.GetFloat();
 		}
 		else
 		{
-			m_flPlaybackRate = sk_metrocop_speed_scale.GetFloat();
+			m_flPlaybackRate *= sk_metrocop_speed_scale.GetFloat();
 		}
 	}
 	BaseClass::PrescheduleThink();
@@ -671,6 +671,9 @@ void CNPC_MetroPolice::Spawn(void)
 	{
 		m_iHealth = sk_metropolice_health.GetFloat() * pow(mdl_scale, 4);
 	}
+
+	// Smaller people are faster
+	m_flPlaybackRate *= 1.0f - (pow(mdl_scale, 4) - 1.0f);
 
 	m_flFieldOfView = -0.2;// indicates the width of this NPC's forward view cone ( as a dotproduct result )
 	m_NPCState = NPC_STATE_NONE;
@@ -5337,49 +5340,47 @@ WeaponProficiency_t CNPC_MetroPolice::CalcWeaponProficiency(CBaseCombatWeapon *p
 		{
 			return WEAPON_PROFICIENCY_POOR;	// 20 Poor accuracy for this map, looks silly if gordon can take so many bullets before dying!
 		}
+		else if (g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL))
+		{
+			return WEAPON_PROFICIENCY_VERY_GOOD;	
+		}
+		else if (g_pGameRules->IsSkillLevel(SKILL_HARD))
+		{
+			return WEAPON_PROFICIENCY_GOOD;	
+		}
 		else
-			if (g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL))	// better accuracy on hard
-			{
-				return WEAPON_PROFICIENCY_VERY_GOOD;			//5/7.5
-			}
-			else
-				if (g_pGameRules->IsSkillLevel(SKILL_HARD))	// worse accuracy on easy
-				{
-					return WEAPON_PROFICIENCY_GOOD;		//7/12.25
-				}
-				else
-				{
-					return WEAPON_PROFICIENCY_AVERAGE;	//5.6/9.8
-				}
+		{
+			return WEAPON_PROFICIENCY_AVERAGE;
+		}
 	}
 	if (FClassnameIs(pWeapon, "weapon_smg1"))
 	{
 		if (g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL))
 		{
-			return WEAPON_PROFICIENCY_GOOD;		//5/8
+			return WEAPON_PROFICIENCY_GOOD;	
 		}
 		else if (g_pGameRules->IsSkillLevel(SKILL_HARD))
 		{
-			return WEAPON_PROFICIENCY_AVERAGE;		//6.25/10
+			return WEAPON_PROFICIENCY_AVERAGE;	
 		}
 		else
 		{
-			return WEAPON_PROFICIENCY_POOR;	//5.5/8.8
+			return WEAPON_PROFICIENCY_POOR;
 		}
 	}
 	if (FClassnameIs(pWeapon, "weapon_shotgun"))
 	{
 		if (g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL))
 		{
-			return WEAPON_PROFICIENCY_GOOD;		//5/8
+			return WEAPON_PROFICIENCY_GOOD;	
 		}
 		else if (g_pGameRules->IsSkillLevel(SKILL_HARD))
 		{
-			return WEAPON_PROFICIENCY_AVERAGE;		//6.25/10
+			return WEAPON_PROFICIENCY_AVERAGE;
 		}
 		else
 		{
-			return WEAPON_PROFICIENCY_POOR;	//5.5/8.8
+			return WEAPON_PROFICIENCY_POOR;	
 		}
 	}
 	return BaseClass::CalcWeaponProficiency(pWeapon);

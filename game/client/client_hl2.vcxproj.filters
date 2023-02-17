@@ -1943,9 +1943,6 @@
     <ClInclude Include="gameui\labeledcommandcombobox.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="optionssubdifficulty.h">
-      <Filter>Source Files\GameUI</Filter>
-    </ClInclude>
     <ClInclude Include="Igraidifficultypanel.h">
       <Filter>Source Files\GameUI</Filter>
     </ClInclude>
@@ -3438,9 +3435,6 @@
     </ClCompile>
     <ClCompile Include="worldlight.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="optionssubdifficulty.cpp">
-      <Filter>Source Files\GameUI</Filter>
     </ClCompile>
     <ClCompile Include="graidifficultypanel.cpp">
       <Filter>Source Files\GameUI</Filter>

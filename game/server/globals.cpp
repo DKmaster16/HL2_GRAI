@@ -23,5 +23,5 @@
 #include "tier0/memdbgon.h"
 
 Vector			g_vecAttackDir;
-float				g_iSkillLevel;
+int				g_iSkillLevel;
 bool			g_fGameOver;

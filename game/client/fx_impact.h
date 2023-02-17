@@ -58,12 +58,15 @@ public:
 	// Actual work code
 	virtual IterationRetval_t EnumElement( IHandleEntity *pHandleEntity );
 
-	bool Hit( void ) const { return m_bHit; }
+
+	bool Hit( void ) const { return m_pHitEnt != NULL; }
+	C_BaseAnimating *GetHit( void ) { return m_pHitEnt; }
+
 
 private:
 	Ray_t			m_rayShot;
 	int				m_iDamageType;
-	bool			m_bHit;
+	C_BaseAnimating		*m_pHitEnt;
 };
 
 #endif // FX_IMPACT_H

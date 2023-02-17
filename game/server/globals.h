@@ -12,7 +12,7 @@
 
 
 extern Vector g_vecAttackDir;
-extern float g_iSkillLevel;
+extern int g_iSkillLevel;
 extern bool g_fGameOver;
 extern ConVar g_Language;
 

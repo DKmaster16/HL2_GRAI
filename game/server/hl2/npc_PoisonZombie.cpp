@@ -507,7 +507,7 @@ void CNPC_PoisonZombie::SetZombieModel( void )
 	else
 	{
 		SetModel( "models/zombie/poison.mdl" );
-		SetHullType(HULL_HUMAN);
+		SetHullType(HULL_WIDE_HUMAN);
 	}
 
 	SetBodygroup( ZOMBIE_BODYGROUP_HEADCRAB, !m_fIsHeadless );

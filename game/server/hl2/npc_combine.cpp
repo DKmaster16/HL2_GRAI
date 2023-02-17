@@ -58,7 +58,7 @@ ConVar sk_combine_elite_speed_scale("sk_combine_elite_speed_scale", "1.2");
 #define COMBINE_SUPPRESS_FLUSH_TIME	3.0	// Don't try to suppress an enemy who has been out of sight for longer than this.
 
 #define COMBINE_LIMP_HEALTH				20	
-#define	COMBINE_MIN_GRENADE_CLEAR_DIST	300	// 10 yards OLD: 200
+#define	COMBINE_MIN_GRENADE_CLEAR_DIST	300	// 25 feet OLD: 200
 
 #define COMBINE_NUM_DECOYS 5
 
@@ -1249,7 +1249,7 @@ void CNPC_Combine::StartTask( const Task_t *pTask )
 					m_nShots = 1;
 
 					// Longer intervals to simulate single shooting
-					m_flNextAttack = gpGlobals->curtime + m_flShotDelay + random->RandomFloat(0.1, 0.3);	// was - 0.1
+					m_flNextAttack = gpGlobals->curtime + m_flShotDelay + random->RandomFloat(0.1, 0.2);	// was - 0.1
 				}
 			}
 			else
@@ -1605,6 +1605,12 @@ Activity CNPC_Combine::NPC_TranslateActivity( Activity eNewActivity )
 			eNewActivity = ACT_RUN_AIM;
 			break;
 		}
+	}
+
+	if (IsHeavy())
+	{
+		if (eNewActivity == ACT_RUN || eNewActivity == ACT_RUN_AIM)
+			eNewActivity = ACT_WALK_AIM;
 	}
 
 	return BaseClass::NPC_TranslateActivity( eNewActivity );
@@ -4005,15 +4011,15 @@ WeaponProficiency_t CNPC_Combine::CalcWeaponProficiency(CBaseCombatWeapon *pWeap
 	{
 		if (g_pGameRules->IsSkillLevel(SKILL_DIABOLICAL))
 		{
-			return WEAPON_PROFICIENCY_VERY_GOOD;	// 4/8
+			return WEAPON_PROFICIENCY_VERY_GOOD;	// 5/6.67
 		}
 		else if (g_pGameRules->IsSkillLevel(SKILL_HARD))
 		{
-			return WEAPON_PROFICIENCY_GOOD;			// 8/16
+			return WEAPON_PROFICIENCY_GOOD;			// 8.33/11.11
 		}
 		else
 		{
-			return WEAPON_PROFICIENCY_AVERAGE;			// 6/12
+			return WEAPON_PROFICIENCY_AVERAGE;			// 12.5/16.67
 		}
 	}
 
@@ -4138,11 +4144,12 @@ bool CNPC_Combine::IsRunningApproachEnemySchedule()
 	return false;
 }
 
-bool CNPC_Combine::ShouldPickADeathPose( void ) 
-{ 
-	return !IsCrouching(); 
-}
+bool CNPC_Combine::ShouldPickADeathPose(void)
+{
+	// Check base class as well
+	return !IsCrouching() && BaseClass::ShouldPickADeathPose();
 
+}
 //-----------------------------------------------------------------------------
 //
 // Schedules

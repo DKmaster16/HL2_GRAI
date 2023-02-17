@@ -2089,6 +2089,30 @@ void CNPC_Barnacle::Event_Killed( const CTakeDamageInfo &info )
 		SpawnDeathGibs();
 	}
 
+	CHalfLife2 *pHL2GameRules = static_cast<CHalfLife2 *>(g_pGameRules);
+
+	CBasePlayer *pPlayer = ToBasePlayer(info.GetAttacker());
+
+	float rng = random->RandomFloat( 0.0f, 1.0f );
+
+	if ( pPlayer != NULL && pHL2GameRules->NPC_ShouldDropHealth(pPlayer) )
+	{
+		DropItem("item_healthvial", WorldSpaceCenter() + RandomVector(-4, 4), RandomAngle(0, 360));
+		pHL2GameRules->NPC_DroppedHealth();
+	}
+	else if (rng < 0.02f)
+	{
+		DropItem("item_ammo_357", WorldSpaceCenter() + RandomVector(-4, 4), RandomAngle(0, 360));
+	}
+	else if (rng < 0.17f)
+	{
+		DropItem("item_battery", WorldSpaceCenter() + RandomVector(-4, 4), RandomAngle(0, 360));
+	}
+	else if (rng <= 0.37f)
+	{
+		DropItem("weapon_pistol", WorldSpaceCenter() + RandomVector(-4, 4), RandomAngle(0, 360));
+	}
+
 	// Puke blood
 #ifdef _XBOX
 	UTIL_BloodSpray( GetAbsOrigin(), Vector(0,0,-1), BLOOD_COLOR_YELLOW, 8, FX_BLOODSPRAY_ALL );
@@ -2338,6 +2362,11 @@ void CNPC_Barnacle::Precache()
 	PrecacheScriptSound( "NPC_Barnacle.FinalBite" );
 	PrecacheScriptSound( "NPC_Barnacle.Die" );
 	PrecacheScriptSound( "NPC_Barnacle.BreakNeck" );
+
+	UTIL_PrecacheOther("item_healthvial");
+	UTIL_PrecacheOther("item_battery");
+	UTIL_PrecacheOther("weapon_pistol");
+	UTIL_PrecacheOther("item_ammo_357");
 
 	PrecacheModel( "models/props_junk/rock001a.mdl" );
 

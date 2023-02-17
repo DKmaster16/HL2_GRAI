@@ -51,7 +51,7 @@ static void BulletSpeedModifierCallback(ConVar *var, const char *pOldString)
 	if (var->GetFloat() == 0.0f) //To avoid math exception
 		var->Revert();
 }
-ConVar sv_bullet_speed_modifier("sv_bullet_speed_modifier", "5000.000000");
+ConVar sv_bullet_speed_modifier("sv_bullet_speed_modifier", "850.000000");
 
 static void UnrealRicochetCallback(ConVar *var, const char *pOldString)
 {
@@ -468,7 +468,7 @@ bool CSimulatedBullet::EndSolid(trace_t &ptr)
 	m_flEntryDensity = physprops->GetSurfaceData(ptr.surface.surfaceProps)->physics.density;
 
 	trace_t rtr;
-	Vector vecEnd = m_vecEntryPosition + m_vecDirShooting * 32; //32 units
+	Vector vecEnd = m_vecEntryPosition + m_vecDirShooting * 16; //32 units
 
 	//Doing now test of penetration
 	UTIL_TraceLine(m_vecEntryPosition + m_vecDirShooting * 1.1, vecEnd, MASK_SHOT, m_pIgnoreList, &rtr);
@@ -490,19 +490,22 @@ bool CSimulatedBullet::EndSolid(trace_t &ptr)
 		DesiredDistance = 9.0f; // 9 units in hammer
 		break;
 	case CHAR_TEX_CONCRETE:
-		DesiredDistance = 4.0f; // 4 units in hammer
+		DesiredDistance = 3.0f; // 3 units in hammer
 		break;
 	case CHAR_TEX_TILE:
-		DesiredDistance = 5.0f; // 5 units in hammer
+		DesiredDistance = 4.0f; // 4 units in hammer
 		break;
 	case CHAR_TEX_COMPUTER:
-		DesiredDistance = 16.0f; // 5 units in hammer
+		DesiredDistance = 16.0f; // 16 units in hammer, computers are mostly hollow inside
 		break;
 	case CHAR_TEX_VENT:
 		DesiredDistance = 4.0f; // 4 units in hammer and no more(!)
 		break;
 	case CHAR_TEX_METAL:
-		DesiredDistance = 1.0f; // 1 units in hammer. We cannot penetrate a really 'fat' metal wall. Corners are good.
+		if (ptr.m_pEnt->IsNPC())
+			DesiredDistance = 1.0f; // Don't penetrate npcs
+		else
+			DesiredDistance = 2.0f; // 2 units in hammer. We cannot penetrate a really 'fat' metal wall. Corners are good.
 		break;
 	case CHAR_TEX_PLASTIC:
 		DesiredDistance = 16.0f; // 16 units in hammer: Plastic can more
@@ -526,11 +529,11 @@ bool CSimulatedBullet::EndSolid(trace_t &ptr)
 			// Query the func_breakable for whether it wants to allow for bullet penetration
 			if (ptr.m_pEnt->HasSpawnFlags(SF_BREAK_NO_BULLET_PENETRATION) == false)
 			{
-				DesiredDistance = 4.0f; // maximum 4 units in hammer.
+				DesiredDistance = 6.0f; // maximum 6 units in hammer.
 			}
 			else
 			{
-				DesiredDistance = 0.25f; // maximum half a centimeter.
+				DesiredDistance = 0.2f; // maximum half a centimeter.
 			}
 		}
 		else
@@ -797,26 +800,17 @@ void CSimulatedBullet::EntityImpact(trace_t &ptr)
 	if (ptr.m_pEnt != NULL)
 	{
 		//Hit inflicted once to avoid perfomance errors
-		// NPc shoots the player
+		// NPC shoots the player
 		if (!p_eInfictor->IsPlayer())
 		{
 			if (ptr.m_pEnt->IsPlayer())
 			{
-				if (m_pIgnoreList->ShouldHitEntity(ptr.m_pEnt, MASK_SHOT))
-				{
-					m_pIgnoreList->AddEntityToIgnore(ptr.m_pEnt);
-				}
-				else
-				{
+				if (ptr.m_pEnt == m_hLastHit)
 					return;
-				}
+
+				m_hLastHit = ptr.m_pEnt;
 			}
 		}
-
-		if (ptr.m_pEnt == m_hLastHit)
-			return;
-
-		m_hLastHit = ptr.m_pEnt;
 
 		float flMaxDamage;
 
@@ -884,7 +878,7 @@ void CSimulatedBullet::EntityImpact(trace_t &ptr)
 
 
 //==================================================
-// Purpose:	Simulates all bullets every centisecond
+// Purpose:	Simulates all bullets every milisecond
 //==================================================
 //#ifndef 0 //CLIENT_DLL
 void CBulletManager::Think(void)
@@ -904,7 +898,7 @@ void CBulletManager::Think(void)
 /*#ifdef 0 //CLIENT_DLL
 		SetNextClientThink(gpGlobals->curtime + 0.01f);
 #else*/
-		SetNextThink(gpGlobals->curtime + 0.01f);
+		SetNextThink(gpGlobals->curtime + 0.001f);
 //#endif
 	}
 }
@@ -952,7 +946,7 @@ int CBulletManager::AddBullet(CSimulatedBullet *pBullet)
 
 	if (g_Bullets.Count() == 1)
 	{
-		SetNextThink(gpGlobals->curtime + 0.01f);
+		SetNextThink(gpGlobals->curtime + 0.001f);
 	}
 //#endif
 	return index;

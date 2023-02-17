@@ -1898,7 +1898,7 @@
     <ClInclude Include="worldlight.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="gameui\optionssubdifficulty.h">
+    <ClInclude Include="Igraidifficultypanel.h">
       <Filter>Source Files\GameUI</Filter>
     </ClInclude>
   </ItemGroup>
@@ -3427,7 +3427,7 @@
     <ClCompile Include="worldlight.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="gameui\optionssubdifficulty.cpp">
+    <ClCompile Include="graidifficultypanel.cpp">
       <Filter>Source Files\GameUI</Filter>
     </ClCompile>
   </ItemGroup>

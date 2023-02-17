@@ -559,7 +559,6 @@ exit 1
     <ClInclude Include="movehelper_client.h" />
     <ClInclude Include="mumble.h" />
     <ClInclude Include="networkstringtable_clientdll.h" />
-    <ClInclude Include="optionssubdifficulty.h" />
     <ClInclude Include="panelmetaclassmgr.h" />
     <ClInclude Include="particle_collision.h" />
     <ClInclude Include="particle_iterators.h" />
@@ -892,7 +891,6 @@ exit 1
   <ItemGroup>
     <ClCompile Include="graidifficultypanel.cpp" />
     <ClCompile Include="mp3player.cpp" />
-    <ClCompile Include="optionssubdifficulty.cpp" />
     <ClCompile Include="replay\cdll_replay.cpp" />
     <ClCompile Include="replay\replaycamera.cpp" />
     <ClCompile Include="achievement_notification_panel.cpp" />

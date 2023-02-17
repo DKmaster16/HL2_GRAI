@@ -477,6 +477,7 @@ int C_ServerRagdoll::InternalDrawModel( int flags )
 	return ret;
 }
 
+static ConVar g_ragdoll_server_snatch_instance("g_ragdoll_server_snatch_instance", "1", FCVAR_NONE, "Allows serverside ragdolls to snatch their source entities' model instances in the same way clientside ragdolls do, thereby retaining decals.");
 
 CStudioHdr *C_ServerRagdoll::OnNewModel( void )
 {
@@ -499,6 +500,23 @@ CStudioHdr *C_ServerRagdoll::OnNewModel( void )
 		m_iv_ragAngles.SetMaxCount( m_elementCount );
 	}
 
+	if (GetOwnerEntity())
+	{
+		if (GetOwnerEntity()->GetModelName() == GetModelName())
+		{
+			// TODO: Is there a better place for this?
+			if (GetOwnerEntity()->GetBaseAnimating())
+				GetOwnerEntity()->GetBaseAnimating()->m_pServerRagdoll = this;
+
+			if (g_ragdoll_server_snatch_instance.GetBool())
+			{
+				GetOwnerEntity()->SnatchModelInstance(this);
+			}
+		}
+	}
+
+	// Add server ragdolls to the creation tick list
+	NoteRagdollCreationTick(this);
 	return hdr;
 }
 

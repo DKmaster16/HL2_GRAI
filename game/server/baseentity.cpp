@@ -62,6 +62,7 @@
 #include "env_debughistory.h"
 #include "tier1/utlstring.h"
 #include "utlhashtable.h"
+#include "hl2_gamerules.h"
 
 #if defined( TF_DLL )
 #include "tf_gamerules.h"
@@ -943,9 +944,11 @@ void CBaseEntity::DrawDebugGeometryOverlays(void)
 		Vector vecCenter = GetAutoAimCenter();
 		Vector vecRight, vecUp, vecDiag;
 		CBasePlayer *pPlayer = AI_GetSinglePlayer();
+		CHalfLife2 *pHL2GameRules = static_cast<CHalfLife2 *>(g_pGameRules);
+
 		float radius = GetAutoAimRadius();
 
-		radius *= g_pGameRules->GetAutoAimScale(pPlayer);
+		radius *= pHL2GameRules->GetAutoAimScale(pPlayer);
 
 		QAngle angles = pPlayer->EyeAngles();
 		AngleVectors( angles, NULL, &vecRight, &vecUp );

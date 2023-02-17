@@ -85,6 +85,7 @@ public:
 	Class_T			Classify( void );
 	bool			IsElite() { return m_fIsElite; }
 	bool			IsGuard() { return m_fIsGuard; }
+	bool			IsHeavy() { return m_fIsHeavy; }
 	void			DelayAltFireAttack( float flDelay );
 	void			DelaySquadAltFireAttack( float flDelay );
 	float			MaxYawSpeed( void );
@@ -326,6 +327,7 @@ public:
 	int				m_iLastAnimEventHandled;
 	bool			m_fIsElite;
 	bool			m_fIsGuard;
+	bool			m_fIsHeavy;
 	Vector			m_vecAltFireTarget;
 	Vector			m_vecSuppressTarget;
 

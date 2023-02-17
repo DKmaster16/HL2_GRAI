@@ -413,6 +413,15 @@ void CAI_BehaviorBase::HandleAnimEvent( animevent_t *pEvent )
 
 //-------------------------------------
 
+bool CAI_BehaviorBase::ShouldPickADeathPose( void )
+{
+	Assert( m_pBackBridge != NULL );
+
+	return m_pBackBridge->BackBridge_ShouldPickADeathPose();
+}
+
+//-------------------------------------
+
 bool CAI_BehaviorBase::NotifyChangeBehaviorStatus( bool fCanFinishSchedule )
 {
 	bool fInterrupt = GetOuter()->OnBehaviorChangeStatus( this, fCanFinishSchedule );

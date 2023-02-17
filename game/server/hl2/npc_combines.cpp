@@ -42,13 +42,17 @@ ConVar	sk_combine_s_model_scale_max( "sk_combine_s_model_scale_max", "1.07" );
 
 ConVar sk_combine_guard_health( "sk_combine_guard_health", "0");
 ConVar sk_combine_guard_kick( "sk_combine_guard_kick", "0");
-ConVar	sk_combine_guard_model_scale_min("sk_combine_guard_model_scale_min", "0.96");
-ConVar	sk_combine_guard_model_scale_max("sk_combine_guard_model_scale_max", "1.07");
 
 ConVar sk_combine_elite_health( "sk_combine_elite_health", "0" );
 ConVar sk_combine_elite_kick( "sk_combine_elite_kick", "0" );
 ConVar	sk_combine_elite_model_scale_min( "sk_combine_elite_model_scale_min", "1.00" );
-ConVar	sk_combine_elite_model_scale_max( "sk_combine_elite_model_scale_max", "1.10" );
+ConVar	sk_combine_elite_model_scale_max( "sk_combine_elite_model_scale_max", "1.00" );
+
+ConVar	sk_combine_heavy_health( "sk_combine_heavy_health", "0" );
+ConVar	sk_combine_heavy_kick( "sk_combine_heavy_kick", "0" );
+ConVar	sk_combine_heavy_model_scale("sk_combine_heavy_model_scale", "1.11");
+ConVar	sk_combine_heavy_playback_rate( "sk_combine_heavy_playback_rate", "0.75" );
+ConVar	sk_combine_heavy_spawn_chance("sk_combine_heavy_spawn_chance", "-1");
 
 ConVar sk_combine_max_additional_ammo_shots("sk_combine_max_additional_ammo_shots", "8");
 
@@ -77,38 +81,62 @@ void CNPC_CombineS::Spawn( void )
 	Precache();
 	SetModel( STRING( GetModelName() ) );
 
+	float rng = random->RandomFloat( 0.0f, 1.0f );
+
 	if( IsElite() )
 	{
-		//	Make them a little bit taller or smaller
-		float mdl_scale = random->RandomFloat( sk_combine_elite_model_scale_min.GetFloat(), sk_combine_elite_model_scale_max.GetFloat() );
+		//	Make them a little bit bigger or smaller
+		float mdl_scale = random->RandomFloat(sk_combine_elite_model_scale_min.GetFloat(), sk_combine_elite_model_scale_max.GetFloat());
 		SetModelScale(mdl_scale);
 
 		// Stronger, tougher.
 		SetHealth( sk_combine_elite_health.GetFloat() * pow(mdl_scale, 4) );
 		SetMaxHealth( sk_combine_elite_health.GetFloat() * pow(mdl_scale, 4) );
 		SetKickDamage( sk_combine_elite_kick.GetFloat() * pow(mdl_scale, 4) );
+
+		// Smaller people are faster
+		m_flPlaybackRate *= 1.0f - (pow(mdl_scale, 4) - 1.0f);
+	}
+	else if (rng <= sk_combine_heavy_spawn_chance.GetFloat())
+	{
+		SetModelScale(sk_combine_heavy_model_scale.GetFloat());
+
+		// Stronger, tougher.
+		SetHealth(sk_combine_heavy_health.GetFloat());
+		SetMaxHealth(sk_combine_heavy_health.GetFloat());
+		SetKickDamage(sk_combine_heavy_kick.GetFloat());
+
+		// Smaller people are faster
+		m_flPlaybackRate *= sk_combine_heavy_playback_rate.GetFloat();
+
+		m_fIsHeavy = true;
 	}
 	else if (IsGuard())
 	{
-		//	Make them a little bit taller or smaller
-		float mdl_scale = random->RandomFloat( sk_combine_guard_model_scale_min.GetFloat(), sk_combine_guard_model_scale_max.GetFloat() );
+		//	Make them a little bit bigger or smaller
+		float mdl_scale = random->RandomFloat(sk_combine_s_model_scale_min.GetFloat(), sk_combine_s_model_scale_max.GetFloat());
 		SetModelScale(mdl_scale);
 
 		SetHealth( sk_combine_guard_health.GetFloat() * pow(mdl_scale, 4) );
 		SetMaxHealth( sk_combine_guard_health.GetFloat() * pow(mdl_scale, 4) );
 		SetKickDamage( sk_combine_guard_kick.GetFloat() * pow(mdl_scale, 4) );
+
+		// Smaller people are faster
+		m_flPlaybackRate *= 1.0f - (pow(mdl_scale, 4) - 1.0f);
 	}
 	else
 	{
-		//	Make them a little bit taller or smaller
-		float mdl_scale = random->RandomFloat( sk_combine_s_model_scale_min.GetFloat(), sk_combine_s_model_scale_max.GetFloat() );
+		//	Make them a little bit bigger or smaller
+		float mdl_scale = random->RandomFloat(sk_combine_s_model_scale_min.GetFloat(), sk_combine_s_model_scale_max.GetFloat());
 		SetModelScale(mdl_scale);
 
 		SetHealth( sk_combine_s_health.GetFloat() * pow(mdl_scale, 4) );
 		SetMaxHealth( sk_combine_s_health.GetFloat() * pow(mdl_scale, 4) );
 		SetKickDamage( sk_combine_s_kick.GetFloat() * pow(mdl_scale, 4) );
+		
+		// Smaller people are faster
+		m_flPlaybackRate *= 1.0f - (pow(mdl_scale, 4) - 1.0f);
 	}
-
 
 	CapabilitiesAdd( bits_CAP_ANIMATEDFACE );
 	CapabilitiesAdd( bits_CAP_MOVE_SHOOT );
@@ -136,11 +164,9 @@ void CNPC_CombineS::Precache()
 	if( !Q_stricmp( pModelName, "models/combine_super_soldier.mdl" ) )
 	{
 		m_fIsElite = true;
-		m_fIsGuard = false;
 	}
 	else if ( !Q_stricmp(pModelName, "models/combine_soldier_prisonguard.mdl" ) )
 	{
-		m_fIsElite = false;
 		m_fIsGuard = true;
 	}
 
@@ -170,7 +196,6 @@ void CNPC_CombineS::DeathSound( const CTakeDamageInfo &info )
 
 	GetSentences()->Speak( "COMBINE_DIE", SENTENCE_PRIORITY_INVALID, SENTENCE_CRITERIA_ALWAYS ); 
 }
-
 
 //-----------------------------------------------------------------------------
 // Purpose: Soldiers use CAN_RANGE_ATTACK2 to indicate whether they can throw
@@ -359,7 +384,7 @@ void CNPC_CombineS::TraceAttack(const CTakeDamageInfo &info, const Vector &vecDi
 					{
 						infoCopy.SetDamage(1);
 						pHL2GameRules->NPC_TakenAdditionalShots(1);
-						m_flAdditionalShots += 3;
+						m_flAdditionalShots += 2;
 					}
 					else if (infoCopy.GetDamage() >= (float)GetHealth())
 					{
@@ -413,7 +438,7 @@ void CNPC_CombineS::TraceAttack(const CTakeDamageInfo &info, const Vector &vecDi
 					&& !m_bHeadShot && infoCopy.GetDamage() >= (float)GetHealth())
 				{
 					extern ConVar sk_npc_dmg_357;
-					infoCopy.SetDamage(sk_npc_dmg_357.GetFloat() * 0.5);
+					infoCopy.SetDamage(sk_npc_dmg_357.GetFloat() * 0.25);
 					pHL2GameRules->NPC_TakenAdditionalShots(1);
 					m_flAdditionalShots += sk_combine_max_additional_ammo_shots.GetInt();
 				}

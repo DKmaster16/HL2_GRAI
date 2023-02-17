@@ -97,7 +97,7 @@ ConVar	sk_autoaim_scale2( "sk_autoaim_scale2", "0.5", FCVAR_REPLICATED );
 //ConVar	sk_autoaim_scale4( "sk_autoaim_scale4", "0.0", FCVAR_REPLICATED );
 
 // Quantity scale for ammo received by the player.
-ConVar	sk_ammo_qty_scale0 ( "sk_ammo_qty_scale1", "1.50", FCVAR_REPLICATED );
+ConVar	sk_ammo_qty_scale0 ( "sk_ammo_qty_scale0", "1.50", FCVAR_REPLICATED );
 ConVar	sk_ammo_qty_scale1 ( "sk_ammo_qty_scale1", "1.20", FCVAR_REPLICATED );
 ConVar	sk_ammo_qty_scale2 ( "sk_ammo_qty_scale2", "1.00", FCVAR_REPLICATED );
 ConVar	sk_ammo_qty_scale3 ( "sk_ammo_qty_scale3", "0.60", FCVAR_REPLICATED );
@@ -1761,7 +1761,7 @@ bool CHalfLife2::ShouldCollide( int collisionGroup0, int collisionGroup1 )
 //---------------------------------------------------------
 void CHalfLife2::AdjustPlayerDamageTaken( CTakeDamageInfo *pInfo )
 {
-	if( pInfo->GetDamageType() & (DMG_DROWN|DMG_CRUSH|DMG_FALL|DMG_POISON) )	//DMG_SNIPER
+	if (pInfo->GetDamageType() & (DMG_DROWN | DMG_CRUSH | DMG_FALL | DMG_POISON | DMG_SNIPER | DMG_BLAST)) //DMG_BLAST added to mitigate self damage.
 	{
 		// Skill level doesn't affect these types of damage.
 		return;
@@ -1841,7 +1841,7 @@ float CHalfLife2::GetAutoAimScale( CBasePlayer *pPlayer )
 #ifdef _X360
 	return 1.0f;
 #else
-	float skill = GetSkillLevel();
+	int skill = GetSkillLevel();
 
 	if (skill == SKILL_STORY)
 		return sk_autoaim_scale0.GetFloat();

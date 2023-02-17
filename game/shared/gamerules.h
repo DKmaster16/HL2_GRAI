@@ -234,10 +234,10 @@ public:
 	int g_skill;
 	virtual bool IsSkillLevel( int iLevel ) { return GetSkillLevel() == iLevel; }
 	virtual int	GetSkillLevel() { return g_iSkillLevel; }
-	virtual void OnSkillLevelChanged( float iNewLevel ) {};
+	virtual void OnSkillLevelChanged( int iNewLevel ) {};
 	virtual void SetSkillLevel( int iLevel )
 	{
-		float oldLevel = g_iSkillLevel; 
+		int oldLevel = g_iSkillLevel; 
 
 		if ( iLevel < 0 )
 		{

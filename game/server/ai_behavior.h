@@ -130,6 +130,9 @@ public:
 	void BridgeModifyOrAppendCriteria( AI_CriteriaSet& criteriaSet );
 	void BridgeTeleport( const Vector *newPosition, const QAngle *newAngles, const Vector *newVelocity );
 	void BridgeHandleAnimEvent( animevent_t *pEvent );
+//#ifdef MAPBASE
+	bool BridgeShouldPickADeathPose( void );
+//#endif
 
 	virtual void GatherConditions();
 	virtual void GatherConditionsNotActive() { return; } // Override this and your behavior will call this in place of GatherConditions() when your behavior is NOT the active one.
@@ -215,6 +218,9 @@ protected:
 	virtual void ModifyOrAppendCriteria( AI_CriteriaSet& criteriaSet );
 	virtual void Teleport( const Vector *newPosition, const QAngle *newAngles, const Vector *newVelocity );
 	virtual void HandleAnimEvent( animevent_t *pEvent );
+//#ifdef MAPBASE
+	virtual bool ShouldPickADeathPose( void );
+//#endif
 
 	virtual bool ShouldAlwaysThink();
 
@@ -361,6 +367,11 @@ public:
 
 	virtual void		 BackBridge_HandleAnimEvent( animevent_t *pEvent ) = 0;
 
+//#ifdef MAPBASE
+
+	virtual bool		 BackBridge_ShouldPickADeathPose( void ) = 0;
+//#endif
+
 //-------------------------------------
 
 };
@@ -457,6 +468,9 @@ public:
 	Activity		GetFlinchActivity( bool bHeavyDamage, bool bGesture );
 	bool			OnCalcBaseMove( AILocalMoveGoal_t *pMoveGoal, float distClear, AIMoveResult_t *pResult );
 	void			HandleAnimEvent( animevent_t *pEvent );
+//#ifdef MAPBASE
+	bool			ShouldPickADeathPose( void );
+//#endif
 	
 	bool			ShouldAlwaysThink();
 
@@ -516,6 +530,10 @@ private:
 	void			BackBridge_Teleport( const Vector *newPosition, const QAngle *newAngles, const Vector *newVelocity );
 
 	void			BackBridge_HandleAnimEvent( animevent_t *pEvent );
+
+//#ifdef MAPBASE
+	bool			 BackBridge_ShouldPickADeathPose( void );
+//#endif
 
 	CAI_BehaviorBase **AccessBehaviors();
 	int				NumBehaviors();
@@ -885,6 +903,14 @@ inline void CAI_BehaviorBase::BridgeTeleport( const Vector *newPosition, const Q
 inline void CAI_BehaviorBase::BridgeHandleAnimEvent( animevent_t *pEvent )
 {
 	HandleAnimEvent( pEvent );
+}
+
+
+//-----------------------------------------------------------------------------
+
+inline bool CAI_BehaviorBase::BridgeShouldPickADeathPose( void )
+{
+	return ShouldPickADeathPose();
 }
 
 //-----------------------------------------------------------------------------
@@ -1462,6 +1488,16 @@ inline void CAI_BehaviorHost<BASE_NPC>::BackBridge_HandleAnimEvent( animevent_t 
 	BaseClass::HandleAnimEvent( pEvent );
 }
 
+//#ifdef MAPBASE
+//-------------------------------------
+
+template <class BASE_NPC>
+inline bool CAI_BehaviorHost<BASE_NPC>::BackBridge_ShouldPickADeathPose( void )
+{
+	return BaseClass::ShouldPickADeathPose();
+}
+
+
 //-------------------------------------
 
 template <class BASE_NPC>
@@ -1864,6 +1900,19 @@ inline void CAI_BehaviorHost<BASE_NPC>::HandleAnimEvent( animevent_t *pEvent )
 
 	return BaseClass::HandleAnimEvent( pEvent );
 }
+
+//#ifdef MAPBASE
+//-------------------------------------
+
+template <class BASE_NPC>
+inline bool CAI_BehaviorHost<BASE_NPC>::ShouldPickADeathPose( void )
+{
+	if (m_pCurBehavior)
+		return m_pCurBehavior->BridgeShouldPickADeathPose();
+
+	return BaseClass::ShouldPickADeathPose();
+}
+
 
 //-------------------------------------
 

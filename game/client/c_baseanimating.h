@@ -480,6 +480,8 @@ private:
 
 public:
 	CRagdoll						*m_pRagdoll;
+	C_BaseAnimating					*m_pClientsideRagdoll;	// From Alien Swarm SDK
+	C_BaseAnimating					*m_pServerRagdoll;	// Not from Alien Swarm SDK (note that this can exist without the entity having died)
 
 	// Texture group to use
 	int								m_nSkin;

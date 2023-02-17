@@ -166,9 +166,6 @@ private:
 	CheckButton		*m_pAutoAim;
 };
 
-ConVarRef difficulty("difficulty");
-ConVarRef AutoAim("sk_allow_autoaim");
-
 // Constuctor: Initializes the Panel
 CMyPanel::CMyPanel(vgui::VPANEL parent)	: BaseClass(NULL, "MyPanel")
 {
@@ -225,7 +222,7 @@ CMyPanel::CMyPanel(vgui::VPANEL parent)	: BaseClass(NULL, "MyPanel")
 	m_pDiabolicalRadio->SetPos(35, 265);
 	m_pDiabolicalRadio->SetWide(96);
 
-//	ConVarRef difficulty("difficulty");
+	ConVarRef difficulty("difficulty");
 
 	m_pAutoAim = new CheckButton(this, "AutoAim", "#GameUI_AutoAim");
 	m_pAutoAim->SetPos(40, 315);
@@ -307,7 +304,7 @@ void CMyPanel::OnCommand(const char* pcCommand)
 //-----------------------------------------------------------------------------
 void CMyPanel::OnResetData()
 {
-//	ConVarRef var("difficulty");
+	ConVarRef difficulty("difficulty");
 
 	if (difficulty.GetInt() == 0)
 	{
@@ -330,7 +327,7 @@ void CMyPanel::OnResetData()
 		m_pNormalRadio->SetSelected(true);
 	}
 	
-//	ConVarRef AutoAim("sk_allow_autoaim");
+	ConVarRef AutoAim("sk_allow_autoaim");
 
 	if (difficulty.GetInt() <= 2)
 		m_pAutoAim->SetEnabled(true);
@@ -352,7 +349,7 @@ void CMyPanel::OnResetData()
 //-----------------------------------------------------------------------------
 void CMyPanel::OnApplyChanges()
 {
-//	ConVarRef var("difficulty");
+	ConVarRef difficulty("difficulty");
 
 	if (m_pStoryRadio->IsSelected())
 	{
@@ -380,7 +377,7 @@ void CMyPanel::OnApplyChanges()
 	else
 		m_pAutoAim->SetEnabled(false);
 
-//	ConVarRef AutoAim("sk_allow_autoaim");
+	ConVarRef AutoAim("sk_allow_autoaim");
 
 	if (m_pAutoAim->IsSelected())
 	{

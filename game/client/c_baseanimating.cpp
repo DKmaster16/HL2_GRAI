@@ -675,6 +675,8 @@ C_BaseAnimating::C_BaseAnimating() :
 	m_nPrevSequence = -1;
 	m_nRestoreSequence = -1;
 	m_pRagdoll		= NULL;
+	m_pClientsideRagdoll = NULL;
+	m_pServerRagdoll = NULL;
 	m_builtRagdoll = false;
 	m_hitboxBoneCacheHandle = 0;
 	int i;
@@ -1752,6 +1754,8 @@ CollideType_t C_BaseAnimating::GetCollideType( void )
 	return BaseClass::GetCollideType();
 }
 
+ConVar ai_death_pose_enabled("ai_death_pose_enabled", "1", FCVAR_NONE, "Toggles the death pose fix code, which cancels sequence transitions while a NPC is ragdolling.");
+
 //-----------------------------------------------------------------------------
 // Purpose: if the active sequence changes, keep track of the previous ones and decay them based on their decay rate
 //-----------------------------------------------------------------------------
@@ -1763,6 +1767,12 @@ void C_BaseAnimating::MaintainSequenceTransitions( IBoneSetup &boneSetup, float 
 		return;
 
 	if ( prediction->InPrediction() )
+	{
+		m_nPrevNewSequenceParity = m_nNewSequenceParity;
+		return;
+	}
+
+	if (IsAboutToRagdoll() && ai_death_pose_enabled.GetBool())
 	{
 		m_nPrevNewSequenceParity = m_nNewSequenceParity;
 		return;
@@ -4607,15 +4617,15 @@ C_BaseAnimating *C_BaseAnimating::BecomeRagdollOnClient()
 {
 	MoveToLastReceivedPosition( true );
 	GetAbsOrigin();
-	C_BaseAnimating *pRagdoll = CreateRagdollCopy();
+	m_pClientsideRagdoll = CreateRagdollCopy();
 
 	matrix3x4_t boneDelta0[MAXSTUDIOBONES];
 	matrix3x4_t boneDelta1[MAXSTUDIOBONES];
 	matrix3x4_t currentBones[MAXSTUDIOBONES];
 	const float boneDt = 0.1f;
 	GetRagdollInitBoneArrays( boneDelta0, boneDelta1, currentBones, boneDt );
-	pRagdoll->InitAsClientRagdoll( boneDelta0, boneDelta1, currentBones, boneDt );
-	return pRagdoll;
+	m_pClientsideRagdoll->InitAsClientRagdoll(boneDelta0, boneDelta1, currentBones, boneDt);
+	return m_pClientsideRagdoll;
 }
 
 bool C_BaseAnimating::InitAsClientRagdoll( const matrix3x4_t *pDeltaBones0, const matrix3x4_t *pDeltaBones1, const matrix3x4_t *pCurrentBonePosition, float boneDt, bool bFixedConstraints )

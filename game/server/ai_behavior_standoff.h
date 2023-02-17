@@ -150,6 +150,9 @@ protected:
 	// Standoff overrides base AI crouch handling
 	bool		IsCrouching( void ) { return false; }
 	
+	// Don't do death poses while crouching
+	bool		ShouldPickADeathPose(void) { return (GetPosture() != AIP_CROUCHING && GetPosture() != AIP_PEEKING) && BaseClass::ShouldPickADeathPose(); }
+
 private:
 	
 	//----------------------------
