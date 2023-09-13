@@ -1,0 +1,56 @@
+﻿Build started 29.07.2021 14:40:00.
+     1>Project "C:\Users\Yerkebulan Laptop\Desktop\Modding\GRAI\src\utils\qc_eyes\qc_eyes.vcxproj" on node 9 (Rebuild target(s)).
+     1>PreBuildEvent:
+         if EXIST ..\..\..\game\bin\.\qc_eyes.exe for /f "delims=" %%A in ('attrib "..\..\..\game\bin\.\qc_eyes.exe"') do set valveTmpIsReadOnly="%%A"
+         set valveTmpIsReadOnlyLetter=%valveTmpIsReadOnly:~6,1%
+         if "%valveTmpIsReadOnlyLetter%"=="R" del /q "C:\Users\Yerkebulan Laptop\Desktop\Modding\GRAI\src\utils\qc_eyes\Release\"qc_eyes.exe
+         if exist "..\..\devtools\bin\vpc.exe" "..\..\devtools\bin\vpc.exe" -crc2 "qc_eyes.vcxproj"
+         if ERRORLEVEL 1 exit /b 1
+         
+         :VCEnd
+       CustomBuild:
+         Compiling pointeroverride.asm
+          Assembling: C:\Users\Yerkebulan Laptop\Desktop\Modding\GRAI\src\public\tier0\pointeroverride.asm
+         Microsoft (R) Macro Assembler Version 12.00.40629.0
+         Copyright (C) Microsoft Corporation.  All rights reserved.
+         
+         Running VPC CRC Check - qc_eyes.vpc
+         Access is denied.
+       ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I..\..\common /I..\..\public /I..\..\public\tier0 /I..\..\public\tier1 /Zi /nologo /W4 /WX /MP /O2 /Ob2 /Oi /Ot /Oy- /D VPC /D RAD_TELEMETRY_DISABLED /D WIN32 /D _WIN32 /D NDEBUG /D _WINDOWS /D _CRT_SECURE_NO_DEPRECATE /D _CRT_NONSTDC_NO_DEPRECATE /D _ALLOW_RUNTIME_LIBRARY_MISMATCH /D _ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH /D _ALLOW_MSC_VER_MISMATCH /D _USING_V110_SDK71_ /D _MBCS /D COMPILER_MSVC32 /D COMPILER_MSVC32 /D COMPILER_MSVC /D EXENAME=qc_eyes /D _DLL_EXT=.dll /D BINK_VIDEO /D AVI_VIDEO /D WMV_VIDEO /D DEV_BUILD /D FRAME_POINTER_OMISSION_DISABLED /D NO_WARN_MBCS_MFC_DEPRECATION /D _EXTERNAL_DLL_EXT=.dll /D VPCGAMECAPS=VALVE /D "PROJECTDIR=C:\Users\Yerkebulan Laptop\Desktop\Modding\GRAI\src\utils\qc_eyes" /D _DLL_EXT=.dll /D VPCGAME=valve /D SOURCE1=1 /GF /Gm- /EHsc /MT /GS /Gy /arch:SSE /fp:fast /Zc:wchar_t /Zc:forScope /GR /openmp- /Yc"stdafx.h" /Fp"Debug/QC_Eyes.pch" /Fo".\Release\.\/" /Fd".\Release\.\/vc120.pdb" /Gd /TP /wd4316 /analyze- /FC /errorReport:prompt  /d2Zi+ /Gw StdAfx.cpp
+         StdAfx.cpp
+         _WIN32_WINNT not defined. Defaulting to _WIN32_WINNT_MAXVER (see WinSDKVer.h)
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I..\..\common /I..\..\public /I..\..\public\tier0 /I..\..\public\tier1 /Zi /nologo /W4 /WX /MP /O2 /Ob2 /Oi /Ot /Oy- /D VPC /D RAD_TELEMETRY_DISABLED /D WIN32 /D _WIN32 /D NDEBUG /D _WINDOWS /D _CRT_SECURE_NO_DEPRECATE /D _CRT_NONSTDC_NO_DEPRECATE /D _ALLOW_RUNTIME_LIBRARY_MISMATCH /D _ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH /D _ALLOW_MSC_VER_MISMATCH /D _USING_V110_SDK71_ /D _MBCS /D COMPILER_MSVC32 /D COMPILER_MSVC32 /D COMPILER_MSVC /D EXENAME=qc_eyes /D _DLL_EXT=.dll /D BINK_VIDEO /D AVI_VIDEO /D WMV_VIDEO /D DEV_BUILD /D FRAME_POINTER_OMISSION_DISABLED /D NO_WARN_MBCS_MFC_DEPRECATION /D _EXTERNAL_DLL_EXT=.dll /D VPCGAMECAPS=VALVE /D "PROJECTDIR=C:\Users\Yerkebulan Laptop\Desktop\Modding\GRAI\src\utils\qc_eyes" /D _DLL_EXT=.dll /D VPCGAME=valve /D SOURCE1=1 /GF /Gm- /EHsc /MT /GS /Gy /arch:SSE /fp:fast /Zc:wchar_t /Zc:forScope /GR /openmp- /Yu"stdafx.h" /Fp"Debug/QC_Eyes.pch" /Fo".\Release\.\/" /Fd".\Release\.\/vc120.pdb" /Gd /TP /wd4316 /analyze- /FC /errorReport:prompt  /d2Zi+ /Gw QC_Eyes.cpp QC_EyesDlg.cpp
+         QC_Eyes.cpp
+         QC_EyesDlg.cpp
+       ResourceCompile:
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\bin\rc.exe /D NDEBUG /D _CRT_SECURE_NO_DEPRECATE /D _CRT_NONSTDC_NO_DEPRECATE /D _USING_V110_SDK71_ /l"1033" /nologo /fo".\Release\.\QC_Eyes.res" QC_Eyes.rc 
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:".\Release\.\\qc_eyes.exe" /INCREMENTAL:NO /NOLOGO shell32.lib user32.lib advapi32.lib gdi32.lib comdlg32.lib ole32.lib windowscodecs.lib /NODEFAULTLIB:libc /NODEFAULTLIB:libcd /NODEFAULTLIB:libcmtd /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:".\Release\.\/qc_eyes.pdb" /SUBSYSTEM:WINDOWS,"5.01" /OPT:REF /OPT:NOICF /TLBID:1 /DYNAMICBASE:NO /NXCOMPAT /IMPLIB:".\Release\.\qc_eyes.lib" /MACHINE:X86 /SAFESEH:NO /NXCOMPAT /ignore:4221 .\Release\.\\pointeroverride.obj
+         .\Release\.\QC_Eyes.res
+         .\Release\.\/QC_Eyes.obj
+         .\Release\.\/QC_EyesDlg.obj
+         .\Release\.\/StdAfx.obj
+         ..\..\lib\public\tier0.lib
+         ..\..\lib\public\tier1.lib
+         ..\..\lib\public\vstdlib.lib
+         qc_eyes.vcxproj -> C:\Users\Yerkebulan Laptop\Desktop\Modding\GRAI\src\utils\qc_eyes\.\Release\.\qc_eyes.exe
+       PostBuildEvent:
+         copy "C:\Users\Yerkebulan Laptop\Desktop\Modding\GRAI\src\utils\qc_eyes\Release\"qc_eyes.exe ..\..\..\game\bin\.\qc_eyes.exe >nul
+         if ERRORLEVEL 1 goto BuildEventFailed
+         if exist "C:\Users\Yerkebulan Laptop\Desktop\Modding\GRAI\src\utils\qc_eyes\Release\"qc_eyes.map copy "C:\Users\Yerkebulan Laptop\Desktop\Modding\GRAI\src\utils\qc_eyes\Release\"qc_eyes.map ..\..\..\game\bin\.\qc_eyes.map >nul
+         copy "C:\Users\Yerkebulan Laptop\Desktop\Modding\GRAI\src\utils\qc_eyes\Release\"qc_eyes.pdb ..\..\..\game\bin\.\qc_eyes.pdb >nul
+         if ERRORLEVEL 1 goto BuildEventFailed
+         goto BuildEventOK
+         :BuildEventFailed
+         echo *** ERROR! PostBuildStep FAILED for QC_Eyes! EXE or DLL is probably running. ***
+         del /q "C:\Users\Yerkebulan Laptop\Desktop\Modding\GRAI\src\utils\qc_eyes\Release\"qc_eyes.exe
+         exit 1
+         :BuildEventOK
+         
+         :VCEnd
+     1>Done Building Project "C:\Users\Yerkebulan Laptop\Desktop\Modding\GRAI\src\utils\qc_eyes\qc_eyes.vcxproj" (Rebuild target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:37.36

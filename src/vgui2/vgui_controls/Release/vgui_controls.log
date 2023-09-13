@@ -1,0 +1,181 @@
+﻿Build started 7/30/2023 12:46:03 PM.
+     1>Project "C:\Users\Yerkebulan Laptop\Desktop\Modding\GRAI\src\vgui2\vgui_controls\vgui_controls.vcxproj" on node 4 (Rebuild target(s)).
+     1>PreBuildEvent:
+         if EXIST ..\..\lib\public\.\vgui_controls.lib ( for /f "delims=" %%A in ('attrib "..\..\lib\public\.\vgui_controls.lib"') do set valveTmpIsReadOnly="%%A"
+         ) else ( if not EXIST ..\..\lib\public\. mkdir ..\..\lib\public\. )
+         set valveTmpIsReadOnlyLetter=%valveTmpIsReadOnly:~6,1%
+         if "%valveTmpIsReadOnlyLetter%"=="R" (
+             attrib -r ..\..\lib\public\.\vgui_controls.lib
+             ..\..\devtools\bin\gnu\touch.exe -d "1999-01-01" ..\..\lib\public\.\vgui_controls.lib
+             attrib +r ..\..\lib\public\.\vgui_controls.lib
+         )
+         if exist "..\..\devtools\bin\vpc.exe" "..\..\devtools\bin\vpc.exe" -crc2 "vgui_controls.vcxproj"
+         if ERRORLEVEL 1 exit /b 1
+         
+         :VCEnd
+       CustomBuild:
+         Running VPC CRC Check - vgui_controls.vpc
+         Access is denied.
+       ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I..\..\common /I..\..\public /I..\..\public\tier0 /I..\..\public\tier1 /Igenerated_proto /I"..\..\thirdparty\protobuf-2.3.0\src" /I..\..\thirdparty /I..\..\thirdparty\cef /Igenerated_proto /Z7 /nologo /W4 /WX /MP /O2 /Ob2 /Oi /Ot /Oy- /D VPC /D RAD_TELEMETRY_DISABLED /D WIN32 /D _WIN32 /D NDEBUG /D _LIB /D _CRT_SECURE_NO_DEPRECATE /D _CRT_NONSTDC_NO_DEPRECATE /D _ALLOW_RUNTIME_LIBRARY_MISMATCH /D _ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH /D _ALLOW_MSC_VER_MISMATCH /D _USING_V110_SDK71_ /D _MBCS /D COMPILER_MSVC32 /D COMPILER_MSVC32 /D COMPILER_MSVC /D _DLL_EXT=.dll /D LIBNAME=vgui_controls /D BINK_VIDEO /D AVI_VIDEO /D WMV_VIDEO /D DEV_BUILD /D FRAME_POINTER_OMISSION_DISABLED /D _EXTERNAL_DLL_EXT=.dll /D VPCGAMECAPS=VALVE /D "PROJECTDIR=C:\Users\Yerkebulan Laptop\Desktop\Modding\GRAI\src\vgui2\vgui_controls" /D _DLL_EXT=.dll /D SOURCE1=1 /D VPCGAME=valve /GF /Gm- /MT /GS /Gy /arch:SSE /fp:fast /Zc:wchar_t /Zc:forScope /GR /openmp- /Fo".\Release\.\/" /Fd".\Release\.\/vc120.pdb" /Gd /TP /wd4316 /analyze- /FC /errorReport:prompt /d2Zi+ /Gw AnalogBar.cpp AnimatingImagePanel.cpp AnimationController.cpp BitmapImagePanel.cpp BuildFactoryHelper.cpp BuildGroup.cpp BuildModeDialog.cpp Button.cpp CheckButton.cpp CheckButtonList.cpp CircularProgressBar.cpp ComboBox.cpp consoledialog.cpp ControllerMap.cpp controls.cpp CvarToggleCheckButton.cpp DirectorySelectDialog.cpp Divider.cpp EditablePanel.cpp ExpandButton.cpp FileOpenDialog.cpp FileOpenStateMachine.cpp ..\..\public\filesystem_helpers.cpp FocusNavGroup.cpp Frame.cpp GraphPanel.cpp HTML.cpp Image.cpp ImageList.cpp ImagePanel.cpp InputDialog.cpp KeyBindingHelpDialog.cpp KeyBoardEditorDialog.cpp KeyRepeat.cpp Label.cpp ListPanel.cpp ListViewPanel.cpp Menu.cpp MenuBar.cpp MenuButton.cpp MenuItem.cpp MessageBox.cpp MessageDialog.cpp Panel.cpp PanelListPanel.cpp PerforceFileExplorer.cpp PerforceFileList.cpp perforcefilelistframe.cpp ProgressBar.cpp ProgressBox.cpp PropertyDialog.cpp PropertyPage.cpp PropertySheet.cpp QueryBox.cpp RadioButton.cpp RichText.cpp RotatingProgressBar.cpp savedocumentquery.cpp ScalableImagePanel.cpp ScrollableEditablePanel.cpp ScrollBar.cpp ScrollBarSlider.cpp SectionedListPanel.cpp Slider.cpp Splitter.cpp subrectimage.cpp TextEntry.cpp TextImage.cpp ToggleButton.cpp Tooltip.cpp ToolWindow.cpp TreeView.cpp TreeViewListControl.cpp URLLabel.cpp ..\..\vgui2\src\vgui_key_translation.cpp WizardPanel.cpp WizardSubPanel.cpp
+         AnalogBar.cpp
+         AnimatingImagePanel.cpp
+         AnimationController.cpp
+         BitmapImagePanel.cpp
+         BuildFactoryHelper.cpp
+         BuildGroup.cpp
+         BuildModeDialog.cpp
+         Button.cpp
+         CheckButton.cpp
+         CheckButtonList.cpp
+         CircularProgressBar.cpp
+         ComboBox.cpp
+         consoledialog.cpp
+         ControllerMap.cpp
+         controls.cpp
+         CvarToggleCheckButton.cpp
+         DirectorySelectDialog.cpp
+         Divider.cpp
+         EditablePanel.cpp
+         ExpandButton.cpp
+         FileOpenDialog.cpp
+         FileOpenStateMachine.cpp
+         filesystem_helpers.cpp
+         FocusNavGroup.cpp
+         Frame.cpp
+         GraphPanel.cpp
+         HTML.cpp
+         Image.cpp
+         ImageList.cpp
+         ImagePanel.cpp
+         InputDialog.cpp
+         KeyBindingHelpDialog.cpp
+         KeyBoardEditorDialog.cpp
+         KeyRepeat.cpp
+         Label.cpp
+         ListPanel.cpp
+         Menu.cpp
+         ListViewPanel.cpp
+         MenuBar.cpp
+         MenuButton.cpp
+         MenuItem.cpp
+         MessageBox.cpp
+         MessageDialog.cpp
+         Panel.cpp
+         PanelListPanel.cpp
+         PerforceFileExplorer.cpp
+         PerforceFileList.cpp
+         perforcefilelistframe.cpp
+         ProgressBar.cpp
+         ProgressBox.cpp
+         PropertyDialog.cpp
+         PropertyPage.cpp
+         PropertySheet.cpp
+         QueryBox.cpp
+         RadioButton.cpp
+         RichText.cpp
+         RotatingProgressBar.cpp
+         savedocumentquery.cpp
+         ScalableImagePanel.cpp
+         ScrollableEditablePanel.cpp
+         ScrollBar.cpp
+         ScrollBarSlider.cpp
+         SectionedListPanel.cpp
+         Slider.cpp
+         Splitter.cpp
+         subrectimage.cpp
+         TextEntry.cpp
+         TextImage.cpp
+         ToggleButton.cpp
+         Tooltip.cpp
+         ToolWindow.cpp
+         TreeView.cpp
+         TreeViewListControl.cpp
+         URLLabel.cpp
+         vgui_key_translation.cpp
+         WizardPanel.cpp
+         WizardSubPanel.cpp
+       Lib:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\Lib.exe /OUT:"..\..\lib\public\.\vgui_controls.lib" /NOLOGO  /ignore:4221 .\Release\.\/AnalogBar.obj
+         .\Release\.\/AnimatingImagePanel.obj
+         .\Release\.\/AnimationController.obj
+         .\Release\.\/BitmapImagePanel.obj
+         .\Release\.\/BuildFactoryHelper.obj
+         .\Release\.\/BuildGroup.obj
+         .\Release\.\/BuildModeDialog.obj
+         .\Release\.\/Button.obj
+         .\Release\.\/CheckButton.obj
+         .\Release\.\/CheckButtonList.obj
+         .\Release\.\/CircularProgressBar.obj
+         .\Release\.\/ComboBox.obj
+         .\Release\.\/consoledialog.obj
+         .\Release\.\/ControllerMap.obj
+         .\Release\.\/controls.obj
+         .\Release\.\/CvarToggleCheckButton.obj
+         .\Release\.\/DirectorySelectDialog.obj
+         .\Release\.\/Divider.obj
+         .\Release\.\/EditablePanel.obj
+         .\Release\.\/ExpandButton.obj
+         .\Release\.\/FileOpenDialog.obj
+         .\Release\.\/FileOpenStateMachine.obj
+         .\Release\.\/filesystem_helpers.obj
+         .\Release\.\/FocusNavGroup.obj
+         .\Release\.\/Frame.obj
+         .\Release\.\/GraphPanel.obj
+         .\Release\.\/HTML.obj
+         .\Release\.\/Image.obj
+         .\Release\.\/ImageList.obj
+         .\Release\.\/ImagePanel.obj
+         .\Release\.\/InputDialog.obj
+         .\Release\.\/KeyBindingHelpDialog.obj
+         .\Release\.\/KeyBoardEditorDialog.obj
+         .\Release\.\/KeyRepeat.obj
+         .\Release\.\/Label.obj
+         .\Release\.\/ListPanel.obj
+         .\Release\.\/ListViewPanel.obj
+         .\Release\.\/Menu.obj
+         .\Release\.\/MenuBar.obj
+         .\Release\.\/MenuButton.obj
+         .\Release\.\/MenuItem.obj
+         .\Release\.\/MessageBox.obj
+         .\Release\.\/MessageDialog.obj
+         .\Release\.\/Panel.obj
+         .\Release\.\/PanelListPanel.obj
+         .\Release\.\/PerforceFileExplorer.obj
+         .\Release\.\/PerforceFileList.obj
+         .\Release\.\/perforcefilelistframe.obj
+         .\Release\.\/ProgressBar.obj
+         .\Release\.\/ProgressBox.obj
+         .\Release\.\/PropertyDialog.obj
+         .\Release\.\/PropertyPage.obj
+         .\Release\.\/PropertySheet.obj
+         .\Release\.\/QueryBox.obj
+         .\Release\.\/RadioButton.obj
+         .\Release\.\/RichText.obj
+         .\Release\.\/RotatingProgressBar.obj
+         .\Release\.\/savedocumentquery.obj
+         .\Release\.\/ScalableImagePanel.obj
+         .\Release\.\/ScrollableEditablePanel.obj
+         .\Release\.\/ScrollBar.obj
+         .\Release\.\/ScrollBarSlider.obj
+         .\Release\.\/SectionedListPanel.obj
+         .\Release\.\/Slider.obj
+         .\Release\.\/Splitter.obj
+         .\Release\.\/subrectimage.obj
+         .\Release\.\/TextEntry.obj
+         .\Release\.\/TextImage.obj
+         .\Release\.\/ToggleButton.obj
+         .\Release\.\/Tooltip.obj
+         .\Release\.\/ToolWindow.obj
+         .\Release\.\/TreeView.obj
+         .\Release\.\/TreeViewListControl.obj
+         .\Release\.\/URLLabel.obj
+         .\Release\.\/vgui_key_translation.obj
+         .\Release\.\/WizardPanel.obj
+         .\Release\.\/WizardSubPanel.obj
+         vgui_controls.vcxproj -> C:\Users\Yerkebulan Laptop\Desktop\Modding\GRAI\src\vgui2\vgui_controls\..\..\lib\public\.\vgui_controls.lib
+     1>Done Building Project "C:\Users\Yerkebulan Laptop\Desktop\Modding\GRAI\src\vgui2\vgui_controls\vgui_controls.vcxproj" (Rebuild target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:08.61

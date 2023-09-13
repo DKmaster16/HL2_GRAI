@@ -1,0 +1,92 @@
+﻿Build started 29.07.2021 14:40:33.
+     1>Project "C:\Users\Yerkebulan Laptop\Desktop\Modding\GRAI\src\utils\vvis\vvis_dll.vcxproj" on node 4 (Rebuild target(s)).
+     1>PreBuildEvent:
+         if EXIST ..\..\..\game\bin\.\vvis_dll.dll for /f "delims=" %%A in ('attrib "..\..\..\game\bin\.\vvis_dll.dll"') do set valveTmpIsReadOnly="%%A"
+         set valveTmpIsReadOnlyLetter=%valveTmpIsReadOnly:~6,1%
+         if "%valveTmpIsReadOnlyLetter%"=="R" del /q "C:\Users\Yerkebulan Laptop\Desktop\Modding\GRAI\src\utils\vvis\Release\"vvis_dll.dll
+         if exist "..\..\devtools\bin\vpc.exe" "..\..\devtools\bin\vpc.exe" -crc2 "vvis_dll.vcxproj"
+         if ERRORLEVEL 1 exit /b 1
+         
+         :VCEnd
+       CustomBuild:
+         Compiling pointeroverride.asm
+          Assembling: C:\Users\Yerkebulan Laptop\Desktop\Modding\GRAI\src\public\tier0\pointeroverride.asm
+         Microsoft (R) Macro Assembler Version 12.00.40629.0
+         Copyright (C) Microsoft Corporation.  All rights reserved.
+         
+         Running VPC CRC Check - vvis_dll.vpc
+         Access is denied.
+       ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I..\..\common /I..\..\public /I..\..\public\tier0 /I..\..\public\tier1 /I..\common /I..\vmpi /I..\vmpi\mysql\include /Zi /nologo /W4 /WX /MP /O2 /Ob2 /Oi /Ot /Oy- /D VPC /D RAD_TELEMETRY_DISABLED /D WIN32 /D _WIN32 /D NDEBUG /D _WINDOWS /D _USRDLL /D _CRT_SECURE_NO_DEPRECATE /D _CRT_NONSTDC_NO_DEPRECATE /D _ALLOW_RUNTIME_LIBRARY_MISMATCH /D _ALLOW_ITERATOR_DEBUG_LEVEL_MISMATCH /D _ALLOW_MSC_VER_MISMATCH /D _USING_V110_SDK71_ /D _WINDLL /D _MBCS /D COMPILER_MSVC32 /D COMPILER_MSVC32 /D COMPILER_MSVC /D _DLL_EXT=.dll /D DLLNAME=vvis_dll /D BINK_VIDEO /D AVI_VIDEO /D WMV_VIDEO /D DEV_BUILD /D FRAME_POINTER_OMISSION_DISABLED /D MPI /D PROTECTED_THINGS_DISABLE /D _EXTERNAL_DLL_EXT=.dll /D VPCGAMECAPS=VALVE /D "PROJECTDIR=C:\Users\Yerkebulan Laptop\Desktop\Modding\GRAI\src\utils\vvis" /D _DLL_EXT=.dll /D VPCGAME=valve /D SOURCE1=1 /GF /Gm- /MT /GS /Gy /arch:SSE /fp:fast /Zc:wchar_t /Zc:forScope /GR /Fo".\Release\.\/" /Fd".\Release\.\/vc120.pdb" /Gd /TP /wd4316 /analyze- /FC /errorReport:prompt /Zm200 /d2Zi+ /Gw ..\common\bsplib.cpp ..\common\cmdlib.cpp ..\..\public\collisionutils.cpp ..\..\public\filesystem_helpers.cpp flow.cpp ..\..\public\loadcmdline.cpp ..\..\public\lumpfiles.cpp ..\common\mpi_stats.cpp mpivis.cpp ..\common\MySqlDatabase.cpp ..\common\pacifier.cpp ..\..\public\scratchpad3d.cpp ..\common\scratchpad_helpers.cpp ..\common\scriplib.cpp ..\common\threads.cpp ..\common\tools_minidump.cpp ..\common\vmpi_tools_shared.cpp vvis.cpp WaterDist.cpp ..\..\public\zip_utils.cpp
+         bsplib.cpp
+         cmdlib.cpp
+         collisionutils.cpp
+         filesystem_helpers.cpp
+         flow.cpp
+         loadcmdline.cpp
+         lumpfiles.cpp
+         mpi_stats.cpp
+         mpivis.cpp
+         MySqlDatabase.cpp
+         pacifier.cpp
+         scratchpad3d.cpp
+         scratchpad_helpers.cpp
+         scriplib.cpp
+         threads.cpp
+         tools_minidump.cpp
+         vmpi_tools_shared.cpp
+         vvis.cpp
+         WaterDist.cpp
+         zip_utils.cpp
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:".\Release\.\\vvis_dll.dll" /INCREMENTAL:NO /NOLOGO /LIBPATH:..\..\lib\common\. /LIBPATH:..\..\lib\public\. shell32.lib user32.lib advapi32.lib gdi32.lib comdlg32.lib ole32.lib odbc32.lib odbccp32.lib ws2_32.lib /NODEFAULTLIB:libc /NODEFAULTLIB:libcd /NODEFAULTLIB:libcmtd /MANIFEST:NO /DEBUG /PDB:".\Release\.\/vvis_dll.pdb" /SUBSYSTEM:WINDOWS,"5.01" /OPT:REF /OPT:NOICF /TLBID:1 /DYNAMICBASE:NO /NXCOMPAT /IMPLIB:".\Release\.\vvis_dll.lib" /MACHINE:X86 /SAFESEH:NO  /ignore:4221 /DLL .\Release\.\\pointeroverride.obj
+         .\Release\.\/bsplib.obj
+         .\Release\.\/cmdlib.obj
+         .\Release\.\/collisionutils.obj
+         .\Release\.\/filesystem_helpers.obj
+         .\Release\.\/flow.obj
+         .\Release\.\/loadcmdline.obj
+         .\Release\.\/lumpfiles.obj
+         .\Release\.\/mpi_stats.obj
+         .\Release\.\/mpivis.obj
+         .\Release\.\/MySqlDatabase.obj
+         .\Release\.\/pacifier.obj
+         .\Release\.\/scratchpad3d.obj
+         .\Release\.\/scratchpad_helpers.obj
+         .\Release\.\/scriplib.obj
+         .\Release\.\/threads.obj
+         .\Release\.\/tools_minidump.obj
+         .\Release\.\/vmpi_tools_shared.obj
+         .\Release\.\/vvis.obj
+         .\Release\.\/WaterDist.obj
+         .\Release\.\/zip_utils.obj
+         ..\..\lib\public\mathlib.lib
+         ..\..\lib\public\tier0.lib
+         ..\..\lib\public\tier1.lib
+         ..\..\lib\public\tier2.lib
+         ..\..\lib\public\vmpi.lib
+         ..\..\lib\public\vstdlib.lib
+            Creating library .\Release\.\vvis_dll.lib and object .\Release\.\vvis_dll.exp
+         vvis_dll.vcxproj -> C:\Users\Yerkebulan Laptop\Desktop\Modding\GRAI\src\utils\vvis\.\Release\.\vvis_dll.dll
+       PostBuildEvent:
+         if not exist "..\..\..\game\bin\." mkdir "..\..\..\game\bin\."
+         copy "C:\Users\Yerkebulan Laptop\Desktop\Modding\GRAI\src\utils\vvis\Release\vvis_dll.dll" "..\..\..\game\bin\.\vvis_dll.dll"
+         if ERRORLEVEL 1 goto BuildEventFailed
+         if exist "C:\Users\Yerkebulan Laptop\Desktop\Modding\GRAI\src\utils\vvis\Release\vvis_dll.map" copy "C:\Users\Yerkebulan Laptop\Desktop\Modding\GRAI\src\utils\vvis\Release\vvis_dll.map" ..\..\..\game\bin\.\vvis_dll.map
+         copy "C:\Users\Yerkebulan Laptop\Desktop\Modding\GRAI\src\utils\vvis\Release\vvis_dll.pdb" ..\..\..\game\bin\.\vvis_dll.pdb
+         if ERRORLEVEL 1 goto BuildEventFailed
+         goto BuildEventOK
+         :BuildEventFailed
+         echo *** ERROR! PostBuildStep FAILED for Vvis_dll! EXE or DLL is probably running. ***
+         del /q "C:\Users\Yerkebulan Laptop\Desktop\Modding\GRAI\src\utils\vvis\Release\vvis_dll.dll"
+         exit 1
+         :BuildEventOK
+         
+         :VCEnd
+                 1 file(s) copied.
+                 1 file(s) copied.
+     1>Done Building Project "C:\Users\Yerkebulan Laptop\Desktop\Modding\GRAI\src\utils\vvis\vvis_dll.vcxproj" (Rebuild target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:28.37
