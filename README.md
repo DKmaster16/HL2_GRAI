@@ -33,3 +33,5 @@ Extract these files in your game's directory
 Replace every file and play the game!
 
 To revert back to vanilla right click on Half-Life 2 in your steam library, click properties, LOCAL FILES, Verify integrity of game files. Then remove cfg folder in \Half-Life 2\ folder.
+
+Thanks and have fun.
